@@ -146,11 +146,11 @@ $(document).on("click", ".open-deleteModal", function () {
 				 			onClick="location.href='<c:url value='/shop/${productId}/review?quantity=${quantity}&page=${pageNum}&sortType=${param.sortType}' />'">${pageNum}</button></div>
 					 </c:if>
 				 </c:forEach>
-				 <c:if test="${startPage == (lastPage - lastPage % 5 + 1)}">
+				 <c:if test="${nextStartPage == 0}">
 				 	 <button type="button" class="btn" disabled><i class="fas fa-chevron-right"></i></button>
 				 </c:if>
-				 <c:if test="${startPage != (lastPage - lastPage % 5 + 1)}">
-				 	 <button type="button" class="btn" onClick="location.href='<c:url value='/shop/${productId}/review?quantity=${quantity}&page=${startpage + 6}&sortType=${param.sortType}' />'">
+				 <c:if test="${nextStartPage != 0}">
+				 	 <button type="button" class="btn" onClick="location.href='<c:url value='/shop/${productId}/review?quantity=${quantity}&page=${nextStartPage}&sortType=${param.sortType}' />'">
 				 	 	<i class="fas fa-chevron-right"></i></button>
 				 </c:if>
 			</div>

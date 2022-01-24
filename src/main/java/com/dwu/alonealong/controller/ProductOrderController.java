@@ -85,8 +85,8 @@ public class ProductOrderController {
 				orderList.add(new ProductLineItem(cartItem));
 				totalPrice += cartItem.getUnitPrice();
 			}
-			if(totalPrice < 30000) {
-				totalPrice += 3000;
+			if(totalPrice < Product.FREE_SHIPPING_PRICE) {
+				totalPrice += Product.SHIPPING_FEE;
 			}
 		}
 		//2. Product
@@ -142,8 +142,8 @@ public class ProductOrderController {
 		for (ProductLineItem item : lineItems) {
 			totalPrice += item.getUnitPrice();
 		}
-		if (totalPrice < 30000) {
-			totalPrice += 3000;
+		if (totalPrice < Product.FREE_SHIPPING_PRICE) {
+			totalPrice += Product.SHIPPING_FEE;
 		}
 				
 		if (result.hasErrors()) {

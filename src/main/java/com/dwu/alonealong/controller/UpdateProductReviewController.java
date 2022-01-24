@@ -42,7 +42,7 @@ public class UpdateProductReviewController {
 		
 		//product를 구매한 user인지 검사, 리뷰 내용 검사
 		ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
-		if(!productReview.getUserId().equals(userId) || contents.length() > 300) {
+		if(!productReview.getUserId().equals(userId) || contents.length() > ProductReview.MAX_CONTENT_SIZE) {
 			return new RedirectView("error");
 		}
 		productReview.setRating(rating);

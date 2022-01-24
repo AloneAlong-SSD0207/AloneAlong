@@ -23,6 +23,9 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 public class ViewProductListController {
 	private AloneAlongFacade aloneAlong;
+	private static final int PAGE_SIZE = 15;
+	private static final int UNIT_PAGE_SIZE = 5;
+	private static final int PC_SIZE = 5;
 	String[] productCategory = {"소량 과일", "소량 채소", "소량 육류", "소량 식재료", "밀키트"};
 
 	@Autowired
@@ -37,13 +40,13 @@ public class ViewProductListController {
 			@RequestParam(value="insertProductId", required=false) String insertProductId,  
 			@RequestParam(value="stockError", required=false) boolean stockError,  
 			ModelMap model) throws Exception {
-		if(pcId < 1 || pcId > 5) {
+		if(pcId <= 0 || pcId > PC_SIZE) {
 			model.put("errorMessage", "존재하지 않는 카테고리입니다.");
 			return "error";
 		}
 		List<Product> productList = this.aloneAlong.getProductList(pcId, sortType);
 		PagedListHolder<Product> productPagedList = new PagedListHolder<Product>(productList);
-		productPagedList.setPageSize(15);
+		productPagedList.setPageSize(PAGE_SIZE);
 		productPagedList.setPage(page - 1);
 		
 		String sortTypeName = "최신순";
@@ -64,7 +67,7 @@ public class ViewProductListController {
 		model.put("productCount", productList.size());
 		
 		model.put("page", productPagedList.getPage() + 1);
-		model.put("startPage", (productPagedList.getPage() / 5) * 5 + 1);
+		model.put("startPage", (productPagedList.getPage() / UNIT_PAGE_SIZE) * UNIT_PAGE_SIZE + 1);
 		model.put("lastPage", productPagedList.getPageCount());
 		return "productList";
 	}

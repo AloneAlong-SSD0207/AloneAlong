@@ -92,13 +92,4 @@ public class ProductOrder implements Serializable {
 			+ ", shipPhone2=" + shipPhone2 + ", shipPhone3=" + shipPhone3 + ", shipEmail=" + shipEmail + ", shipZip="
 			+ shipZip + ", shipAddress=" + shipAddress + "]";
   }
-  
-  public int getShippingFee() {
-	if(getTotalPrice() < 30000) {
-		return 3000;
-	}
-	else {
-		return 0;
-	}
-  }
 }
