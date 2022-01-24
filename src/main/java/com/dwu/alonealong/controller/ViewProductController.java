@@ -37,10 +37,11 @@ public class ViewProductController {
 			model.put("errorMessage", "존재하지 않는 상품입니다.");
 			return "error";
 		}
-		if(!aloneAlong.checkStock(productId, quantity) && product.getProductStock() != 0) {
+		int stock = product.getProductStock();
+		if(stock < quantity && stock != 0) {
 			return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + product.getProductStock();
 		}
-        if(stockError == true) {
+        if(stockError) {
     		model.put("insertProductName", aloneAlong.getProduct(insertProductId).getProductName());
         }
 		product.setQuantity(quantity);
