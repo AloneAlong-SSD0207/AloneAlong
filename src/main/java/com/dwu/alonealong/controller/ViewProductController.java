@@ -38,8 +38,8 @@ public class ViewProductController {
 			return "error";
 		}
 		int stock = product.getProductStock();
-		if(stock < quantity && stock != 0) {
-			return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + product.getProductStock();
+		if(stock < quantity && !stockError) {
+			return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + stock;
 		}
         if(stockError) {
     		model.put("insertProductName", aloneAlong.getProduct(insertProductId).getProductName());

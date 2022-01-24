@@ -49,7 +49,7 @@ public class ProductOrderController {
 	public void setValidator(ProductOrderFormValidator validator) {
 		this.validator = validator;
 	}
-	
+
 	@RequestMapping("/shop/order")
 	public String initNewOrder(HttpServletRequest request,
 		@RequestParam(value="type") String type,
@@ -75,15 +75,15 @@ public class ProductOrderController {
 		
 		//1. Cart
 		if(type.equals("cart")){
-			List<CartItem> cart = this.aloneAlong.getAllCartItem(userId);
-			for(CartItem cartItem : cart){ 
-				if(!aloneAlong.checkStock(cartItem.getProductId(), cartItem.getQuantity())){
-					Product product = this.aloneAlong.getProduct(cartItem.getProductId());
-					return "redirect:/cart?stockError=true&cartItemId=" + cartItem.getCartItemId() + "&stock=" + product.getProductStock();
+			List<CartItem> cart = aloneAlong.getAllCartItem(userId);
+			for(CartItem cartItem : cart){
+				Product product = this.aloneAlong.getProduct(cartItem.getProductId());
+				int stock = product.getProductStock();
+				if(stock < quantity){
+					return "redirect:/cart?stockError=true&productId=" + product.getProductId() + "&stock=" + stock;
 				}
-				ProductLineItem orderItem = new ProductLineItem(cartItem);
-				totalPrice += orderItem.getUnitPrice();
-				orderList.add(orderItem);
+				orderList.add(new ProductLineItem(cartItem));
+				totalPrice += cartItem.getUnitPrice();
 			}
 			if(totalPrice < 30000) {
 				totalPrice += 3000;
@@ -96,8 +96,10 @@ public class ProductOrderController {
 			}
 			Product product = this.aloneAlong.getProduct(productId);
 			product.setQuantity(quantity);
-			if(!aloneAlong.checkStock(product.getProductId(), quantity)){
-				return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + product.getProductStock();
+
+			int stock = product.getProductStock();
+			if(stock < quantity){
+				return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + stock;
 			}
 			totalPrice = product.getUnitPrice();
 			ProductLineItem orderItem = new ProductLineItem(product);
@@ -156,8 +158,6 @@ public class ProductOrderController {
 		
 		//lineItem
 		order.setLineItems(lineItems);
-		
-		
 		order.setTotalPrice(totalPrice);
 		
 		//user
