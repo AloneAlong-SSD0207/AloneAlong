@@ -57,12 +57,8 @@ public class FoodCartController {
 				System.out.println("null들어왔다");
 			cart.addFood(item);
 		}		
-		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId); 
-		model.put("foodList", foodList);
-		model.put("foodCart", cart.getAllFoodCartItems());
-		model.put("totalPrice", cart.getSubTotal());
-		Restaurant res = alonealong.getRestaurantByResId(resId);
-		model.put("restaurant", res);
+
+		putCartSessionData(model, cart, resId);
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping("/eating/{resId}/updateFoodCartItem")
@@ -75,12 +71,7 @@ public class FoodCartController {
 		
 		cart.setQuantityByFoodId(request.getParameter("foodId"), Integer.parseInt(request.getParameter("quantity")));
 				
-		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId); 
-		model.put("foodList", foodList);
-		model.put("foodCart", cart.getAllFoodCartItems());
-		model.put("totalPrice", cart.getSubTotal());
-		Restaurant res = alonealong.getRestaurantByResId(resId);
-		model.put("restaurant", res);
+		putCartSessionData(model, cart, resId);
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping("/eating/{resId}/deleteFoodCartItem")
@@ -93,13 +84,16 @@ public class FoodCartController {
 		
 		cart.removeFoodById((request.getParameter("foodId")));
 				
+		putCartSessionData(model, cart, resId);
+		return "redirect:/eating/{resId}";
+	}
+	private void putCartSessionData(ModelMap model, FoodCart cart, String resId) {
 		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId); 
 		model.put("foodList", foodList);
 		model.put("foodCart", cart.getAllFoodCartItems());
 		model.put("totalPrice", cart.getSubTotal());
 		Restaurant res = alonealong.getRestaurantByResId(resId);
 		model.put("restaurant", res);
-		return "redirect:/eating/{resId}";
 	}
 	
 //	@RequestMapping("/eating/{resId}/updateFoodCartQuantities")
