@@ -35,6 +35,11 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 @SessionAttributes({"retaurantList", "sessionFoodCart"})
 public class TogetherRegisterController {
+	public static final int GATHERING = 0;
+	public static final int GATHERED = 1;
+	public static final int IS_NOT_HOST = 0;
+	public static final int IS_HOST = 1;
+	
 	private AloneAlongFacade aloneAlong;
 	
 	@Autowired
@@ -63,17 +68,10 @@ public class TogetherRegisterController {
 		String resId = null;
 		model.put("resId", resId);
 		
-		
 		List<Restaurant> restaurantList = this.aloneAlong.searchRestaurantList(keywords);
 		model.put("keywords", keywords);
 		
-		Encoder encoder = Base64.getEncoder(); //이미지
-        for(Restaurant res : restaurantList) {     	
-        	byte[] imagefile = res.getImgFile();
-            String encodedString = encoder.encodeToString(imagefile);
-            res.setImg64(encodedString);
-        }
-		
+		getRestaurantsImage(restaurantList); //이미지 가져오기
 		model.put("restaurantList", restaurantList);
 
 		return "together/togetherRegisterForm";
@@ -89,18 +87,9 @@ public class TogetherRegisterController {
 		List<Food> foodList = aloneAlong.getFoodListByRestaurant(resId);
 		
 		model.put("keywords", restaurant.getResName()); //검색창에 레스토랑 이름 세팅하기
-		
 		model.put("selectedRes", restaurant);
 		
-		Encoder encoder = Base64.getEncoder(); //음식 이미지
-		byte[] imagefile;
-		String encodedString;
-        for(Food food : foodList) {
-        	imagefile = food.getImgFile();
-            encodedString = encoder.encodeToString(imagefile);
-            food.setImg64(encodedString);
-        }
-		
+		getFoodsImage(foodList); //음식 이미지 가져오기
 		model.addAttribute("foodList", foodList);
 		model.put("foodCart", foodCart.getAllFoodCartItems());
 		
@@ -125,33 +114,16 @@ public class TogetherRegisterController {
 		if(resId == null)
 			return "redirect:/togetherRegister";
 		
-		//together 넣기
-		Together together = new Together("TOG_ID.NEXTVAL", name, headCount, date, time, sex, age, description, resId, 0, cart.getSubTotal() / headCount);
+		//together 넣기		
+		Together together = new Together("TOG_ID.NEXTVAL", name, headCount, date, time, sex, age, description, resId, GATHERING, cart.getSubTotal() / headCount);
 		aloneAlong.insertTogether(together);
 		
-		System.out.println("Tog_id : " + together.getTogetherId());
-		
-		//음식 넣기
-		for(int i = 0; i < cart.getFoodItemList().size(); i++) {
-			TogetherFood togetherFood = new TogetherFood("TOGFOOD_ID.NEXTVAL", together.getTogetherId(), cart.getFoodItemList().get(i).getFood().getFoodId() , cart.getFoodItemList().get(i).getQuantity());
-			aloneAlong.insertTogetherFood(togetherFood);
-		}
-		
-		//멤버 넣기
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
 		User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
 		
-		System.out.println("유저아이디" + user.getId());
-		
-		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), 1);
-		aloneAlong.insertTogetherMember(togetherMember);
-		
-		//결제 정보에는 들어가기(결제상태는x)
-		Order order = new Order("ORDER_ID.NEXTVAL", together.getPrice(), "결제 대기중", user.getId(), "결제 대기중", "결제 대기중", "결제 대기중");
-		aloneAlong.insertTogetherOrderInfo(order);
-		
-		TogetherOrder togetherOrder = new TogetherOrder(order.getOrderId(), together.getTogetherId());
-		aloneAlong.insertTogetherOrder(togetherOrder);
+		insertFoodsIntoTogether(cart, together); //음식 넣기
+		insertHostIntoTogether(user, together); //멤버에 유저 넣기
+		insertOrder(together, user); //결제 정보에는 들어가기(결제상태는 아직x)
 		
 		status.setComplete(); //카트 제거
 		
@@ -161,4 +133,43 @@ public class TogetherRegisterController {
 		return "redirect:/together";
 	}
 	
+	public void getRestaurantsImage(List<Restaurant> restaurantList) {
+		Encoder encoder = Base64.getEncoder();
+        for(Restaurant res : restaurantList) {     	
+        	byte[] imagefile = res.getImgFile();
+            String encodedString = encoder.encodeToString(imagefile);
+            res.setImg64(encodedString);
+        }
+	}
+	
+	public void getFoodsImage(List<Food> foodList) {
+		Encoder encoder = Base64.getEncoder();
+		byte[] imagefile;
+		String encodedString;
+        for(Food food : foodList) {
+        	imagefile = food.getImgFile();
+            encodedString = encoder.encodeToString(imagefile);
+            food.setImg64(encodedString);
+        }
+	}
+	
+	public void insertFoodsIntoTogether(FoodCart cart, Together together) {
+		for(int i = 0; i < cart.getFoodItemList().size(); i++) {
+			TogetherFood togetherFood = new TogetherFood("TOGFOOD_ID.NEXTVAL", together.getTogetherId(), cart.getFoodItemList().get(i).getFood().getFoodId() , cart.getFoodItemList().get(i).getQuantity());
+			aloneAlong.insertTogetherFood(togetherFood);
+		}
+	}
+	
+	public void insertHostIntoTogether(User user, Together together) {
+		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), IS_HOST);
+		aloneAlong.insertTogetherMember(togetherMember);
+	}
+	
+	public void insertOrder(Together together, User user) {
+		Order order = new Order("ORDER_ID.NEXTVAL", together.getPrice(), "결제 대기중", user.getId(), "결제 대기중", "결제 대기중", "결제 대기중");
+		aloneAlong.insertTogetherOrderInfo(order);
+		
+		TogetherOrder togetherOrder = new TogetherOrder(order.getOrderId(), together.getTogetherId());
+		aloneAlong.insertTogetherOrder(togetherOrder);
+	}
 }

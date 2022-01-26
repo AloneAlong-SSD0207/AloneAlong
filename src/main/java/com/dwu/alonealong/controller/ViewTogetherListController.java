@@ -27,6 +27,7 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 @SessionAttributes({"userSession", "sessionFoodCart", "together"})
 public class ViewTogetherListController {
+	public static String areaName, kindName, priceName, sexName, ageName;
 	
 	private AloneAlongFacade alonealong;
 	
@@ -77,50 +78,7 @@ public class ViewTogetherListController {
 		model.put("lastPage", togetherPagedList.getPageCount());
 		
 		//카테고리
-		String areaName = "모든 지역";
-		switch(area) {
-			case "seoul" : areaName = "서울특별시"; break;
-			case "gyenggi" : areaName = "경기도"; break;
-			case "busan" : areaName = "부산광역시"; break;
-			case "incheon" : areaName = "인천광역시"; break;
-			case "deagu" : areaName = "대구광역시"; break;
-			case "deageon" : areaName = "대전광역시"; break;
-			case "guangju" : areaName = "광주광역시"; break;
-			case "ulsan" : areaName = "울산광역시"; break;
-		}
-		
-		String kindName = "모든 종류 음식";
-		switch(kind) {
-			case "korean" : kindName = "한식"; break;
-			case "western" : kindName = "양식"; break;
-			case "japanese" : kindName = "일식"; break;
-			case "chinese" : kindName = "중식"; break;
-			case "etc" : kindName = "기타"; break;
-		}
-		
-		String priceName = "모든 가격대";
-		switch(price) {
-			case 10000 : priceName = "10000원 미만"; break;
-			case 15000 : priceName = "15000원 미만"; break;
-			case 20000 : priceName = "20000원 미만"; break;
-			case 25000 : priceName = "25000원 미만"; break;
-			case 35000 : priceName = "30000원 미만"; break;
-		}
-		
-		String sexName = "모든 성별";
-		switch(sex) {
-			case "female" : sexName = "여성"; break;
-			case "male" : sexName = "남성"; break;
-		}
-		
-		String ageName = "모든 나이";
-		switch(age) {
-			case "10" : ageName = "10대"; break;
-			case "20" : ageName = "20대"; break;
-			case "30" : ageName = "30대"; break;
-			case "40" : ageName = "40대"; break;
-			case "50" : ageName = "50대 이상"; break;
-		}
+		getCategory(area, kind, price, sex, age);
 		
 		model.put("areaName", areaName);
 		model.put("kindName", kindName);
@@ -136,6 +94,53 @@ public class ViewTogetherListController {
 		model.put("age", age);
 		
 		return "togetherList";
+	}
+	
+	public void getCategory(String area, String kind, int price, String sex, String age) {
+		areaName = "모든 지역";
+		switch(area) {
+			case "seoul" : areaName = "서울특별시"; break;
+			case "gyenggi" : areaName = "경기도"; break;
+			case "busan" : areaName = "부산광역시"; break;
+			case "incheon" : areaName = "인천광역시"; break;
+			case "deagu" : areaName = "대구광역시"; break;
+			case "deageon" : areaName = "대전광역시"; break;
+			case "guangju" : areaName = "광주광역시"; break;
+			case "ulsan" : areaName = "울산광역시"; break;
+		}
+		
+		kindName = "모든 종류 음식";
+		switch(kind) {
+			case "korean" : kindName = "한식"; break;
+			case "western" : kindName = "양식"; break;
+			case "japanese" : kindName = "일식"; break;
+			case "chinese" : kindName = "중식"; break;
+			case "etc" : kindName = "기타"; break;
+		}
+		
+		priceName = "모든 가격대";
+		switch(price) {
+			case 10000 : priceName = "10000원 미만"; break;
+			case 15000 : priceName = "15000원 미만"; break;
+			case 20000 : priceName = "20000원 미만"; break;
+			case 25000 : priceName = "25000원 미만"; break;
+			case 35000 : priceName = "30000원 미만"; break;
+		}
+		
+		sexName = "모든 성별";
+		switch(sex) {
+			case "female" : sexName = "여성"; break;
+			case "male" : sexName = "남성"; break;
+		}
+		
+		ageName = "모든 나이";
+		switch(age) {
+			case "10" : ageName = "10대"; break;
+			case "20" : ageName = "20대"; break;
+			case "30" : ageName = "30대"; break;
+			case "40" : ageName = "40대"; break;
+			case "50" : ageName = "50대 이상"; break;
+		}
 	}
 	
 }

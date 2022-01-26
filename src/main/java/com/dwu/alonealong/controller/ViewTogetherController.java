@@ -25,6 +25,13 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 @SessionAttributes({"together", "sessionFoodCart"})
 public class ViewTogetherController {
+	public static String areaName, kindName, priceName, sexName, ageName;
+	public static boolean isUserNull = false; //로그인 여부
+	public static boolean isHost = false; //호스트 여부
+	public static boolean ifEditPossible = false; //수정 삭제 가능 여부
+	public static boolean alreadyApply = false; //이미 신청했는지 여부
+	public static boolean isPaid = false; //결제 여부
+	public static boolean ifCanApply = false; //신청 조건 맞는지 여부
 
 	private AloneAlongFacade aloneAlong;
 
@@ -47,15 +54,43 @@ public class ViewTogetherController {
 		
 		Together together = this.aloneAlong.getTogetherByTogId(togId);
 		
-		//수정, 삭제, 신청 접근 조건
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-		boolean isUserNull = false; //로그인 여부
-		boolean isHost = false; //호스트 여부
-		boolean ifEditPossible = false; //수정 삭제 가능 여부
-		boolean alreadyApply = false; //이미 신청했는지 여부
-		boolean isPaid = false; //결제 여부
-		boolean ifCanApply = false; //신청 조건 맞는지 여부
+
+		//수정, 삭제, 신청 접근 조건 판단
+		judgeAcess(userSession, together, togId);
 		
+		model.put("isUserNull", isUserNull);
+		model.put("isHost", isHost);
+		model.put("isPaid", isPaid);
+		model.put("ifEditPossible", ifEditPossible);
+		model.put("alreadyApply", alreadyApply);
+		model.put("ifCanApply", ifCanApply);
+		
+		//식당 이미지 불러오기
+		getRestaurantImage(together);
+		
+		//카테고리
+        getCategory(area, kind, price, sex, age);
+		
+		model.put("areaName", areaName);
+		model.put("kindName", kindName);
+		model.put("priceName", priceName);
+		model.put("sexName", sexName);
+		model.put("ageName", ageName);
+		
+		model.put("area", area);
+		model.put("date", date);
+		model.put("kind", kind);
+		model.put("price", price);
+		model.put("sex", sex);
+		model.put("age", age);
+		
+		model.put("together", together);
+		
+		return "togetherInfo";
+	}
+	
+	public void judgeAcess(UserSession userSession, Together together, String togId) {
 		if(userSession != null) {
 			isUserNull = true;
 			User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
@@ -81,23 +116,18 @@ public class ViewTogetherController {
 				}
 			}	
 		}
-		
-		model.put("isUserNull", isUserNull);
-		model.put("isHost", isHost);
-		model.put("isPaid", isPaid);
-		model.put("ifEditPossible", ifEditPossible);
-		model.put("alreadyApply", alreadyApply);
-		model.put("ifCanApply", ifCanApply);
-		
-		//이미지
+	}
+	
+	public void getRestaurantImage(Together together) {
 		Encoder encoder = Base64.getEncoder();
 		byte[] imagefile = together.getRestaurant().getImgFile();
     	
         String encodedString = encoder.encodeToString(imagefile);
         together.getRestaurant().setImg64(encodedString);
-		
-		//카테고리
-		String areaName = "모든 지역";
+	}
+	
+	public void getCategory(String area, String kind, int price, String sex, String age) {
+		areaName = "모든 지역";
 		switch(area) {
 			case "seoul" : areaName = "서울특별시"; break;
 			case "gyenggi" : areaName = "경기도"; break;
@@ -109,7 +139,7 @@ public class ViewTogetherController {
 			case "ulsan" : areaName = "울산광역시"; break;
 		}
 		
-		String kindName = "모든 종류 음식";
+		kindName = "모든 종류 음식";
 		switch(kind) {
 			case "korean" : kindName = "한식"; break;
 			case "western" : kindName = "양식"; break;
@@ -118,7 +148,7 @@ public class ViewTogetherController {
 			case "etc" : kindName = "기타"; break;
 		}
 		
-		String priceName = "모든 가격대";
+		priceName = "모든 가격대";
 		switch(price) {
 			case 10000 : priceName = "10000원 미만"; break;
 			case 15000 : priceName = "15000원 미만"; break;
@@ -127,13 +157,13 @@ public class ViewTogetherController {
 			case 35000 : priceName = "30000원 미만"; break;
 		}
 		
-		String sexName = "모든 성별";
+		sexName = "모든 성별";
 		switch(sex) {
 			case "female" : sexName = "여성"; break;
 			case "male" : sexName = "남성"; break;
 		}
 		
-		String ageName = "모든 나이";
+		ageName = "모든 나이";
 		switch(age) {
 			case "10" : ageName = "10대"; break;
 			case "20" : ageName = "20대"; break;
@@ -141,22 +171,5 @@ public class ViewTogetherController {
 			case "40" : ageName = "40대"; break;
 			case "50" : ageName = "50대 이상"; break;
 		}
-		
-		model.put("areaName", areaName);
-		model.put("kindName", kindName);
-		model.put("priceName", priceName);
-		model.put("sexName", sexName);
-		model.put("ageName", ageName);
-		
-		model.put("area", area);
-		model.put("date", date);
-		model.put("kind", kind);
-		model.put("price", price);
-		model.put("sex", sex);
-		model.put("age", age);
-		
-		model.put("together", together);
-		
-		return "togetherInfo";
 	}
 }

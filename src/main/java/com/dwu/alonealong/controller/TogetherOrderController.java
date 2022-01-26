@@ -26,6 +26,12 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 @SessionAttributes({"together"})
 public class TogetherOrderController {
+	public static final int GATHERING = 0;
+	public static final int GATHERED = 1;
+	public static final int IS_NOT_HOST = 0;
+	public static final int IS_HOST = 1;
+	
+	public static Order order;
 
 	private AloneAlongFacade aloneAlong;
 	
@@ -64,60 +70,74 @@ public class TogetherOrderController {
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
 		User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
 		
-		//카드 결제(호스트인 사람)
-		if(together.getTogetherMemberList().get(0).getUserId().equals(user.getId())) {
-			String orderId = aloneAlong.getTogetherOrderByTogId(together.getTogetherId()).get(0).getOrderId();
+		String orderDate = cardDate1 + "/" + cardDate2;
+		
+		if(isHost(together, user)) {
+			completePayment(true, together, user, cardNum, orderDate, cardName); //카드 결제
 			
-			System.out.println("결제 전");
+		} else {
+			completePayment(false, together, user, cardNum, orderDate, cardName); //카드 결제
+			insertUserIntoMember(user, together); //같이먹기 멤버에 추가
 			
-			String orderDate = cardDate1 + "/" + cardDate2;
-			Order newOrder = new Order(orderId, together.getPrice(), "결제완료", user.getId(), cardNum, orderDate, cardName);
-			
-			System.out.println("객체 생성?" + newOrder.toString());
-			
-			aloneAlong.updateTogetherOrderInfo(newOrder);
-			
-			System.out.println("결제 후");
-			
-		} 
-		else { //(호스트 아닌 사람)
-			//카드 결제
-			String orderDate = cardDate1 + "/" + cardDate2;
-			Order newOrder = new Order("ORDER_ID.NEXTVAL", together.getPrice(), "결제완료", user.getId(), cardNum, orderDate, cardName);
-			aloneAlong.insertTogetherOrderInfo(newOrder);
-			
-			System.out.println("객체 생성?" + newOrder.toString());
-			
-			System.out.println("주문 목록 넣기 전");
-			//주문목록에 넣기
-			TogetherOrder togetherOrder = new TogetherOrder(newOrder.getOrderId(), together.getTogetherId());
-			aloneAlong.insertTogetherOrder(togetherOrder);
-			
-			System.out.println("멤버 추가 전");
-			//TogetherMember에 추가
-			TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), 0);
-			aloneAlong.insertTogetherMember(togetherMember);
-			
-			System.out.println("멤버사이즈: " + together.getTogetherMemberList().size());
-			//만약에 멤버 다찼으면 state -> 1, foodOrder에 들어가기
-			if(together.getTogetherMemberList().size() + 1 == together.getHeadCount()) {
-				Together newTogether = new Together(together.getTogetherId(), together.getTogetherName(), together.getHeadCount(), together.getTogetherDate(), together.getTogetherTime(), 
-						together.getSex(), together.getAge(), together.getTogetherDes(), together.getResId(), 1, together.getPrice());
-				aloneAlong.updateTogether(newTogether);
-				
-				System.out.println("음식 주문 추가 전");
-				//foodOrder에 넣기
-				for(int i = 0; i < together.getTogetherFoodList().size(); i++) {
-					FoodOrder foodOrder = new FoodOrder(newOrder.getOrderId(), "visit", together.getTogetherDate() + "," + together.getTogetherTime(), 
-							together.getTogetherFoodList().get(i).getFoodId(), together.getResId());
-					aloneAlong.insertFoodOrderForTogetherOrder(foodOrder);
-				}
+			if(isMemberFull(together)) {
+				completeGathering(together); //모집 완료로 바꿈
+				insertFoodOrder(together); //식당 측 foodOrder에 넣기
 			}
 		}
 		
 		String togName = aloneAlong.getTogetherByTogId(together.getTogetherId()).getTogetherName();
 		model.put("togName", togName);
+		
 		return "togOrderResult";
 	}
 
+	public boolean isHost(Together together, User user) {
+		if(together.getTogetherMemberList().get(0).getUserId().equals(user.getId())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isMemberFull(Together together) {
+		if(together.getTogetherMemberList().size() + 1 == together.getHeadCount()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void completePayment(boolean isHost, Together together, User user, String cardNum, String orderDate, String cardName) {
+		if(isHost) {
+			String orderId = aloneAlong.getTogetherOrderByTogId(together.getTogetherId()).get(0).getOrderId();
+			order = new Order(orderId, together.getPrice(), "결제완료", user.getId(), cardNum, orderDate, cardName);
+			aloneAlong.updateTogetherOrderInfo(order);
+		}else {
+			order = new Order("ORDER_ID.NEXTVAL", together.getPrice(), "결제완료", user.getId(), cardNum, orderDate, cardName);
+			aloneAlong.insertTogetherOrderInfo(order);
+			
+			//주문목록에 넣기
+			TogetherOrder togetherOrder = new TogetherOrder(order.getOrderId(), together.getTogetherId());
+			aloneAlong.insertTogetherOrder(togetherOrder);
+		}
+	}
+	
+	public void insertUserIntoMember(User user, Together together) {
+		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), IS_NOT_HOST);
+		aloneAlong.insertTogetherMember(togetherMember);
+	}
+	
+	public void completeGathering(Together together) {
+		Together newTogether = new Together(together.getTogetherId(), together.getTogetherName(), together.getHeadCount(), together.getTogetherDate(), together.getTogetherTime(), 
+				together.getSex(), together.getAge(), together.getTogetherDes(), together.getResId(), GATHERED, together.getPrice());
+		aloneAlong.updateTogether(newTogether);
+	}
+	
+	public void insertFoodOrder(Together together) {
+		for(int i = 0; i < together.getTogetherFoodList().size(); i++) {
+			FoodOrder foodOrder = new FoodOrder(order.getOrderId(), "visit", together.getTogetherDate() + "," + together.getTogetherTime(), 
+					together.getTogetherFoodList().get(i).getFoodId(), together.getResId());
+			aloneAlong.insertFoodOrderForTogetherOrder(foodOrder);
+		}
+	}
 }

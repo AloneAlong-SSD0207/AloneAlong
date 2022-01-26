@@ -29,6 +29,9 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @SessionAttributes({"sessionFoodCart"})
 @Controller
 public class TogetherUpdateController {
+	public static final int GATHERING = 0;
+	public static final int GATHERED = 1;
+	
 	private AloneAlongFacade aloneAlong;
 	
 	@Autowired
@@ -51,39 +54,12 @@ public class TogetherUpdateController {
 		
 		System.out.println("selectedRes" + together.getRestaurant());
 		
-		//푸드 리스트 세팅
 		List<Food> foodList = aloneAlong.getFoodListByRestaurant(together.getResId());
 		
-		Encoder encoder = Base64.getEncoder(); //음식 이미지
-		byte[] imagefile;
-		String encodedString;
-        for(Food food : foodList) {
-        	imagefile = food.getImgFile();
-            encodedString = encoder.encodeToString(imagefile);
-            food.setImg64(encodedString);
-        }
-		
+		getFoodsImage(foodList); //푸드 리스트 세팅
 		model.addAttribute("foodList", foodList);
 		
-		//카트 세팅
-		for(int i = 0; i < together.getTogetherFoodList().size(); i++) {
-			System.out.println("현재 음식 사이즈" + foodCart.getFoodItemList().size());
-			
-			for(int j = 0; j < together.getTogetherFoodList().get(i).getQuantity(); j++) {
-				if (foodCart.containsFoodId(together.getTogetherFoodList().get(i).getFoodId())) {
-					System.out.println("이미 있는 음식");
-					foodCart.incrementQuantityByFoodId(together.getTogetherFoodList().get(i).getFoodId());
-				}
-				else {
-					Food item = this.aloneAlong.getFood(together.getTogetherFoodList().get(i).getFoodId());
-					if(item == null)
-						System.out.println("null들어왔다");
-					foodCart.addFood(item);
-					System.out.println("카트에 추가됨");
-				}	
-			}
-		}
-		
+		getCart(together, foodCart); //카트 세팅
 		model.put("foodCart", foodCart.getAllFoodCartItems());
 		model.put("totalPrice", foodCart.getSubTotal());
 		
@@ -106,14 +82,9 @@ public class TogetherUpdateController {
 		boolean resSelected = false; //식당 선택했는지 구분
 		model.put("resSelected", resSelected);
 		
-		Encoder encoder = Base64.getEncoder(); //이미지
-        for(Restaurant res : restaurantList) {     	
-        	byte[] imagefile = res.getImgFile();
-            String encodedString = encoder.encodeToString(imagefile);
-            res.setImg64(encodedString);
-        }
-		
+		getRestaurantsImage(restaurantList);
 		model.put("restaurantList", restaurantList);
+		
 		System.out.println("키워드 검색 완료");
 		return "together/togetherUpdateForm";
 	}
@@ -130,15 +101,7 @@ public class TogetherUpdateController {
 		model.put("keywords", restaurant.getResName()); //검색창에 레스토랑 이름 세팅하기
 		model.put("selectedRes", restaurant);
 		
-		Encoder encoder = Base64.getEncoder(); //음식 이미지
-		byte[] imagefile;
-		String encodedString;
-        for(Food food : foodList) {
-        	imagefile = food.getImgFile();
-            encodedString = encoder.encodeToString(imagefile);
-            food.setImg64(encodedString);
-        }
-		
+		getFoodsImage(foodList);
 		model.addAttribute("foodList", foodList);
 		System.out.println("메뉴 검색 완료");
 		
@@ -163,20 +126,13 @@ public class TogetherUpdateController {
 			@RequestParam("resId") String resId,
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			ModelMap model) {
-		if(resId == null)
-			return "redirect:/togetherUpdate/{togetherId}";
+		if(resId == null) return "redirect:/togetherUpdate/{togetherId}";
 		
 		//together 수정
-		Together newTogether = new Together(togId, name, headCount, date, time, sex, age, description, resId, 0, cart.getSubTotal() / headCount);
+		Together newTogether = new Together(togId, name, headCount, date, time, sex, age, description, resId, GATHERING, cart.getSubTotal() / headCount);
 		aloneAlong.updateTogether(newTogether);
 		
-		//음식 수정(기존 음식 다 버리고 새로 추가)
-		aloneAlong.deleteTogetherFood(togId);
-		
-		for(int i = 0; i < cart.getFoodItemList().size(); i++) { //새로 음식 추가
-			TogetherFood togetherFood = new TogetherFood("TOGFOOD_ID.NEXTVAL", newTogether.getTogetherId(), cart.getFoodItemList().get(i).getFood().getFoodId() , cart.getFoodItemList().get(i).getQuantity());
-			aloneAlong.insertTogetherFood(togetherFood);
-		}
+		updateFoods(togId, cart, newTogether); //음식 수정
 		
 		status.setComplete(); //카트 제거
 		
@@ -184,5 +140,54 @@ public class TogetherUpdateController {
 		model.addAttribute("togetherList", togetherList);
 		
 		return "redirect:/together";
+	}
+	
+	public void getRestaurantsImage(List<Restaurant> restaurantList) {
+		Encoder encoder = Base64.getEncoder();
+        for(Restaurant res : restaurantList) {     	
+        	byte[] imagefile = res.getImgFile();
+            String encodedString = encoder.encodeToString(imagefile);
+            res.setImg64(encodedString);
+        }
+	}
+	
+	public void getFoodsImage(List<Food> foodList) {
+		Encoder encoder = Base64.getEncoder();
+		byte[] imagefile;
+		String encodedString;
+        for(Food food : foodList) {
+        	imagefile = food.getImgFile();
+            encodedString = encoder.encodeToString(imagefile);
+            food.setImg64(encodedString);
+        }
+	}
+	
+	public void getCart(Together together, FoodCart foodCart) {
+		for(int i = 0; i < together.getTogetherFoodList().size(); i++) {
+			System.out.println("현재 음식 사이즈" + foodCart.getFoodItemList().size());
+			
+			for(int j = 0; j < together.getTogetherFoodList().get(i).getQuantity(); j++) {
+				if (foodCart.containsFoodId(together.getTogetherFoodList().get(i).getFoodId())) {
+					System.out.println("이미 있는 음식");
+					foodCart.incrementQuantityByFoodId(together.getTogetherFoodList().get(i).getFoodId());
+				}
+				else {
+					Food item = this.aloneAlong.getFood(together.getTogetherFoodList().get(i).getFoodId());
+					if(item == null)
+						System.out.println("null들어왔다");
+					foodCart.addFood(item);
+					System.out.println("카트에 추가됨");
+				}	
+			}
+		}
+	}
+	
+	public void updateFoods(String togId, FoodCart cart, Together newTogether) {
+		aloneAlong.deleteTogetherFood(togId); //기존 음식 버리고
+		
+		for(int i = 0; i < cart.getFoodItemList().size(); i++) { //새로 음식 추가
+			TogetherFood togetherFood = new TogetherFood("TOGFOOD_ID.NEXTVAL", newTogether.getTogetherId(), cart.getFoodItemList().get(i).getFood().getFoodId() , cart.getFoodItemList().get(i).getQuantity());
+			aloneAlong.insertTogetherFood(togetherFood);
+		}
 	}
 }
