@@ -22,6 +22,7 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 public class FoodReviewController {
 		
 	private AloneAlongFacade alonealong;
+	public static final int defaultInt = 0;
 	
 	@Autowired
 	public void setAlonealong(AloneAlongFacade alonealong) {
@@ -44,7 +45,7 @@ public class FoodReviewController {
 		String userId = user.getId(); 
 		int rating = Integer.parseInt(request.getParameter("rating"));
 		String contents = request.getParameter("review");
-		FoodReview foodReview = new FoodReview(foodOrderId, resId, userId, rating, contents, 0);
+		FoodReview foodReview = new FoodReview(foodOrderId, resId, userId, rating, contents, defaultInt);
 
 		alonealong.insertFoodReview(foodReview);
 		alonealong.updateAvgRating(rating, resId);

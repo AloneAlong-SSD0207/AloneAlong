@@ -30,6 +30,7 @@ import com.dwu.alonealong.domain.FoodOrder;
 @SessionAttributes({"sessionFoodCart"})
 public class FoodOrderController {
 	private AloneAlongFacade aloneAlong;
+	public static final int defaultInt = 0;
 
 	@Autowired
 	public void setAloneAlong(AloneAlongFacade aloneAlong) {
@@ -91,7 +92,7 @@ public class FoodOrderController {
 		FoodOrder order = new FoodOrder(resId, userId, foodList, reserveType, visitDate, payment);
 		order.setTotalPrice(order.calcTotalPrice());
 		System.out.println("totalprice 무슨일이야 잘 들어 왔는지: " + order.getTotalPrice());
-		if(order.getTotalPrice() == 0)
+		if(order.getTotalPrice() == defaultInt)
 			return "";
 		aloneAlong.insertFoodOrder(order);
 

@@ -30,6 +30,8 @@ public class RestaurantController {
 
 	private AloneAlongFacade alonealong;
 	
+	public static final Double defaultDouble = 0.0;
+	
 	@Autowired
 	public void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
@@ -76,18 +78,11 @@ public class RestaurantController {
 		
 		Restaurant res;
 		
-		MultipartFile mf = resForm.getImgFile();
-		byte[] img = null;
-		try {
-			img = mf.getBytes();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		System.out.println("res의 getResArea : " + resForm.getResArea());
 		System.out.println("res의 isTogetherOk : " + resForm.getIsTogetherOk());
 		if(request.getParameter("status").equals("insert")) {
 			res = new Restaurant("RES_ID.NEXTVAL", resForm.getResName(), resForm.getResAddress(), resForm.getResPhone(), userId,
-					resForm.getResDescription(), 0.0, resForm.getCategoryId(), img, resForm.getIsTogetherOk(), resForm.getResArea());
+					resForm.getResDescription(), defaultDouble, resForm.getCategoryId(), getImgFile(resForm), resForm.getIsTogetherOk(), resForm.getResArea());
 			alonealong.insertRestaurant(res);
 		}
 		else if(request.getParameter("status").equals("update")) {
@@ -98,7 +93,7 @@ public class RestaurantController {
 			}
 			System.out.println("null에러" + resForm.getIsTogetherOk());
 			res = new Restaurant(resId, resForm.getResName(), resForm.getResAddress(), resForm.getResPhone(),
-					resForm.getResDescription(), resForm.getCategoryId(), img, resForm.getIsTogetherOk(), resForm.getResArea());
+					resForm.getResDescription(), resForm.getCategoryId(), getImgFile(resForm), resForm.getIsTogetherOk(), resForm.getResArea());
 			
 			alonealong.updateRestaurant(res);
 			
@@ -111,5 +106,14 @@ public class RestaurantController {
 		return "redirect:/eating";
 
 	}
-	
+	private byte[] getImgFile(RestaurantForm resForm) {
+		MultipartFile mf = resForm.getImgFile();
+		byte[] img = null;
+		try {
+			img = mf.getBytes();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return img;
+	}
 }

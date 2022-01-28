@@ -61,15 +61,7 @@ public class FoodController {
 			return "foodForm"; 
 		}
 		
-		
-		MultipartFile mf = foodForm.getImgFile();
-		byte[] img = null;
-		try {
-			img = mf.getBytes();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Food food = new Food(resId, "FOOD_ID.NEXTVAL", foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), img, foodForm.getMaxPeopleNum());
+		Food food = new Food(resId, "FOOD_ID.NEXTVAL", foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), getImgFile(foodForm), foodForm.getMaxPeopleNum());
 		alonealong.insertFood(food);
 		
 		List<Food> foodList = alonealong.getFoodListByRestaurant(resId);
@@ -88,14 +80,7 @@ public class FoodController {
 		System.out.println("update");
 		Food foodData = alonealong.getFood(foodId);
 		
-		
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;
-		String encodedString;
-        imagefile = foodData.getImgFile();
-        encodedString = encoder.encodeToString(imagefile);
-        foodData.setImg64(encodedString);
-		
+		encodeImg(foodData); //이미지 변경을 하지 않을 경우 기존의 이미지값을 저장하고있음.
 		
 		model.addAttribute("food", foodData);
 		return "foodForm";
@@ -118,14 +103,7 @@ public class FoodController {
 		if(foodForm.getImgFile() == null)
 			food = new Food(resId, foodId, foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), null, foodForm.getMaxPeopleNum());
 		else {
-			MultipartFile mf = foodForm.getImgFile();
-			byte[] img = null;
-			try {
-				img = mf.getBytes();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			food = new Food(resId, foodId, foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), img, foodForm.getMaxPeopleNum());
+			food = new Food(resId, foodId, foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), getImgFile(foodForm), foodForm.getMaxPeopleNum());
 		}
 			
 		alonealong.updateFood(food);
@@ -147,6 +125,23 @@ public class FoodController {
 		model.addAttribute("foodList", foodList);
 		return "redirect:/eating/{resId}";
 	}
-	
+	private void encodeImg(Food food){
+		Encoder encoder = Base64.getEncoder();
+		byte[] imagefile;
+		String encodedString;
+        imagefile = food.getImgFile();
+        encodedString = encoder.encodeToString(imagefile);
+        food.setImg64(encodedString);
+	}
+	private byte[] getImgFile(FoodForm foodForm) {
+		MultipartFile mf = foodForm.getImgFile();
+		byte[] img = null;
+		try {
+			img = mf.getBytes();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return img;
+	}
 	
 }

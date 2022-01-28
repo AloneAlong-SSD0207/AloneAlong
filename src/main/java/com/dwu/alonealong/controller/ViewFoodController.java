@@ -52,10 +52,8 @@ public class ViewFoodController {
 			String userId = user.getId();
 			model.put("userId", userId);
 			
-		}
-	
-		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId); 
-		model.put("foodList", foodList);
+		}	 
+		
 		if(foodCart == null) {
 			model.put("category1", "지역");
 			model.put("category2", "분류");
@@ -68,21 +66,12 @@ public class ViewFoodController {
 		model.put("totalPrice", foodCart.getSubTotal());
 		//System.out.println(foodCart.getFoodItemList().size());
 		
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;
-		String encodedString;
-        for(Food food : foodList) {
-        	imagefile = food.getImgFile();
-            encodedString = encoder.encodeToString(imagefile);
-            food.setImg64(encodedString);
-      
-        }
-        imagefile = res.getImgFile();
-        encodedString = encoder.encodeToString(imagefile);
-        res.setImg64(encodedString);
-        model.put("restaurant", res);
-
+        List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
+        encodeImgList(foodList);
+        encodeImg(res);
         
+        model.put("foodList", foodList);
+        model.put("restaurant", res);
 		return "restaurant";
 
 	}
@@ -132,24 +121,10 @@ public class ViewFoodController {
 		model.put("totalPrice", foodCart.getSubTotal());
 		System.out.println(foodCart.getFoodItemList().size());
 		
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;
-		String encodedString;
-        imagefile = res.getImgFile();
-        encodedString = encoder.encodeToString(imagefile);
-        res.setImg64(encodedString);
+		encodeImg(res);
         model.put("restaurant", res);
         
-        
-        PagedListHolder<FoodReview> pagedReviewList = new PagedListHolder<FoodReview>(reviewList);
-        pagedReviewList.setPageSize(3);
-        pagedReviewList.setPage(page - 1);
-        model.put("foodReviewList", pagedReviewList.getPageList());
-		model.put("foodReviewCount", reviewList.size());
-		
-		model.put("page", pagedReviewList.getPage() + 1);
-		model.put("startPage", (pagedReviewList.getPage() / 5) * 5 + 1);
-		model.put("lastPage", pagedReviewList.getPageCount());
+        pagingList(reviewList, model, page);
         
 		return "restaurantReview";
 	}
@@ -170,15 +145,39 @@ public class ViewFoodController {
 		model.put("totalPrice", foodCart.getSubTotal());
 		System.out.println(foodCart.getFoodItemList().size());
 		
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;  
-		String encodedString;
-        imagefile = res.getImgFile();
-        encodedString = encoder.encodeToString(imagefile);
-        res.setImg64(encodedString);
+
+        encodeImg(res);
         model.put("restaurant", res);
 		
 		return "togetherListTab";
 	}
+	private void encodeImg(Restaurant res){
+		Encoder encoder = Base64.getEncoder();
+		byte[] imagefile;
+		String encodedString;
+        imagefile = res.getImgFile();
+        encodedString = encoder.encodeToString(imagefile);
+        res.setImg64(encodedString);
+	}
+	private void encodeImgList(List<Food> list){
+		Encoder encoder = Base64.getEncoder();
+		byte[] imagefile;
+		String encodedString;
+        for(Food food : list) {
+        	imagefile = food.getImgFile();
+            encodedString = encoder.encodeToString(imagefile);
+            food.setImg64(encodedString);
+        }
+	}	
+	private void pagingList(List<FoodReview> reviewList, ModelMap model, int page) {
+		PagedListHolder<FoodReview> pagedReviewList = new PagedListHolder<FoodReview>(reviewList);
+        pagedReviewList.setPageSize(3);
+        pagedReviewList.setPage(page - 1);
+        model.put("foodReviewList", pagedReviewList.getPageList());
+		model.put("foodReviewCount", reviewList.size());
 		
+		model.put("page", pagedReviewList.getPage() + 1);
+		model.put("startPage", (pagedReviewList.getPage() / 5) * 5 + 1);
+		model.put("lastPage", pagedReviewList.getPageCount());
+	}
 }
