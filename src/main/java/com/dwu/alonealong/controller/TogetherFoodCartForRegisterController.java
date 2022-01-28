@@ -32,7 +32,7 @@ public class TogetherFoodCartForRegisterController {
 	}
 	
 	@RequestMapping("/togetherRegister/{resId}/addFoodToCart")
-	public String handleRequest(
+	public String addFoodCart(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,
@@ -50,30 +50,24 @@ public class TogetherFoodCartForRegisterController {
 				System.out.println("null들어왔다");
 			cart.addFood(item);
 			System.out.println("카트에 추가됨");
-		}		
-		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
+		}
 		
-		//음식 이미지
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;
-		String encodedString;
-        for(Food food : foodList) {
-        	imagefile = food.getImgFile();
-            encodedString = encoder.encodeToString(imagefile);
-            food.setImg64(encodedString);
-        }
+		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
+		getFoodsImage(foodList);
 		
 		model.put("foodList", foodList);
 		model.put("foodCart", cart.getAllFoodCartItems());
 		model.put("totalPrice", cart.getSubTotal());
+		
 		Restaurant res = alonealong.getRestaurantByResId(resId);
 		model.put("keywords", res.getResName()); //검색창에 레스토랑 이름 세팅하기
 		model.put("selectedRes", res); //선택된 레스토랑
+		
 		return "together/togetherRegisterForm";
 	}
 	
 	@RequestMapping("/togetherRegister/{resId}/updateFoodCartItem")
-	public String handleRequest2(
+	public String updateFoodCart(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,
@@ -82,29 +76,22 @@ public class TogetherFoodCartForRegisterController {
 		
 		cart.setQuantityByFoodId(request.getParameter("foodId"), Integer.parseInt(request.getParameter("quantity")));
 				
-		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId); 
+		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
+		getFoodsImage(foodList);
+		
 		model.put("foodList", foodList);
-		
-		//음식이미지
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;
-		String encodedString;
-        for(Food food : foodList) {
-        	imagefile = food.getImgFile();
-            encodedString = encoder.encodeToString(imagefile);
-            food.setImg64(encodedString);
-        }
-		
 		model.put("foodCart", cart.getAllFoodCartItems());
 		model.put("totalPrice", cart.getSubTotal());
+		
 		Restaurant res = alonealong.getRestaurantByResId(resId);
 		model.put("keywords", res.getResName()); //검색창에 레스토랑 이름 세팅하기
 		model.put("selectedRes", res); //선택된 레스토랑
+		
 		return "together/togetherRegisterForm";
 	}
 	
 	@RequestMapping("/togetherRegister/{resId}/deleteFoodCartItem")
-	public String handleRequest3(
+	public String deleteFoodCart(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,
@@ -114,8 +101,20 @@ public class TogetherFoodCartForRegisterController {
 		cart.removeFoodById((request.getParameter("foodId")));
 		
 		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
+		getFoodsImage(foodList);
 		
-		//음식 이미지
+		model.put("foodList", foodList);
+		model.put("foodCart", cart.getAllFoodCartItems());
+		model.put("totalPrice", cart.getSubTotal());
+		
+		Restaurant res = alonealong.getRestaurantByResId(resId);
+		model.put("keywords", res.getResName()); //검색창에 레스토랑 이름 세팅하기
+		model.put("selectedRes", res); //선택된 레스토랑
+		
+		return "together/togetherRegisterForm";
+	}
+	
+	public void getFoodsImage(List<Food> foodList) {
 		Encoder encoder = Base64.getEncoder();
 		byte[] imagefile;
 		String encodedString;
@@ -124,14 +123,6 @@ public class TogetherFoodCartForRegisterController {
             encodedString = encoder.encodeToString(imagefile);
             food.setImg64(encodedString);
         }
-		
-		model.put("foodList", foodList);
-		model.put("foodCart", cart.getAllFoodCartItems());
-		model.put("totalPrice", cart.getSubTotal());
-		Restaurant res = alonealong.getRestaurantByResId(resId);
-		model.put("keywords", res.getResName()); //검색창에 레스토랑 이름 세팅하기
-		model.put("selectedRes", res); //선택된 레스토랑
-		return "together/togetherRegisterForm";
 	}
 	
 }

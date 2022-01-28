@@ -8,6 +8,7 @@ import java.util.StringTokenizer;
 
 @SuppressWarnings("serial")
 public class Together implements Serializable {
+	public static final int MIN_HEAD_COUNT = 2;
 	
 	private String togetherId;
 	private String togetherName;
@@ -26,7 +27,7 @@ public class Together implements Serializable {
 	private List<TogetherMember> togetherMemberList = new ArrayList<TogetherMember>();
 	
 	public Together() {
-		this.headCount = 2;
+		this.headCount = MIN_HEAD_COUNT;
 	}
 	
 	public Together(String togetherId, String togetherName, int headCount, String togetherDate, String togetherTime,
