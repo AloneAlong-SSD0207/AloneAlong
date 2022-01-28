@@ -23,6 +23,8 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 public class ViewProductReviewController {
 	private AloneAlongFacade aloneAlong;
+	private static final int PAGE_SIZE = 3;
+	private static final int UNIT_PAGE_SIZE = 5;
 
 	@Autowired
 	public void setAloneAlong(AloneAlongFacade aloneAlong) {
@@ -64,7 +66,7 @@ public class ViewProductReviewController {
 			model.put("mostRatingOfReviews", "0");
 		}
 		PagedListHolder<ProductReview> pagedReviewList = new PagedListHolder<ProductReview>(reviewList);
-		pagedReviewList.setPageSize(3);
+		pagedReviewList.setPageSize(PAGE_SIZE);
 		pagedReviewList.setPage(page - 1);
 
 		product.setQuantity(quantity);
@@ -74,8 +76,11 @@ public class ViewProductReviewController {
 		model.put("sortTypeName", sortTypeName);
 		
 		model.put("page", pagedReviewList.getPage() + 1);
-		model.put("startPage", (pagedReviewList.getPage() / 5) * 5 + 1);
-		model.put("lastPage", pagedReviewList.getPageCount());
+		int startPage = (pagedReviewList.getPage() / UNIT_PAGE_SIZE) * UNIT_PAGE_SIZE + 1;
+		int lastPage = pagedReviewList.getPageCount();
+		model.put("startPage", startPage);
+		model.put("lastPage", lastPage);
+		model.put("nextStartPage", (startPage + UNIT_PAGE_SIZE > lastPage) ? 0 : startPage + UNIT_PAGE_SIZE);
 		
 		model.put("userId", userId);
 		return "productReview";

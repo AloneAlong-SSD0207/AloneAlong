@@ -14,7 +14,6 @@ public class CartItem implements Serializable {
   private int quantity;
   private int price;
   private int unitPrice;
-  private int shippingFee;
   private byte[] img;
   private String img64;
 
@@ -41,9 +40,6 @@ public class CartItem implements Serializable {
   public int getPrice() { return price; }
   public void setPrice(int price) { this.price = price; }
 
-  public int getShippingFee() { return shippingFee; }
-  public void setShippingFee(int shippingFee) { this.shippingFee = shippingFee; }
-
   public byte[] getImg() { return img; }
   public void setImg(byte[] img) { this.img = img; }
 
@@ -54,9 +50,6 @@ public class CartItem implements Serializable {
   public int getUnitPrice() {
 	  int totalPrice = 0;
 	  totalPrice += quantity * price;
-//	  if (totalPrice <= 30000) {
-//		  totalPrice += shippingFee;
-//	  }
 	  this.unitPrice = totalPrice;
 	  return unitPrice;
   }
@@ -71,6 +64,6 @@ public class CartItem implements Serializable {
 @Override
 public String toString() {
 	return "CartItem [cartItemId=" + cartItemId + ", userId=" + userId + ", productId=" + productId + ", quantity="
-			+ quantity + ", price=" + price + ", shippingFee=" + shippingFee + "]";
+			+ quantity + ", price=" + price + "]";
 }
 }

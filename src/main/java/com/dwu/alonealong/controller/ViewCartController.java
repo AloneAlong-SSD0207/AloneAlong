@@ -6,6 +6,7 @@ import java.util.Base64.Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -45,9 +46,8 @@ public class ViewCartController {
 		}
 
 		model.put("productsPrice", totalPrice);
-		if (totalPrice != 0 && totalPrice < 30000) {
-			shippingFee = 3000;
-			totalPrice += shippingFee;
+		if (totalPrice != 0 && totalPrice <  Product.FREE_SHIPPING_PRICE) {
+			totalPrice += Product.SHIPPING_FEE;
 		}
 		model.put("shippingFee", shippingFee);
 		model.put("totalPrice", totalPrice);
