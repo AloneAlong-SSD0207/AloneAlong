@@ -39,7 +39,6 @@ public interface AloneAlongFacade {
 	List<Product> getProductList(int pcId, String sortType);	
 	List<Product> searchProductList(String keywords);
 	Product getProduct(String productId);
-	boolean checkStock(String productId, int quantity);
 	void updateProduct(Product product);
 	
 	//PRODUCT Review

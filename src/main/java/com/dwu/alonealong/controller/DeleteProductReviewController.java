@@ -28,7 +28,6 @@ public class DeleteProductReviewController {
 	
 	@RequestMapping("/shop/review/delete")
 	public String handleRequest(HttpServletRequest request,
-//			@ModelAttribute("userSession") UserSession userSession,
 			@RequestParam(value="productId") String productId,
 			@RequestParam(value="reviewId") String reviewId,
 			ModelMap model) throws Exception {
@@ -47,5 +46,4 @@ public class DeleteProductReviewController {
 
 		return "redirect:/shop/" + productId + "/review";
 	}
-
-}//.
+}

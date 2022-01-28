@@ -28,7 +28,7 @@ public class ViewCartController {
 	
 	@RequestMapping("/cart")
 	public String handleRequest(HttpServletRequest request,
-			@RequestParam(value="cartItemId", required=false) String cartItemId,  
+			@RequestParam(value="productId", required=false) String productId,
 			@RequestParam(value="stockError", required=false) boolean stockError,  
 			ModelMap model) throws Exception {
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
@@ -54,8 +54,7 @@ public class ViewCartController {
 		model.put("cart", cart);
 
         if(stockError == true) {
-    		model.put("cartItemName", aloneAlong.getCartItem(cartItemId).getProductName());
-    		System.out.println("?" + aloneAlong.getCartItem(cartItemId).getProductName());
+    		model.put("cartItemName", aloneAlong.getProduct(productId).getProductName());
         }
 		return "thyme/Cart";
 //		return "productCart";
