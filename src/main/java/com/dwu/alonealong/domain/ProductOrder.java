@@ -83,6 +83,15 @@ public class ProductOrder implements Serializable {
 
   public String getShipEmail() { return shipEmail; }
   public void setShipEmail(String shipEmail) { this.shipEmail = shipEmail; }
+
+  public int getShippingFee() {
+    if (getTotalPrice() < Product.FREE_SHIPPING_PRICE){
+      return Product.SHIPPING_FEE;
+    }
+    else{
+      return 0;
+    }
+  }
   
   @Override
   public String toString() {
