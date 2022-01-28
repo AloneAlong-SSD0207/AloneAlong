@@ -6,6 +6,7 @@ import java.util.Base64.Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.domain.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,7 +29,7 @@ public class ViewCartController {
 	
 	@RequestMapping("/cart")
 	public String handleRequest(HttpServletRequest request,
-			@RequestParam(value="cartItemId", required=false) String cartItemId,  
+			@RequestParam(value="productId", required=false) String productId,
 			@RequestParam(value="stockError", required=false) boolean stockError,  
 			ModelMap model) throws Exception {
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
@@ -45,17 +46,15 @@ public class ViewCartController {
 		}
 
 		model.put("productsPrice", totalPrice);
-		if (totalPrice != 0 && totalPrice < 30000) {
-			shippingFee = 3000;
-			totalPrice += shippingFee;
+		if (totalPrice != 0 && totalPrice <  Product.FREE_SHIPPING_PRICE) {
+			totalPrice += Product.SHIPPING_FEE;
 		}
 		model.put("shippingFee", shippingFee);
 		model.put("totalPrice", totalPrice);
 		model.put("cart", cart);
 
         if(stockError == true) {
-    		model.put("cartItemName", aloneAlong.getCartItem(cartItemId).getProductName());
-    		System.out.println("?" + aloneAlong.getCartItem(cartItemId).getProductName());
+    		model.put("cartItemName", aloneAlong.getProduct(productId).getProductName());
         }
 		return "thyme/Cart";
 //		return "productCart";

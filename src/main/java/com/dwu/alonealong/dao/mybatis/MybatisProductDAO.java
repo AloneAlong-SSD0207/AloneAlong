@@ -37,16 +37,7 @@ public class MybatisProductDAO implements ProductDAO{
 	public Product getProduct(String productId) throws DataAccessException{
 	    return productMapper.getProduct(productId);
 	}
-	
-	public boolean checkStock(String productId, int quantity) throws DataAccessException{
-		Product product = productMapper.getProduct(productId);
-		if(product.getProductStock() >= quantity) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
+
 	public void updateProduct(Product product) throws DataAccessException{
 		productMapper.updateProduct(product);
 	}

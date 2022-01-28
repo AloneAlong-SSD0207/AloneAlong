@@ -16,7 +16,7 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 
 @Controller
 @SessionAttributes({"userSession"})
-public class editCartItemController {
+public class CartItemController {
 	private AloneAlongFacade aloneAlong;
 
 	@Autowired
@@ -57,9 +57,9 @@ public class editCartItemController {
 		}
 		Product product = aloneAlong.getProduct(cartItem.getProductId());
 		cartItem.setQuantity(quantity);
-		
-		if(!aloneAlong.checkStock(cartItem.getProductId(), quantity)) {
-			return "redirect:/cart?stockError=true&cartItemId=" + cartItemId + "&stock=" + product.getProductStock();
+		int stock = product.getProductStock();
+		if(stock < quantity){
+			return "redirect:/cart?stockError=true&productId=" + cartItem.getProductId() + "&stock=" + stock;
 		}
 		aloneAlong.updateCartItem(cartItem);
 		return "redirect:/cart";
@@ -80,22 +80,22 @@ public class editCartItemController {
 		}
 		String userId = userSession.getUser().getId();
 		Product product = aloneAlong.getProduct(productId);
-		System.out.println(product);
+		int stock = product.getProductStock();
 		
 		product.setQuantity(quantity);
 		model.put("product", product);
 		model.put("pcId", product.getPcId());
 		
 		if(type.equals("list")) {
-			if(!aloneAlong.checkStock(productId, quantity)) {
-				return "redirect:/shop?stockError=true&insertProductId=" + productId + "&stock=" + product.getProductStock() + "&pcId=" + product.getPcId() + "&page=" + page;
+			if(stock < quantity){
+				return "redirect:/shop?stockError=true&insertProductId=" + productId + "&stock=" + stock + "&pcId=" + product.getPcId() + "&page=" + page;
 			}
 			aloneAlong.insertCartItem(productId, quantity, userId);
 			return "redirect:/shop?insertCart=true&pcId=" + product.getPcId() + "&page=" + page;
 		}
 		else if(type.equals("product")) {
-			if(!aloneAlong.checkStock(productId, quantity)) {
-				return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + product.getProductStock();
+			if(stock < quantity){
+				return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + stock;
 			}
 			aloneAlong.insertCartItem(productId, quantity, userId);
 			return "redirect:/shop/" + productId + "?insertCart=true";

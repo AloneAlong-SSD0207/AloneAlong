@@ -3,14 +3,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script>
-function test() {	// click event handler for <td> including price
-	$("#quantity").val(21);
-};
 function changeQuantity(){
 	var nowQuantity = $("#quantity").val();
 	var totalPrice = ${product.productPrice} * nowQuantity;
-	if (totalPrice < 30000) {
-	  totalPrice += ${product.shippingFee};
+	if (totalPrice < ${product.getFreeShippingPrice()}) {
+	  totalPrice += ${product.getShippingFee()};
 	}
 	totalPrice = String(totalPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	$("#totalPrice").text(totalPrice);
@@ -37,8 +34,9 @@ function changeQuantity(){
 				<input class="form-control text-center w-25" onchange="changeQuantity()" name="quantity" id="quantity" type="number" value="${product.quantity}" min="1">
 			</p>
 			<p class="row px-3 mb-2"><span class="border-right pr-4 mr-4">배송비</span>
-				<fmt:formatNumber value="${product.shippingFee}" pattern="#,###,###"/>원</p>
-				<small class="text-muted">30,000원 이상 구매시 무료 배송</small>
+				<fmt:formatNumber value="${product.getShippingFee()}" pattern="#,###,###"/>원</p>
+				<small class="text-muted">
+					<fmt:formatNumber value="${product.getFreeShippingPrice()}" pattern="#,###,###"/>원 이상 구매시 무료 배송</small>
 		</div>
 		
 		<!-- 임시 -->

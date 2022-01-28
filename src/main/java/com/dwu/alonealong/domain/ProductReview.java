@@ -5,6 +5,7 @@ import java.util.Date;
 
 @SuppressWarnings("serial")
 public class ProductReview implements Serializable {
+  public final static int MAX_CONTENT_SIZE = 300;
 
   /* Private Fields */
   private String reviewId;
