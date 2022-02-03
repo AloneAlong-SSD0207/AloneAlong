@@ -2,6 +2,7 @@ package com.dwu.alonealong.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.exception.UserNotMatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -36,11 +37,10 @@ public class DeleteProductReviewController {
 			return "redirect:/login";
 		}
 		String userId = userSession.getUser().getId();
-		
-		//product를 구매한 user인지 검사
+
 		ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
-		if(!productReview.getUserId().equals(userId)) {
-			return "redirect:/error";
+		if(!productReview.getUserId().equals(userId)){
+			throw new UserNotMatchException();
 		}
 		this.aloneAlong.deleteProductReview(reviewId);
 

@@ -3,11 +3,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script languae="javaScript">
 $(document).ready(function() {
-	$("#stockModal").modal("show");
+	// $("#stockModal").modal("show");
 	$("#recommendReviewModal").modal("show");
 });
 </script>
-<c:if test="${param.stockError == true}">
+<%--<c:if test="${stockError == true}">--%>
 <div class="modal fade" id="stockModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content pb-4">
@@ -18,12 +18,12 @@ $(document).ready(function() {
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<div class="modal-body text-center">현재 <span class="text-green">${insertProductName}</span>의 재고수량은
-				<span class="text-orange">${param.stock}</span>개 입니다.</div>
+			<div class="modal-body text-center">현재 <span class="text-green" id="pName"></span>의 재고수량은
+				<span class="text-orange" id="pStock"></span>개 입니다.</div>
 		</div>
 	</div>
 </div>
-</c:if>
+<%--</c:if>--%>
 <c:if test="${param.recommendError == true}">
 <div class="modal fade" id="recommendReviewModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">

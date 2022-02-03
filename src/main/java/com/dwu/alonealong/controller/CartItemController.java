@@ -2,6 +2,8 @@ package com.dwu.alonealong.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.exception.NullProductException;
+import com.dwu.alonealong.exception.StockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.dwu.alonealong.domain.CartItem;
 import com.dwu.alonealong.domain.Product;
 import com.dwu.alonealong.service.AloneAlongFacade;
+import com.dwu.alonealong.exception.UserNotMatchException;
 
 @Controller
 @SessionAttributes({"userSession"})
@@ -32,10 +35,13 @@ public class CartItemController {
 		if(userSession == null) {
 			return "redirect:/login";
 		}
-		
+
 		CartItem cartItem = aloneAlong.getCartItem(cartItemId);
+		if(cartItem == null){
+			throw new NullProductException();
+		}
 		if(!userSession.getUser().getId().equals(cartItem.getUserId())) {
-			return  "redirect:/error";
+			throw new UserNotMatchException();
 		}
 		this.aloneAlong.deleteCartItem(cartItemId);
 		
@@ -52,9 +58,13 @@ public class CartItemController {
 			return "redirect:/login";
 		}
 		CartItem cartItem = aloneAlong.getCartItem(cartItemId);
-		if(!userSession.getUser().getId().equals(cartItem.getUserId())) {
-			return  "redirect:/error";
+		if(cartItem == null){
+			throw new NullProductException();
 		}
+		if(!userSession.getUser().getId().equals(cartItem.getUserId())) {
+			throw new UserNotMatchException();
+		}
+
 		Product product = aloneAlong.getProduct(cartItem.getProductId());
 		cartItem.setQuantity(quantity);
 		int stock = product.getProductStock();
@@ -72,7 +82,8 @@ public class CartItemController {
 			@PathVariable("productId") String productId,
 			@PathVariable("type") String type, 
 			@RequestParam(value="quantity", defaultValue="1") int quantity, 
-			@RequestParam(value="page", defaultValue="1") String page, 
+			@RequestParam(value="page", defaultValue="1") String page,
+			@RequestParam(value="sortType", required=false) String sortType,
 			ModelMap model) throws Exception {
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
 		if(userSession == null) {
@@ -88,18 +99,18 @@ public class CartItemController {
 		
 		if(type.equals("list")) {
 			if(stock < quantity){
-				return "redirect:/shop?stockError=true&insertProductId=" + productId + "&stock=" + stock + "&pcId=" + product.getPcId() + "&page=" + page;
+				throw new StockException();
 			}
 			aloneAlong.insertCartItem(productId, quantity, userId);
-			return "redirect:/shop?insertCart=true&pcId=" + product.getPcId() + "&page=" + page;
+			return "redirect:/shop?insertCart=true&pcId=" + product.getPcId() + "&page=" + page + "&sortType=" + sortType;
 		}
 		else if(type.equals("product")) {
 			if(stock < quantity){
-				return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + stock;
+				throw new StockException();
 			}
 			aloneAlong.insertCartItem(productId, quantity, userId);
 			return "redirect:/shop/" + productId + "?insertCart=true";
 		}
-		return "error";
+		throw new Exception("올바르지 않은 타입입니다.");
 	}
 }
