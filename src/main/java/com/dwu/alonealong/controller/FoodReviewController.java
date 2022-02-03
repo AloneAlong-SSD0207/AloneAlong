@@ -1,6 +1,5 @@
 package com.dwu.alonealong.controller;
 
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,11 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodReview;
-import com.dwu.alonealong.domain.Review;
 import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
 
@@ -32,10 +28,8 @@ public class FoodReviewController {
 	@RequestMapping("/eating/{resId}/writeReview")
 	@Transactional
 	public String insertReview(
-//			@ModelAttribute("food") FoodForm foodForm,
 			@PathVariable("resId") String resId,
 			HttpServletRequest request,
-//			BindingResult bindingResult,
 			Model model) {
 	
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
@@ -49,8 +43,7 @@ public class FoodReviewController {
 
 		alonealong.insertFoodReview(foodReview);
 		alonealong.updateAvgRating(rating, resId);
-		//식당 평균별점 update 시키는 코드.
-		System.out.println("insertReview 진행");
+
 		return "redirect:/eating/{resId}/RestaurantReview";
 
 	}
