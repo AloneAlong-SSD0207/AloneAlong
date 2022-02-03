@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public class TogetherMember implements Serializable {
-
+	public static final int IS_NOT_HOST = 0;
+	public static final int IS_HOST = 1;
+	
 	private String togetherMemberId;
 	private String userId;
 	private String togetherId;

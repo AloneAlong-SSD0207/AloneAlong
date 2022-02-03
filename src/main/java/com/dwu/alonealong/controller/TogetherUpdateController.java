@@ -29,8 +29,7 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @SessionAttributes({"sessionFoodCart"})
 @Controller
 public class TogetherUpdateController {
-	public static final int GATHERING = 0;
-	public static final int GATHERED = 1;
+	
 	
 	private AloneAlongFacade aloneAlong;
 	
@@ -129,7 +128,7 @@ public class TogetherUpdateController {
 		if(resId == null) return "redirect:/togetherUpdate/{togetherId}";
 		
 		//together 수정
-		Together newTogether = new Together(togId, name, headCount, date, time, sex, age, description, resId, GATHERING, cart.getSubTotal() / headCount);
+		Together newTogether = new Together(togId, name, headCount, date, time, sex, age, description, resId, Together.GATHERING, cart.getSubTotal() / headCount);
 		aloneAlong.updateTogether(newTogether);
 		
 		updateFoods(togId, cart, newTogether); //음식 수정

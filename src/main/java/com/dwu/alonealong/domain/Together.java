@@ -9,6 +9,8 @@ import java.util.StringTokenizer;
 @SuppressWarnings("serial")
 public class Together implements Serializable {
 	public static final int MIN_HEAD_COUNT = 2;
+	public static final int GATHERING = 0;
+	public static final int GATHERED = 1;
 	
 	private String togetherId;
 	private String togetherName;
