@@ -11,9 +11,9 @@ $(function(){
 		$("#cancelModal").modal("show");
 		$("#cancelOrder").attr("href","<c:url value='/eating/order/delete'><c:param name="orderId" value='${foodOrder.orderId}'/></c:url>");
 	});
-	$("#review${foodOrder.resId}").click(function() {
+	$("#review${foodOrder.orderId}").click(function() {
 		$("#reviewModal").modal("show");
-		$("#reviewOrder").attr("action","<c:url value="/eating/${foodOrder.resId}/writeReview"/>");
+		$("#reviewOrder").attr("action","<c:url value="/eating/${foodOrder.orderId}/writeReview"/>");
 	});
 
 });
@@ -98,7 +98,7 @@ $(document).ready(function() {
 </div>
 	<div class="col-md-12">
 		<div class="form-col float-right">
-			<a id="review${foodOrder.resId}">
+			<a id="review${foodOrder.orderId}">
 				<button class="btn btn-sm btn-outline-success mb-1" data-toggle="modal" data-target="#exampleModal"
 					id="advanced-set-submit">리뷰 작성</button>
 			</a>
