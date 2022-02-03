@@ -40,7 +40,7 @@ public class FoodCartController {
 	
 	
 	@RequestMapping("/eating/{resId}/addFoodToCart")
-	public String handleRequest(
+	public String addFoodToCart(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,
@@ -62,7 +62,7 @@ public class FoodCartController {
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping("/eating/{resId}/updateFoodCartItem")
-	public String handleRequest2(
+	public String updateFoodCartItem(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,
@@ -75,7 +75,7 @@ public class FoodCartController {
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping("/eating/{resId}/deleteFoodCartItem")
-	public String handleRequest3(
+	public String deleteFoodCartItem(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,

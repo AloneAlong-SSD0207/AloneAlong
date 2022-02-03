@@ -38,7 +38,7 @@ public class RestaurantController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String form(
+	public String restaurantForm(
 			@ModelAttribute("restaurant") RestaurantForm resForm,
 			HttpServletRequest request,
 			Model model) {
@@ -55,7 +55,7 @@ public class RestaurantController {
 	
 	//insert, update 모두 해결
 	@RequestMapping(method = RequestMethod.POST)
-	public String insert(
+	public String insertAndUpdateRestaurant(
 			@ModelAttribute("restaurant") RestaurantForm resForm,
 			BindingResult result,
 			HttpServletRequest request,

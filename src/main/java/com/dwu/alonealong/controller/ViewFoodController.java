@@ -39,7 +39,7 @@ public class ViewFoodController {
 	
 	//가게 선택 resId로
 	@RequestMapping("/eating/{resId}")
-	public String resFood(
+	public String viewFoodListByResId(
 			@PathVariable("resId") String resId,
 			@SessionAttribute(value="sessionFoodCart", required=false) FoodCart foodCart,
 			HttpServletRequest request,
@@ -79,7 +79,7 @@ public class ViewFoodController {
 	
 	//리뷰탭
 	@RequestMapping("/eating/{resId}/RestaurantReview")
-	public String handleRequest2(
+	public String viewReviewListByResId(
 			@RequestParam(value="page", defaultValue="1") int page, 
 			@PathVariable("resId") String resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
@@ -131,7 +131,7 @@ public class ViewFoodController {
 	
 	//togetherList 탭
 	@RequestMapping("/eating/{resId}/togetherList")
-	public String listTogether(
+	public String viewTogetherListByResId(
 			@PathVariable("resId") String resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
 			ModelMap model

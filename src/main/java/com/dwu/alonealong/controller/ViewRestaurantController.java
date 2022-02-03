@@ -34,7 +34,7 @@ public class ViewRestaurantController {
 	}
 
 	@RequestMapping("/eating")
-	public String handleRequest(
+	public String viewRestaurantWithSort(
 			@RequestParam(value="page", defaultValue="1") int page, 
 			@RequestParam(value="category1",  defaultValue="지역") String category1,
 			@RequestParam(value="category2",  defaultValue="분류") String category2,

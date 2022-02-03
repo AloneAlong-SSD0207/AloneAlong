@@ -40,7 +40,7 @@ public class FoodController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String form(
+	public String insertFoodForm(
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId) {
 		return "foodForm";
@@ -49,7 +49,7 @@ public class FoodController {
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String insert(
+	public String insertFood(
 			@ModelAttribute("food") FoodForm foodForm,
 			BindingResult result,
 			@PathVariable("resId") String resId,
@@ -72,7 +72,7 @@ public class FoodController {
 	}
 	
 	@RequestMapping(value = "/update", method = RequestMethod.GET) 
-	public String form2(
+	public String updateFoodForm(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId,
@@ -86,7 +86,7 @@ public class FoodController {
 		return "foodForm";
 	}
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(
+	public String updateFood(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("food") FoodForm foodForm,
 			@PathVariable("resId") String resId,
@@ -113,7 +113,7 @@ public class FoodController {
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping(value = "/delete")
-	public String delete(
+	public String deleteFood(
 			@RequestParam("foodId") String foodId,
 			@PathVariable("resId") String resId,
 //			BindingResult bindingResult,

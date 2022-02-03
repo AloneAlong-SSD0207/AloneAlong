@@ -31,7 +31,7 @@ public class FoodReviewController {
 		
 	@RequestMapping("/eating/{resId}/writeReview")
 	@Transactional
-	public String insert(
+	public String insertReview(
 //			@ModelAttribute("food") FoodForm foodForm,
 			@PathVariable("resId") String resId,
 			HttpServletRequest request,
