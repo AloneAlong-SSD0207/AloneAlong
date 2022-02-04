@@ -4,20 +4,14 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Base64.Encoder;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCart;
 import com.dwu.alonealong.domain.Restaurant;
 import com.dwu.alonealong.service.AloneAlongFacade;
@@ -34,7 +28,7 @@ public class ViewRestaurantController {
 	}
 
 	@RequestMapping("/eating")
-	public String handleRequest(
+	public String viewRestaurantWithSort(
 			@RequestParam(value="page", defaultValue="1") int page, 
 			@RequestParam(value="category1",  defaultValue="지역") String category1,
 			@RequestParam(value="category2",  defaultValue="분류") String category2,

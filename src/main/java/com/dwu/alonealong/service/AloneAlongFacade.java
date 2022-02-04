@@ -93,7 +93,7 @@ public interface AloneAlongFacade {
 	Food getFood(String foodId);
 
 	void insertFoodOrder(FoodOrder order);
-	FoodOrder getFoodOrder(int orderId); //사용x
+	FoodOrder getFoodOrder(String orderId); 
 	List<FoodOrder> getFoodOrdersByUserId(String userId);
 	void deleteFoodOrder(String orderId);
 	

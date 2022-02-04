@@ -4,6 +4,18 @@
 <mapper namespace="com.dwu.alonealong.dao.mybatis.mapper.FoodOrderMapper">
 
   <cache />
+  
+  <select id="getFoodOrder" resultType="FoodOrder">
+     SELECT
+     	ORDER_ID as orderId,
+     	RESERVE_TYPE as reserveType,
+    	VISIT_DATE as visitDate,
+    	FOOD_ID as foodId,
+    	RES_ID as resId
+    FROM FOOD_ORDER
+    WHERE ORDER_ID = #{orderId}
+  </select>
+  
 
   <insert id="insertFoodOrder">
     INSERT INTO FOOD_ORDER (ORDER_ID, RESERVE_TYPE, VISIT_DATE, FOOD_ID, RES_ID)

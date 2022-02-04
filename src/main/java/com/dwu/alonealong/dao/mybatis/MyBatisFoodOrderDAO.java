@@ -24,7 +24,7 @@ public class MyBatisFoodOrderDAO implements FoodOrderDAO{
 	}
 
 	@Override
-	public FoodOrder getFoodOrder(int orderId) {
+	public FoodOrder getFoodOrder(String orderId) {
 		return foodOrderMapper.getFoodOrder(orderId);
 	}
 
