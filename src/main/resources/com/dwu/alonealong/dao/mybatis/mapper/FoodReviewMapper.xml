@@ -8,7 +8,7 @@
   <select id="getFoodReviewListByResId" resultType="FoodReview">
      SELECT
      	REVIEW_ID as reviewId,
-    	FOOD_ID as foodId,
+    	ORDER_ID as orderId,
     	RES_ID as resId, 
     	USER_ID as userId,
     	REVIEW_DATE as reviewDate,
@@ -21,8 +21,8 @@
   </select>
 
   <insert id="insertFoodReview">
-    INSERT INTO FOOD_REVIEW (REVIEW_ID, FOOD_ID, RES_ID, USER_ID, REVIEW_DATE, REVIEW_RATING, REVIEW_CONTENTS, REVIEW_RECOMMEND)
-    VALUES ('rev' || REVIEWID_SEQ.NEXTVAL, 'none', #{resId}, #{userId}, SYSDATE, #{rating}, #{contents}, #{recommend})
+    INSERT INTO FOOD_REVIEW (REVIEW_ID, ORDER_ID, RES_ID, USER_ID, REVIEW_DATE, REVIEW_RATING, REVIEW_CONTENTS, REVIEW_RECOMMEND)
+    VALUES ('rev' || REVIEWID_SEQ.NEXTVAL, #{orderId}, #{resId}, #{userId}, SYSDATE, #{rating}, #{contents}, #{recommend})
   </insert>
   
 
