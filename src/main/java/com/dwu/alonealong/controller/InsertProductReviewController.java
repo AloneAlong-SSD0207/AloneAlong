@@ -2,6 +2,8 @@ package com.dwu.alonealong.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.exception.ContentSizeException;
+import com.dwu.alonealong.exception.UserNotMatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -38,8 +40,11 @@ public class InsertProductReviewController {
 			return "redirect:/login";
 		}
 		String userId = userSession.getUser().getId();
-		if(!aloneAlong.checkUsersOrder(userId, productId) || contents.length() > ProductReview.MAX_CONTENT_SIZE) {
-			return "redirect:/error";
+		if(!aloneAlong.checkUsersOrder(userId, productId)){
+			throw new UserNotMatchException();
+		}
+		if (contents.length() > ProductReview.MAX_CONTENT_SIZE) {
+			throw new ContentSizeException();
 		}
 		
 		ProductReview productReview = new ProductReview();

@@ -12,8 +12,27 @@ function changeQuantity(){
 	totalPrice = String(totalPrice).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	$("#totalPrice").text(totalPrice);
 };
+function insertCart(){
+	const nowQuantity = $("#quantity").val();
+	if(nowQuantity > ${product.productStock}){
+		$("#pStock").text('${product.productStock}');
+		$("#pName").text('${product.productName}');
+		$("#stockModal").modal("show");
+	}
+	else{
+		location.href="/cart/insert/" + ${productId} + "/product?quantity=" + nowQuantity;
+	}
+};
+function order(){
+	const nowQuantity = $("#quantity").val();
+	if(nowQuantity > ${product.productStock}){
+		$("#stockModal").modal("show");
+	}
+	else{
+		location.href="/shop/order?type=product&productId=${productId}&quantity=" + nowQuantity;
+	}
+};
 </script>
-<form method="get">
 <div class="row mx-5 mb-5">
 	<!-- 사진 -->
 	<div class="col-md-6 my-3">
@@ -47,13 +66,12 @@ function changeQuantity(){
 				<span id="totalPrice"><fmt:formatNumber value="${product.getUnitPrice()}" pattern="#,###,###"/></span></b>원</p>
 			<div class="row justify-content-around">
 				<button type="submit" class="btn btn-green rounded-pill"
-					onclick="javascript: form.action='/cart/insert/${productId}/product';">
+						onclick="insertCart()">
 					<small><i class="fas fa-shopping-cart pr-1"></i></small> 장바구니</button>
 				<button type="submit" class="btn btn-orange rounded-pill"
-					onclick="javascript: form.action='/shop/order';">
+					onclick="order()">
 					<small> <i class="far fa-credit-card pr-1"></i></small> 결제하기</button>
 			</div>
 		</div>
 	</div>
 </div>
-</form>
