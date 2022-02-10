@@ -20,6 +20,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.dwu.alonealong.domain.FoodCart;
 import com.dwu.alonealong.domain.FoodCartItem;
+import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.domain.Payment;
 import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
@@ -52,10 +53,7 @@ public class FoodOrderController {
 		User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
 		Payment paymentMethod = aloneAlong.getCard(userSession.getUser().getId());
 
-		Encoder encoder = Base64.getEncoder();
-		for(FoodCartItem item : cart.getFoodItemList()) {
-			item.getFood().setImg64(encoder.encodeToString(item.getFood().getImgFile()));
-		}
+		FoodFunction.encodeImgList(cart.getFoodItemList());
 		
 		//만약 sessionFoodCart.size가 0이면 order창으로 넘어가지 못하도록.
 		model.put("foodCart", cart.getAllFoodCartItems());

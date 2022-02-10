@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.dwu.alonealong.domain.FoodCart;
+import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.domain.Restaurant;
 import com.dwu.alonealong.service.AloneAlongFacade;
 
@@ -58,30 +59,10 @@ public class ViewRestaurantController {
 		model.put("category1", category1);
 		model.put("category2", category2);
 
-		encodeImgList(restaurantList);
-		pagingList(restaurantList, model, page);
+		FoodFunction.encodeImgList(restaurantList);
+		FoodFunction.pagingRestaurantList(restaurantList, model, page);
 		
 		return "restaurantList";
 	}
-	private void pagingList(List<Restaurant> restaurantList, ModelMap model, int page) {
-		PagedListHolder<Restaurant> pagedRestaurantList = new PagedListHolder<Restaurant>(restaurantList);
-        pagedRestaurantList.setPageSize(6);
-        pagedRestaurantList.setPage(page - 1);
-        model.put("restaurantList", pagedRestaurantList.getPageList());
-		model.put("restaurantCount", restaurantList.size());
-		
-		model.put("page", pagedRestaurantList.getPage() + 1);
-		model.put("startPage", (pagedRestaurantList.getPage() / 5) * 5 + 1);
-		model.put("lastPage", pagedRestaurantList.getPageCount());
-	}
-	private void encodeImgList(List<Restaurant> list){
-		Encoder encoder = Base64.getEncoder();
-        for(Restaurant res : list) {     	
-        	byte[] imagefile = res.getImgFile();
-        	if(imagefile == null)
-        		continue;
-            String encodedString = encoder.encodeToString(imagefile);
-            res.setImg64(encodedString);
-        }
-	}
+	
 }
