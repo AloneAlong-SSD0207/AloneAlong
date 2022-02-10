@@ -35,10 +35,6 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 @SessionAttributes({"retaurantList", "sessionFoodCart"})
 public class TogetherRegisterController {
-	public static final int GATHERING = 0;
-	public static final int GATHERED = 1;
-	public static final int IS_NOT_HOST = 0;
-	public static final int IS_HOST = 1;
 	
 	private AloneAlongFacade aloneAlong;
 	
@@ -115,7 +111,7 @@ public class TogetherRegisterController {
 			return "redirect:/togetherRegister";
 		
 		//together 넣기		
-		Together together = new Together("TOG_ID.NEXTVAL", name, headCount, date, time, sex, age, description, resId, GATHERING, cart.getSubTotal() / headCount);
+		Together together = new Together("TOG_ID.NEXTVAL", name, headCount, date, time, sex, age, description, resId, Together.GATHERING, cart.getSubTotal() / headCount);
 		aloneAlong.insertTogether(together);
 		
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
@@ -161,7 +157,7 @@ public class TogetherRegisterController {
 	}
 	
 	public void insertHostIntoTogether(User user, Together together) {
-		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), IS_HOST);
+		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), TogetherMember.IS_HOST);
 		aloneAlong.insertTogetherMember(togetherMember);
 	}
 	

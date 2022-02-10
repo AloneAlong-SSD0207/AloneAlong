@@ -2,6 +2,8 @@ package com.dwu.alonealong.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.exception.ContentSizeException;
+import com.dwu.alonealong.exception.UserNotMatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,7 +29,7 @@ public class UpdateProductReviewController {
 	}
 	
 	@RequestMapping("/shop/review/update")
-	public RedirectView handleRequest(HttpServletRequest request,
+	public String handleRequest(HttpServletRequest request,
 //			@ModelAttribute("userSession") UserSession userSession,
 			@RequestParam(value="productId") String productId,
 			@RequestParam(value="reviewId") String reviewId,
@@ -36,20 +38,23 @@ public class UpdateProductReviewController {
 			ModelMap model) throws Exception {
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
 		if(userSession == null) {
-			return new RedirectView("error");
+			return "redirect:/login";
 		}
 		String userId = userSession.getUser().getId();
 		
 		//product를 구매한 user인지 검사, 리뷰 내용 검사
 		ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
-		if(!productReview.getUserId().equals(userId) || contents.length() > ProductReview.MAX_CONTENT_SIZE) {
-			return new RedirectView("error");
+		if(!aloneAlong.checkUsersOrder(userId, productId)){
+			throw new UserNotMatchException();
+		}
+		if (contents.length() > ProductReview.MAX_CONTENT_SIZE) {
+			throw new ContentSizeException();
 		}
 		productReview.setRating(rating);
 		productReview.setReviewContents(contents);
 		aloneAlong.updateProductReview(productReview);
-		
-		return new RedirectView("/shop/" + productId + "/review");
+
+		return "redirect:/shop/" + productId + "/review";
 	}
 
 }

@@ -11,6 +11,19 @@ b {color:#29A65F;}
 .card-body>div>a{ z-index:1;}
 .sold-out { background-color:gray; color:#FFFFFF; width:50px; padding: 2px 15px 2px 15px;}
 </style>
+<script>
+function insertCart(stock, product, id){
+	const nowQuantity = $("#quantity").val();
+	if(nowQuantity > stock){
+		$("#pStock").text(stock);
+		$("#pName").text(product);
+		$("#stockModal").modal("show");
+	}
+	else{
+		location.href="/cart/insert/" + id + "/list?pcId=${pcId}&page=${page}&sortType=${param.sortType}";
+	}
+};
+</script>
 
 <!-- 물품 목록 -->
 <div class="row px-5 mb-lg-5 justify-content-between">
@@ -18,6 +31,7 @@ b {color:#29A65F;}
 <c:if test="${idx.index % 3 == 0}">
 </div>
 <div class="row px-5 mb-lg-5 justify-content-between">
+<input type="hidden"  id="quantity" value="1"/>
 </c:if>
 	<input type="hidden" name="pcId" value="${param.pcId}"/>
 	<input type="hidden" name="sortType" value="${param.sortType}"/>
@@ -29,7 +43,8 @@ b {color:#29A65F;}
 			<div class="card-body">
 				<div class="d-flex justify-content-between align-items-start">
 					<h6 class="card-text text-left"><c:out value="${product.productName}"/></h6>
-					<a type="button" href=<c:url value="/cart/insert/${product.productId}/list?page=${page}"/> class="btn btn-green btn-sm rounded-circle">
+					<a type="button" onclick="insertCart(${product.productStock}, '${product}', ${product.productId})"
+					   	class="btn btn-green btn-sm rounded-circle">
 						<i class="fas fa-shopping-cart"></i></a>
 				</div>
 				<p><fmt:formatNumber value="${product.productPrice}" pattern="#,###,###"/>원</p>

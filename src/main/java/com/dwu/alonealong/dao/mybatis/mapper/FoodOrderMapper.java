@@ -11,7 +11,7 @@ import com.dwu.alonealong.domain.FoodOrder;
 public interface FoodOrderMapper {
 	
 	List<FoodOrder> getFoodOrdersByUsername(String username);
-	FoodOrder getFoodOrder(int orderId);
+	FoodOrder getFoodOrder(String orderId);
 
 	void insertFoodOrder(FoodOrder foodOrder, String orderId);
 	

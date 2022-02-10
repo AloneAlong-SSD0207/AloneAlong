@@ -1,7 +1,6 @@
 package com.dwu.alonealong.controller;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Base64;
 import java.util.List;
 import java.util.Base64.Encoder;
@@ -15,22 +14,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dwu.alonealong.domain.Food;
-import com.dwu.alonealong.domain.Restaurant;
 import com.dwu.alonealong.service.AloneAlongFacade;
 import com.dwu.alonealong.service.FoodFormValidator;
-import com.dwu.alonealong.service.RestaurantFormValidator;
 
 @Controller
 @RequestMapping("/eating/{resId}/adminFood")
-//@RequestMapping("/eating/adminFood")
 public class FoodController {
-	
-	//사용x
-	private static final String FOOD_INSERT_FORM = "eating/FoodForm";
 	
 	private AloneAlongFacade alonealong;
 	
@@ -40,24 +32,21 @@ public class FoodController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String form(
+	public String insertFoodForm(
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId) {
 		return "foodForm";
-//		return "thyme/restaurant/foodForm";
-//		return FOOD_INSERT_FORM;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String insert(
+	public String insertFood(
 			@ModelAttribute("food") FoodForm foodForm,
 			BindingResult result,
 			@PathVariable("resId") String resId,
 			Model model) {
 		
-		new FoodFormValidator().validate(foodForm, result); // 검증 실행
+		new FoodFormValidator().validate(foodForm, result);
 		if (result.hasErrors()) { 
-			// 검증 오류 발생 시
 			return "foodForm"; 
 		}
 		
@@ -66,13 +55,12 @@ public class FoodController {
 		
 		List<Food> foodList = alonealong.getFoodListByRestaurant(resId);
 		model.addAttribute("foodList", foodList);
-//		return "eating/Food";
+		
 		return "redirect:/eating/{resId}";
-//		return form;
 	}
 	
 	@RequestMapping(value = "/update", method = RequestMethod.GET) 
-	public String form2(
+	public String updateFoodForm(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId,
@@ -86,16 +74,15 @@ public class FoodController {
 		return "foodForm";
 	}
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(
+	public String updateFood(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("food") FoodForm foodForm,
 			@PathVariable("resId") String resId,
 			BindingResult result,
 			Model model) {
 		
-		new FoodFormValidator().validate(foodForm, result); // 검증 실행
+		new FoodFormValidator().validate(foodForm, result); 
 		if (result.hasErrors()) { 
-			// 검증 오류 발생 시
 			return "foodForm"; 
 		}
 		
@@ -113,10 +100,9 @@ public class FoodController {
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping(value = "/delete")
-	public String delete(
+	public String deleteFood(
 			@RequestParam("foodId") String foodId,
 			@PathVariable("resId") String resId,
-//			BindingResult bindingResult,
 			Model model) {
 		
 		alonealong.deleteFood(foodId);
