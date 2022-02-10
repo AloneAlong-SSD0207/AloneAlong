@@ -32,12 +32,12 @@ public class FoodOrderController {
 	private AloneAlongFacade aloneAlong;
 
 	@Autowired
-	public void setAloneAlong(AloneAlongFacade aloneAlong) {
+	private void setAloneAlong(AloneAlongFacade aloneAlong) {
 		this.aloneAlong = aloneAlong;
 	}
 	
 	@RequestMapping("/eating/order")
-	public String initNewOrder(HttpServletRequest request,
+	private String initNewOrder(HttpServletRequest request,
 		@RequestParam(value="resId", required=false) String resId, 
 		@ModelAttribute("sessionFoodCart") FoodCart cart,
 		ModelMap model) throws Exception {
@@ -66,7 +66,7 @@ public class FoodOrderController {
 	}
 	
 	@RequestMapping("/eating/order/confirm")
-	protected String confirmOrder(
+	private String confirmOrder(
 			@RequestParam(value="resId", required=false) String resId, 
 			@SessionAttribute("sessionFoodCart") FoodCart cart,
 			@ModelAttribute("foodOrderForm") FoodOrderForm form, 
@@ -97,7 +97,7 @@ public class FoodOrderController {
 		return "resOrderResult";
 	}
 	@RequestMapping("/eating/order/delete")
-	protected String deleteOrder(
+	private String deleteOrder(
 			@RequestParam(value="orderId") String orderId, 
 			Model model
 			) {

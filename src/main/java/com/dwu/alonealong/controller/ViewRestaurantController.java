@@ -24,12 +24,12 @@ public class ViewRestaurantController {
 	private AloneAlongFacade alonealong;
 	
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 
 	@RequestMapping("/eating")
-	public String viewRestaurantWithSort(
+	private String viewRestaurantWithSort(
 			@RequestParam(value="page", defaultValue="1") int page, 
 			@RequestParam(value="category1",  defaultValue="지역") String category1,
 			@RequestParam(value="category2",  defaultValue="분류") String category2,

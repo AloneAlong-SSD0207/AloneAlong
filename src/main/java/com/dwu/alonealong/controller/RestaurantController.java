@@ -29,12 +29,12 @@ public class RestaurantController {
 	private AloneAlongFacade alonealong;
 	
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String restaurantForm(
+	private String restaurantForm(
 			@ModelAttribute("restaurant") RestaurantForm resForm,
 			HttpServletRequest request,
 			Model model) {
@@ -51,7 +51,7 @@ public class RestaurantController {
 	
 	//insert, update 모두 해결
 	@RequestMapping(method = RequestMethod.POST)
-	public String insertAndUpdateRestaurant(
+	private String insertAndUpdateRestaurant(
 			@ModelAttribute("restaurant") RestaurantForm resForm,
 			BindingResult result,
 			HttpServletRequest request,

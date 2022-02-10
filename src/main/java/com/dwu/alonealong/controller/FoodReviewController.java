@@ -22,13 +22,13 @@ public class FoodReviewController {
 	private AloneAlongFacade alonealong;
 	
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 		
 	@RequestMapping("/eating/{orderId}/writeReview")
 	@Transactional
-	public String insertReview(
+	private String insertReview(
 			@PathVariable("orderId") String orderId,
 			HttpServletRequest request,
 			Model model) {

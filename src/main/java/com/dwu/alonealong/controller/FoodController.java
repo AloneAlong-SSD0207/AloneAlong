@@ -28,19 +28,19 @@ public class FoodController {
 	private AloneAlongFacade alonealong;
 	
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String insertFoodForm(
+	private String insertFoodForm(
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId) {
 		return "foodForm";
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String insertFood(
+	private String insertFood(
 			@ModelAttribute("food") FoodForm foodForm,
 			BindingResult result,
 			@PathVariable("resId") String resId,
@@ -61,7 +61,7 @@ public class FoodController {
 	}
 	
 	@RequestMapping(value = "/update", method = RequestMethod.GET) 
-	public String updateFoodForm(
+	private String updateFoodForm(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId,
@@ -75,7 +75,7 @@ public class FoodController {
 		return "foodForm";
 	}
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String updateFood(
+	private String updateFood(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("food") FoodForm foodForm,
 			@PathVariable("resId") String resId,
@@ -101,7 +101,7 @@ public class FoodController {
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping(value = "/delete")
-	public String deleteFood(
+	private String deleteFood(
 			@RequestParam("foodId") String foodId,
 			@PathVariable("resId") String resId,
 			Model model) {

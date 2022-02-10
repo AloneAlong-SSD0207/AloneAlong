@@ -31,13 +31,13 @@ public class ViewFoodController {
 	private AloneAlongFacade alonealong;
 		
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 	
 	//메뉴 탭
 	@RequestMapping("/eating/{resId}")
-	public String viewFoodListByResId(
+	private String viewFoodListByResId(
 			@PathVariable("resId") String resId,
 			@SessionAttribute(value="sessionFoodCart", required=false) FoodCart foodCart,
 			HttpServletRequest request,
@@ -73,7 +73,7 @@ public class ViewFoodController {
 	
 	//리뷰 탭
 	@RequestMapping("/eating/{resId}/RestaurantReview")
-	public String viewReviewListByResId(
+	private String viewReviewListByResId(
 			@RequestParam(value="page", defaultValue="1") int page, 
 			@PathVariable("resId") String resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
@@ -119,7 +119,7 @@ public class ViewFoodController {
 	
 	//같이먹기 탭
 	@RequestMapping("/eating/{resId}/togetherList")
-	public String viewTogetherListByResId(
+	private String viewTogetherListByResId(
 			@PathVariable("resId") String resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
 			ModelMap model
