@@ -35,11 +35,7 @@ public class CartController {
 								@RequestParam(value="productId", required=false) String productId,
 								@RequestParam(value="stockError", required=false) boolean stockError,
 								ModelMap model) throws Exception {
-		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-		if(userSession == null) {
-			return "forward:/login";
-		}
-		String userId = userSession.getUser().getId();
+		String userId = UserSession.getUserId(request);
 
 		int totalPrice = 0;
 		int shippingFee = 0;
@@ -60,23 +56,19 @@ public class CartController {
 			model.put("cartItemName", aloneAlong.getProduct(productId).getProductName());
 		}
 		return "thyme/Cart";
-//		return "productCart";
 	}
 
 	@RequestMapping("/cart/delete")
 	public String deleteCartItem(HttpServletRequest request,
 			@RequestParam(value="cartItemId") String cartItemId,
 			ModelMap model) throws Exception {
-		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-		if(userSession == null) {
-			return "redirect:/login";
-		}
+		String userId = UserSession.getUserId(request);
 
 		CartItem cartItem = aloneAlong.getCartItem(cartItemId);
 		if(cartItem == null){
 			throw new NullProductException();
 		}
-		if(!userSession.getUser().getId().equals(cartItem.getUserId())) {
+		if(!userId.equals(cartItem.getUserId())) {
 			throw new UserNotMatchException();
 		}
 		this.aloneAlong.deleteCartItem(cartItemId);
@@ -89,15 +81,12 @@ public class CartController {
 			@PathVariable("cartItemId") String cartItemId,
 			@RequestParam(value="quantity") int quantity,
 			ModelMap model) throws Exception {
-		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-		if(userSession == null) {
-			return "redirect:/login";
-		}
+		String userId = UserSession.getUserId(request);
 		CartItem cartItem = aloneAlong.getCartItem(cartItemId);
 		if(cartItem == null){
 			throw new NullProductException();
 		}
-		if(!userSession.getUser().getId().equals(cartItem.getUserId())) {
+		if(!userId.equals(cartItem.getUserId())) {
 			throw new UserNotMatchException();
 		}
 
@@ -121,11 +110,7 @@ public class CartController {
 			@RequestParam(value="page", defaultValue="1") String page,
 			@RequestParam(value="sortType", required=false) String sortType,
 			ModelMap model) throws Exception {
-		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-		if(userSession == null) {
-			return "redirect:/login";
-		}
-		String userId = userSession.getUser().getId();
+		String userId = UserSession.getUserId(request);
 		Product product = aloneAlong.getProduct(productId);
 		int stock = product.getProductStock();
 		

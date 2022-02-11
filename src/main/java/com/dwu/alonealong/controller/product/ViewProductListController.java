@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Base64.Encoder;
 
+import com.dwu.alonealong.exception.StockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
@@ -56,7 +57,7 @@ public class ViewProductListController {
 		}
 
         if(stockError == true) {
-    		model.put("insertProductName", aloneAlong.getProduct(insertProductId).getProductName());
+			throw new StockException();
         }
         
 		model.put("pcId", pcId);

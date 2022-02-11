@@ -31,14 +31,6 @@ public class ProductReviewController  {
         this.aloneAlong = aloneAlong;
     }
 
-    public String getUserId(HttpServletRequest request) throws Exception {
-        UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-        if(userSession == null) {
-            throw new NotLoginException();
-        }
-        return userSession.getUser().getId();
-    }
-
     @RequestMapping("/shop/{productId}/review")
     public String viewReview(HttpServletRequest request,
                                 @PathVariable("productId") String productId,
@@ -94,7 +86,7 @@ public class ProductReviewController  {
                                @RequestParam(value="rating") int rating,
                                @RequestParam(value="contents") String contents)
                                 throws Exception {
-        String userId = getUserId(request);
+        String userId = UserSession.getUserId(request);
 
         if(!aloneAlong.checkUsersOrder(userId, productId)){
             throw new UserNotMatchException();
@@ -120,7 +112,7 @@ public class ProductReviewController  {
                                @RequestParam(value="rating") int rating,
                                @RequestParam(value="contents") String contents)
                                throws Exception {
-        String userId = getUserId(request);
+        String userId = UserSession.getUserId(request);
 
         //product를 구매한 user인지 검사, 리뷰 내용 검사
         ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
@@ -142,7 +134,7 @@ public class ProductReviewController  {
                                @RequestParam(value="productId") String productId,
                                @RequestParam(value="reviewId") String reviewId)
                                throws Exception {
-        String userId = getUserId(request);
+        String userId = UserSession.getUserId(request);
 
         ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
         if (!productReview.getUserId().equals(userId)) {
@@ -160,7 +152,7 @@ public class ProductReviewController  {
                                 @RequestParam(value="sortType", defaultValue="new") String sortType,
                                 @RequestParam(value="quantity", defaultValue="1") int quantity)
                                 throws Exception {
-        String userId = getUserId(request);
+        String userId = UserSession.getUserId(request);
 
         //자신의 리뷰 추천 여부 검사
         ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);

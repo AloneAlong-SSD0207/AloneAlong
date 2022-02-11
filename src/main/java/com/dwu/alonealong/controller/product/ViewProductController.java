@@ -1,6 +1,7 @@
 package com.dwu.alonealong.controller.product;
 
 import com.dwu.alonealong.exception.NullProductException;
+import com.dwu.alonealong.exception.StockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -27,27 +28,14 @@ public class ViewProductController {
 			@RequestParam(value="quantity",  defaultValue="1") int quantity,
 			ModelMap model) throws Exception {
 		Product product = this.aloneAlong.getProduct(productId);
-		if(product == null) { throw new NullProductException(); }
-
-		int stock = product.getProductStock();
-		if(stock < quantity) {
-			return "redirect:/shop/{productId}/stockError";
+		if(product == null) {
+			throw new NullProductException();
+		}
+		if(product.getProductStock() < quantity) {
+			throw new StockException();
 		}
 		product.setQuantity(quantity);
 		model.put("product", product);
-		model.put("pcId", product.getPcId());
-		return "product";
-	}
-
-	@RequestMapping("/shop/{productId}/stockError")
-	public String stockError(@PathVariable("productId") String productId,
-								ModelMap model) throws Exception {
-		Product product = this.aloneAlong.getProduct(productId);
-		if(product == null) { throw new NullProductException(); }
-
-		product.setQuantity(1);
-		model.put("product", product);
-		model.put("stockError", true);
 		model.put("pcId", product.getPcId());
 		return "product";
 	}
