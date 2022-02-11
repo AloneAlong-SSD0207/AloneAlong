@@ -1,5 +1,6 @@
 package com.dwu.alonealong.controller;
 
+import com.dwu.alonealong.exception.NotLoginException;
 import com.dwu.alonealong.exception.NullProductException;
 import com.dwu.alonealong.exception.UserNotMatchException;
 import org.springframework.ui.Model;
@@ -13,5 +14,10 @@ public class ExceptionController{
     public String NullProductException(Exception e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "error";
+    }
+
+    @ExceptionHandler({ NotLoginException.class, })
+    public String NotLoginException(Exception e, Model model) {
+        return "redirect:/login";
     }
 }

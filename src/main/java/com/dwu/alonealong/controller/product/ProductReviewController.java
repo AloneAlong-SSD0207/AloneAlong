@@ -4,6 +4,7 @@ import com.dwu.alonealong.controller.UserSession;
 import com.dwu.alonealong.domain.Product;
 import com.dwu.alonealong.domain.ProductReview;
 import com.dwu.alonealong.exception.ContentSizeException;
+import com.dwu.alonealong.exception.NotLoginException;
 import com.dwu.alonealong.exception.UserNotMatchException;
 import com.dwu.alonealong.service.AloneAlongFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,14 @@ public class ProductReviewController  {
         this.aloneAlong = aloneAlong;
     }
 
+    public String getUserId(HttpServletRequest request) throws Exception {
+        UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
+        if(userSession == null) {
+            throw new NotLoginException();
+        }
+        return userSession.getUser().getId();
+    }
+
     @RequestMapping("/shop/{productId}/review")
     public String viewReview(HttpServletRequest request,
                                 @PathVariable("productId") String productId,
@@ -37,7 +46,7 @@ public class ProductReviewController  {
                                 @RequestParam(value="sortType", defaultValue="new") String sortType,
                                 @RequestParam(value="quantity", defaultValue="1") int quantity,
                                 ModelMap model) throws Exception {
-        String userId = " ";
+        String userId = null;
         UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
         if(userSession != null) {
             userId = userSession.getUser().getId();
@@ -54,16 +63,10 @@ public class ProductReviewController  {
         Product product = this.aloneAlong.getProduct(productId);
         List<ProductReview> reviewList = this.aloneAlong.getProductReviewList(productId, sortType, userId);
 
-        if(reviewList.size() > 0) {
-            model.put("numOfReviews", aloneAlong.numOfReviews(productId));
-            model.put("averageOfReviews", aloneAlong.averageOfReviews(productId));
-            model.put("mostRatingOfReviews", aloneAlong.mostRatingOfReviews(productId));
-        }
-        else {
-            model.put("numOfReviews", "0");
-            model.put("averageOfReviews", "0");
-            model.put("mostRatingOfReviews", "0");
-        }
+        model.put("numOfReviews", aloneAlong.numOfReviews(productId));
+        model.put("averageOfReviews", aloneAlong.averageOfReviews(productId));
+        model.put("mostRatingOfReviews", aloneAlong.mostRatingOfReviews(productId));
+
         PagedListHolder<ProductReview> pagedReviewList = new PagedListHolder<ProductReview>(reviewList);
         pagedReviewList.setPageSize(PAGE_SIZE);
         pagedReviewList.setPage(page - 1);
@@ -89,13 +92,10 @@ public class ProductReviewController  {
     public String insertReview(HttpServletRequest request,
                                @RequestParam(value="productId") String productId,
                                @RequestParam(value="rating") int rating,
-                               @RequestParam(value="contents") String contents,
-                               ModelMap model) throws Exception {
-        UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-        if(userSession == null) {
-            return "redirect:/login";
-        }
-        String userId = userSession.getUser().getId();
+                               @RequestParam(value="contents") String contents)
+                                throws Exception {
+        String userId = getUserId(request);
+
         if(!aloneAlong.checkUsersOrder(userId, productId)){
             throw new UserNotMatchException();
         }
@@ -118,13 +118,9 @@ public class ProductReviewController  {
                                @RequestParam(value="productId") String productId,
                                @RequestParam(value="reviewId") String reviewId,
                                @RequestParam(value="rating") int rating,
-                               @RequestParam(value="contents") String contents,
-                               ModelMap model) throws Exception {
-        UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-        if(userSession == null) {
-            return "redirect:/login";
-        }
-        String userId = userSession.getUser().getId();
+                               @RequestParam(value="contents") String contents)
+                               throws Exception {
+        String userId = getUserId(request);
 
         //product를 구매한 user인지 검사, 리뷰 내용 검사
         ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
@@ -144,13 +140,9 @@ public class ProductReviewController  {
     @RequestMapping("/shop/review/delete")
     public String deleteReview(HttpServletRequest request,
                                @RequestParam(value="productId") String productId,
-                               @RequestParam(value="reviewId") String reviewId,
-                               ModelMap model) throws Exception {
-        UserSession userSession = (UserSession) request.getSession().getAttribute("userSession");
-        if (userSession == null) {
-            return "redirect:/login";
-        }
-        String userId = userSession.getUser().getId();
+                               @RequestParam(value="reviewId") String reviewId)
+                               throws Exception {
+        String userId = getUserId(request);
 
         ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
         if (!productReview.getUserId().equals(userId)) {
@@ -166,13 +158,9 @@ public class ProductReviewController  {
                                 @PathVariable("reviewId") String reviewId,
                                 @RequestParam(value="page", defaultValue="1") int page,
                                 @RequestParam(value="sortType", defaultValue="new") String sortType,
-                                @RequestParam(value="quantity", defaultValue="1") int quantity,
-                                ModelMap model) throws Exception {
-        UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
-        if(userSession == null) {
-            return "redirect:/login";
-        }
-        String userId = userSession.getUser().getId();
+                                @RequestParam(value="quantity", defaultValue="1") int quantity)
+                                throws Exception {
+        String userId = getUserId(request);
 
         //자신의 리뷰 추천 여부 검사
         ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
