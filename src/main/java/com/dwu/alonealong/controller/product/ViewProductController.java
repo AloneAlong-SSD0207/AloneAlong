@@ -1,4 +1,4 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.product;
 
 import com.dwu.alonealong.exception.NullProductException;
 import org.springframework.beans.factory.annotation.Autowired;

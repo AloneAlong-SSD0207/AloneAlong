@@ -157,15 +157,15 @@
   </select>
   
   
-  <select id="averageOfReviews" resultType="double">
-    SELECT AVG(REVIEW_RATING)
+  <select id="averageOfReviews" resultType="Double">
+    SELECT DECODE(AVG(REVIEW_RATING), null, 0, AVG(REVIEW_RATING))
     FROM PRODUCT_REVIEW
     WHERE PRODUCT_ID = #{productId}
   </select>
   
   
   <select id="mostRatingOfReviews" resultType="int">
-    SELECT REVIEW_RATING
+	SELECT DECODE(SUM(REVIEW_RATING), null, 0, SUM(REVIEW_RATING))
 	FROM (SELECT REVIEW_RATING, COUNT(*) AS CNT 
 	    FROM PRODUCT_REVIEW 
 	    WHERE PRODUCT_ID = #{productId}

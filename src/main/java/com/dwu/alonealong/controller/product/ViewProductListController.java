@@ -1,4 +1,4 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.product;
 
 import java.io.IOException;
 import java.util.Base64;

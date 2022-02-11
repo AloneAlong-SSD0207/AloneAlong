@@ -75,11 +75,6 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	@Autowired
 	private CartItemDAO cartItemDao;
 	
-//	private ProductDAO productDao;
-//	private ProductReviewDAO productReviewDao;
-//	private ProductOrderDAO productOrderDao;
-//	private PaymentDAO paymentDao;
-	
 	@Autowired
 	private TogetherDAO togetherDao;
 	@Autowired

@@ -1,4 +1,4 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.product;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -7,8 +7,8 @@ import java.util.Base64.Encoder;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.controller.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -18,15 +18,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.domain.Payment;
-import com.dwu.alonealong.domain.Cart;
 import com.dwu.alonealong.domain.CartItem;
-import com.dwu.alonealong.domain.FoodCart;
-import com.dwu.alonealong.domain.FoodCartItem;
-import com.dwu.alonealong.domain.FoodOrder;
 import com.dwu.alonealong.domain.Product;
 import com.dwu.alonealong.domain.ProductLineItem;
 import com.dwu.alonealong.domain.ProductOrder;
