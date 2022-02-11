@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.domain.FoodOrder;
 import com.dwu.alonealong.domain.FoodReview;
 import com.dwu.alonealong.domain.User;
@@ -19,16 +20,15 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 public class FoodReviewController {
 		
 	private AloneAlongFacade alonealong;
-	public static final int defaultInt = 0;
 	
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 		
 	@RequestMapping("/eating/{orderId}/writeReview")
 	@Transactional
-	public String insertReview(
+	private String insertReview(
 			@PathVariable("orderId") String orderId,
 			HttpServletRequest request,
 			Model model) {
@@ -40,7 +40,7 @@ public class FoodReviewController {
 		String userId = user.getId(); 
 		int rating = Integer.parseInt(request.getParameter("rating"));
 		String contents = request.getParameter("review");
-		FoodReview foodReview = new FoodReview(orderId, resId, userId, rating, contents, defaultInt);
+		FoodReview foodReview = new FoodReview(orderId, resId, userId, rating, contents, FoodFunction.defaultInt);
 
 		alonealong.insertFoodReview(foodReview);
 		alonealong.updateAvgRating(rating, resId);
