@@ -25,13 +25,13 @@ public class FoodCartController {
 
 	private AloneAlongFacade alonealong;
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 	
 	
 	@RequestMapping("/eating/{resId}/addFoodToCart")
-	public String addFoodToCart(
+	private String addFoodToCart(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,
@@ -50,7 +50,7 @@ public class FoodCartController {
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping("/eating/{resId}/updateFoodCartItem")
-	public String updateFoodCartItem(
+	private String updateFoodCartItem(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,
@@ -63,7 +63,7 @@ public class FoodCartController {
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping("/eating/{resId}/deleteFoodCartItem")
-	public String deleteFoodCartItem(
+	private String deleteFoodCartItem(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			@PathVariable("resId") String resId,

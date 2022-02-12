@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.domain.Restaurant;
 import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
@@ -26,15 +27,14 @@ public class RestaurantController {
 	
 	private static final String RES_INSERT_FORM = "restaurantForm";
 	private AloneAlongFacade alonealong;
-	public static final Double defaultDouble = 0.0;
 	
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String restaurantForm(
+	private String restaurantForm(
 			@ModelAttribute("restaurant") RestaurantForm resForm,
 			HttpServletRequest request,
 			Model model) {
@@ -51,7 +51,7 @@ public class RestaurantController {
 	
 	//insert, update 모두 해결
 	@RequestMapping(method = RequestMethod.POST)
-	public String insertAndUpdateRestaurant(
+	private String insertAndUpdateRestaurant(
 			@ModelAttribute("restaurant") RestaurantForm resForm,
 			BindingResult result,
 			HttpServletRequest request,
@@ -76,13 +76,13 @@ public class RestaurantController {
 		
 		if(request.getParameter("status").equals("insert")) {
 			res = new Restaurant("RES_ID.NEXTVAL", resForm.getResName(), resForm.getResAddress(), resForm.getResPhone(), userId,
-					resForm.getResDescription(), defaultDouble, resForm.getCategoryId(), getImgFile(resForm), resForm.getIsTogetherOk(), resForm.getResArea());
+					resForm.getResDescription(), FoodFunction.defaultDouble, resForm.getCategoryId(), FoodFunction.getImgFile(resForm), resForm.getIsTogetherOk(), resForm.getResArea());
 			alonealong.insertRestaurant(res);
 		}
 		else if(request.getParameter("status").equals("update")) {
 			String resId = request.getParameter("resId");
 			res = new Restaurant(resId, resForm.getResName(), resForm.getResAddress(), resForm.getResPhone(),
-					resForm.getResDescription(), resForm.getCategoryId(), getImgFile(resForm), resForm.getIsTogetherOk(), resForm.getResArea());
+					resForm.getResDescription(), resForm.getCategoryId(), FoodFunction.getImgFile(resForm), resForm.getIsTogetherOk(), resForm.getResArea());
 			alonealong.updateRestaurant(res);	
 		}
 		
@@ -92,14 +92,5 @@ public class RestaurantController {
 		return "redirect:/eating";
 
 	}
-	private byte[] getImgFile(RestaurantForm resForm) {
-		MultipartFile mf = resForm.getImgFile();
-		byte[] img = null;
-		try {
-			img = mf.getBytes();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return img;
-	}
+	
 }

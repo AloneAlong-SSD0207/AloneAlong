@@ -91,7 +91,7 @@
 		 	 <button type="button" class="btn" onClick="location.href='<c:url value='/eating/${resId}/RestaurantReview?page=${page - 1}&sortType=${param.sortType}' />'">
 		 	 	<i class="fas fa-chevron-left"></i></button>
 		 </c:if>
-		 <c:forEach var="pageNum" begin="${startPage}" end="${startPage + 5}" varStatus="status">
+		 <c:forEach var="pageNum" begin="${startPage}" end="${startPage + rangeSize - 1}" varStatus="status">
 			 <c:if test="${pageNum == page}">
 		 		<div class="btn-group"><button type="button" class="btn active rounded-circle" 
 		 			onClick="location.href='<c:url value='/eating/${resId}/RestaurantReview?page=${pageNum}&sortType=${param.sortType}' />'">${pageNum}</button></div>
