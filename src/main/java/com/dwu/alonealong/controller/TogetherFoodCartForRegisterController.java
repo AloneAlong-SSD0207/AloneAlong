@@ -38,18 +38,13 @@ public class TogetherFoodCartForRegisterController {
 			@PathVariable("resId") String resId,
 			ModelMap model
 			) throws Exception {
-		
-		System.out.println("현재 음식 사이즈" + cart.getFoodItemList().size());
+
 		if (cart.containsFoodId(foodId)) {
-			System.out.println("이미 있는 음식");
 			cart.incrementQuantityByFoodId(foodId);
 		}
 		else {
 			Food item = this.alonealong.getFood(foodId);
-			if(item == null)
-				System.out.println("null들어왔다");
 			cart.addFood(item);
-			System.out.println("카트에 추가됨");
 		}
 		
 		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);

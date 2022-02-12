@@ -3,21 +3,14 @@ package com.dwu.alonealong.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 
 import com.dwu.alonealong.domain.FoodCart;
 import com.dwu.alonealong.domain.Together;
@@ -28,7 +21,9 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @SessionAttributes({"userSession", "sessionFoodCart", "together"})
 public class ViewTogetherListController {
 	public static String areaName, kindName, priceName, sexName, ageName;
-	
+	public static final int PAGE_SIZE = 10;
+	public static final int PAGE_RANGE = 5;
+
 	private AloneAlongFacade alonealong;
 	
 	@Autowired
@@ -67,14 +62,14 @@ public class ViewTogetherListController {
 		//공통 리스트
 		List<Together> togetherList = this.alonealong.getTogetherListByCategory(area, date, kind, price, sex, age);
 		PagedListHolder<Together> togetherPagedList = new PagedListHolder<Together>(togetherList);
-		togetherPagedList.setPageSize(10);
+		togetherPagedList.setPageSize(PAGE_SIZE);
 		togetherPagedList.setPage(page - 1);
 		
 		model.put("togetherList", togetherPagedList.getPageList());
 		model.put("togetherCount", togetherList.size());
 		
 		model.put("page", togetherPagedList.getPage() + 1);
-		model.put("startPage", (togetherPagedList.getPage() / 5) * 5 + 1);
+		model.put("startPage", (togetherPagedList.getPage() / PAGE_RANGE) * PAGE_RANGE + 1);
 		model.put("lastPage", togetherPagedList.getPageCount());
 		
 		//카테고리
