@@ -3,11 +3,9 @@ package com.dwu.alonealong.controller;
 
 import java.util.Base64;
 import java.util.Base64.Encoder;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,23 +20,24 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.dwu.alonealong.domain.FoodCart;
 import com.dwu.alonealong.domain.FoodCartItem;
+import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.domain.Payment;
 import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
 import com.dwu.alonealong.domain.FoodOrder;
+
 @Controller
 @SessionAttributes({"sessionFoodCart"})
 public class FoodOrderController {
 	private AloneAlongFacade aloneAlong;
-	public static final int defaultInt = 0;
 
 	@Autowired
-	public void setAloneAlong(AloneAlongFacade aloneAlong) {
+	private void setAloneAlong(AloneAlongFacade aloneAlong) {
 		this.aloneAlong = aloneAlong;
 	}
 	
 	@RequestMapping("/eating/order")
-	public String initNewOrder(HttpServletRequest request,
+	private String initNewOrder(HttpServletRequest request,
 		@RequestParam(value="resId", required=false) String resId, 
 		@ModelAttribute("sessionFoodCart") FoodCart cart,
 		ModelMap model) throws Exception {
@@ -54,11 +53,7 @@ public class FoodOrderController {
 		User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
 		Payment paymentMethod = aloneAlong.getCard(userSession.getUser().getId());
 
-		System.out.print(user);
-		Encoder encoder = Base64.getEncoder();
-		for(FoodCartItem item : cart.getFoodItemList()) {
-			item.getFood().setImg64(encoder.encodeToString(item.getFood().getImgFile()));
-		}
+		FoodFunction.encodeImgList(cart.getFoodItemList());
 		
 		//만약 sessionFoodCart.size가 0이면 order창으로 넘어가지 못하도록.
 		model.put("foodCart", cart.getAllFoodCartItems());
@@ -71,10 +66,10 @@ public class FoodOrderController {
 	}
 	
 	@RequestMapping("/eating/order/confirm")
-	protected String confirmOrder(
+	private String confirmOrder(
 			@RequestParam(value="resId", required=false) String resId, 
 			@SessionAttribute("sessionFoodCart") FoodCart cart,
-			@ModelAttribute("foodOrderForm") FoodOrderForm form, //jsp에서 modelattribute 등록해라
+			@ModelAttribute("foodOrderForm") FoodOrderForm form, 
 			HttpServletRequest request, ModelMap model,
 			SessionStatus status
 			) {
@@ -91,9 +86,7 @@ public class FoodOrderController {
 		
 		FoodOrder order = new FoodOrder(resId, userId, foodList, reserveType, visitDate, payment);
 		order.setTotalPrice(order.calcTotalPrice());
-		System.out.println("totalprice 무슨일이야 잘 들어 왔는지: " + order.getTotalPrice());
-		if(order.getTotalPrice() == defaultInt)
-			return "";
+		
 		aloneAlong.insertFoodOrder(order);
 
 		String resName = aloneAlong.getRestaurantByResId(resId).getResName();
@@ -104,7 +97,7 @@ public class FoodOrderController {
 		return "resOrderResult";
 	}
 	@RequestMapping("/eating/order/delete")
-	protected String deleteOrder(
+	private String deleteOrder(
 			@RequestParam(value="orderId") String orderId, 
 			Model model
 			) {

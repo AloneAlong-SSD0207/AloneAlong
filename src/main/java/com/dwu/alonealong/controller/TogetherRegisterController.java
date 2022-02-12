@@ -5,21 +5,16 @@ import java.util.List;
 import java.util.Base64.Encoder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCart;
@@ -35,10 +30,6 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 @SessionAttributes({"retaurantList", "sessionFoodCart"})
 public class TogetherRegisterController {
-	public static final int GATHERING = 0;
-	public static final int GATHERED = 1;
-	public static final int IS_NOT_HOST = 0;
-	public static final int IS_HOST = 1;
 	
 	private AloneAlongFacade aloneAlong;
 	
@@ -115,7 +106,7 @@ public class TogetherRegisterController {
 			return "redirect:/togetherRegister";
 		
 		//together 넣기		
-		Together together = new Together("TOG_ID.NEXTVAL", name, headCount, date, time, sex, age, description, resId, GATHERING, cart.getSubTotal() / headCount);
+		Together together = new Together("TOG_ID.NEXTVAL", name, headCount, date, time, sex, age, description, resId, Together.GATHERING, cart.getSubTotal() / headCount);
 		aloneAlong.insertTogether(together);
 		
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
@@ -161,7 +152,7 @@ public class TogetherRegisterController {
 	}
 	
 	public void insertHostIntoTogether(User user, Together together) {
-		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), IS_HOST);
+		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), TogetherMember.IS_HOST);
 		aloneAlong.insertTogetherMember(togetherMember);
 	}
 	

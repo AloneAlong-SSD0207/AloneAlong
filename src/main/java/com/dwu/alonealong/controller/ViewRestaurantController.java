@@ -4,21 +4,16 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Base64.Encoder;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCart;
+import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.domain.Restaurant;
 import com.dwu.alonealong.service.AloneAlongFacade;
 
@@ -29,12 +24,12 @@ public class ViewRestaurantController {
 	private AloneAlongFacade alonealong;
 	
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 
 	@RequestMapping("/eating")
-	public String handleRequest(
+	private String viewRestaurantWithSort(
 			@RequestParam(value="page", defaultValue="1") int page, 
 			@RequestParam(value="category1",  defaultValue="지역") String category1,
 			@RequestParam(value="category2",  defaultValue="분류") String category2,
@@ -64,30 +59,10 @@ public class ViewRestaurantController {
 		model.put("category1", category1);
 		model.put("category2", category2);
 
-		encodeImgList(restaurantList);
-		pagingList(restaurantList, model, page);
+		FoodFunction.encodeImgList(restaurantList);
+		FoodFunction.pagingRestaurantList(restaurantList, model, page);
 		
 		return "restaurantList";
 	}
-	private void pagingList(List<Restaurant> restaurantList, ModelMap model, int page) {
-		PagedListHolder<Restaurant> pagedRestaurantList = new PagedListHolder<Restaurant>(restaurantList);
-        pagedRestaurantList.setPageSize(6);
-        pagedRestaurantList.setPage(page - 1);
-        model.put("restaurantList", pagedRestaurantList.getPageList());
-		model.put("restaurantCount", restaurantList.size());
-		
-		model.put("page", pagedRestaurantList.getPage() + 1);
-		model.put("startPage", (pagedRestaurantList.getPage() / 5) * 5 + 1);
-		model.put("lastPage", pagedRestaurantList.getPageCount());
-	}
-	private void encodeImgList(List<Restaurant> list){
-		Encoder encoder = Base64.getEncoder();
-        for(Restaurant res : list) {     	
-        	byte[] imagefile = res.getImgFile();
-        	if(imagefile == null)
-        		continue;
-            String encodedString = encoder.encodeToString(imagefile);
-            res.setImg64(encodedString);
-        }
-	}
+	
 }

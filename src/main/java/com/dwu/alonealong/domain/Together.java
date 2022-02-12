@@ -2,13 +2,14 @@ package com.dwu.alonealong.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
 @SuppressWarnings("serial")
 public class Together implements Serializable {
 	public static final int MIN_HEAD_COUNT = 2;
+	public static final int GATHERING = 0;
+	public static final int GATHERED = 1;
 	
 	private String togetherId;
 	private String togetherName;
@@ -96,19 +97,19 @@ public class Together implements Serializable {
 		}
 		return sum;
 	}
-	
+
 	//1인당 음식 가격 구하기
 	public int getPricePerPerson() {
 		return getTotalPrice() / headCount;
 	}
-	
+
 	//주소에서 앞에 두글자 따서 태그 구하기
 	public String getAddressTag() {
 		String address = restaurant.getResAddress();
 		StringTokenizer st = new StringTokenizer(address);
 		String addressTag = st.nextToken();
-		
-		return addressTag;	
+
+		return addressTag;
 	}
 	
 }

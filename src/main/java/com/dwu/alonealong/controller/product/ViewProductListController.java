@@ -1,10 +1,11 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.product;
 
 import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.Base64.Encoder;
 
+import com.dwu.alonealong.exception.StockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
@@ -41,8 +42,7 @@ public class ViewProductListController {
 			@RequestParam(value="stockError", required=false) boolean stockError,  
 			ModelMap model) throws Exception {
 		if(pcId <= 0 || pcId > PC_SIZE) {
-			model.put("errorMessage", "존재하지 않는 카테고리입니다.");
-			return "error";
+			throw new Exception("존재하지 않는 카테고리입니다.");
 		}
 		List<Product> productList = this.aloneAlong.getProductList(pcId, sortType);
 		PagedListHolder<Product> productPagedList = new PagedListHolder<Product>(productList);
@@ -57,7 +57,7 @@ public class ViewProductListController {
 		}
 
         if(stockError == true) {
-    		model.put("insertProductName", aloneAlong.getProduct(insertProductId).getProductName());
+			throw new StockException();
         }
         
 		model.put("pcId", pcId);

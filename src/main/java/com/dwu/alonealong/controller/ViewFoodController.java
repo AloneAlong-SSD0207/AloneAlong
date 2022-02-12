@@ -5,13 +5,11 @@ import java.util.Base64.*;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCart;
+import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.domain.FoodReview;
 import com.dwu.alonealong.domain.Restaurant;
 import com.dwu.alonealong.domain.Together;
@@ -32,18 +31,16 @@ public class ViewFoodController {
 	private AloneAlongFacade alonealong;
 		
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 	
-	
-	//가게 선택 resId로
+	//메뉴 탭
 	@RequestMapping("/eating/{resId}")
-	public String resFood(
+	private String viewFoodListByResId(
 			@PathVariable("resId") String resId,
 			@SessionAttribute(value="sessionFoodCart", required=false) FoodCart foodCart,
 			HttpServletRequest request,
-//			@RequestParam(value = "foodId", defaultValue="") String foodId,
 			ModelMap model) throws Exception {
 
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
@@ -61,25 +58,22 @@ public class ViewFoodController {
 			model.addAttribute("sessionFoodCart", foodCart);
 		}
 		model.put("foodCart", foodCart.getFoodItemList());
-		Restaurant res = alonealong.getRestaurantByResId(resId);
-		
 		model.put("totalPrice", foodCart.getSubTotal());
-		//System.out.println(foodCart.getFoodItemList().size());
 		
+		Restaurant res = alonealong.getRestaurantByResId(resId);
+		FoodFunction.encodeImg(res);
         List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
-        encodeImgList(foodList);
-        encodeImg(res);
+        FoodFunction.encodeImgList(foodList);
         
         model.put("foodList", foodList);
         model.put("restaurant", res);
+        
 		return "restaurant";
-
 	}
 	
-	
-	//리뷰탭
+	//리뷰 탭
 	@RequestMapping("/eating/{resId}/RestaurantReview")
-	public String handleRequest2(
+	private String viewReviewListByResId(
 			@RequestParam(value="page", defaultValue="1") int page, 
 			@PathVariable("resId") String resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
@@ -87,8 +81,6 @@ public class ViewFoodController {
 			HttpServletRequest request,
 			ModelMap model) throws Exception {
 		
-		
-		//String sortType = request.getParameter("sortType");
 		if(sortType == null)
 			sortType = "REVIEW_DATE DESC";
 	
@@ -105,33 +97,29 @@ public class ViewFoodController {
 				break;
 		}
 		
-
-		
 		model.put("sortTypeName", sortTypeName);
+		
 		List<FoodReview> reviewList = this.alonealong.getFoodReviewListByResId(resId, sortType);
 		for(FoodReview review : reviewList) {
 			User user = alonealong.getUserByUserId(review.getUserId());
 			review.setUserNickName(user.getNickname());
 		}
-		//model.put("foodReviewList", reviewList);
 				
 		model.put("foodCart", foodCart.getFoodItemList());
-		Restaurant res = alonealong.getRestaurantByResId(resId);
-		
 		model.put("totalPrice", foodCart.getSubTotal());
-		System.out.println(foodCart.getFoodItemList().size());
 		
-		encodeImg(res);
+		Restaurant res = alonealong.getRestaurantByResId(resId);
+		FoodFunction.encodeImg(res);
         model.put("restaurant", res);
         
-        pagingList(reviewList, model, page);
+        FoodFunction.pagingReviewList(reviewList, model, page);
         
 		return "restaurantReview";
 	}
 	
-	//togetherList 탭
+	//같이먹기 탭
 	@RequestMapping("/eating/{resId}/togetherList")
-	public String listTogether(
+	private String viewTogetherListByResId(
 			@PathVariable("resId") String resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
 			ModelMap model
@@ -144,40 +132,12 @@ public class ViewFoodController {
 		
 		model.put("totalPrice", foodCart.getSubTotal());
 		System.out.println(foodCart.getFoodItemList().size());
-		
-
-        encodeImg(res);
+	
+		FoodFunction.encodeImg(res);
         model.put("restaurant", res);
 		
 		return "togetherListTab";
 	}
-	private void encodeImg(Restaurant res){
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;
-		String encodedString;
-        imagefile = res.getImgFile();
-        encodedString = encoder.encodeToString(imagefile);
-        res.setImg64(encodedString);
-	}
-	private void encodeImgList(List<Food> list){
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;
-		String encodedString;
-        for(Food food : list) {
-        	imagefile = food.getImgFile();
-            encodedString = encoder.encodeToString(imagefile);
-            food.setImg64(encodedString);
-        }
-	}	
-	private void pagingList(List<FoodReview> reviewList, ModelMap model, int page) {
-		PagedListHolder<FoodReview> pagedReviewList = new PagedListHolder<FoodReview>(reviewList);
-        pagedReviewList.setPageSize(3);
-        pagedReviewList.setPage(page - 1);
-        model.put("foodReviewList", pagedReviewList.getPageList());
-		model.put("foodReviewCount", reviewList.size());
-		
-		model.put("page", pagedReviewList.getPage() + 1);
-		model.put("startPage", (pagedReviewList.getPage() / 5) * 5 + 1);
-		model.put("lastPage", pagedReviewList.getPageCount());
-	}
+	
+	
 }

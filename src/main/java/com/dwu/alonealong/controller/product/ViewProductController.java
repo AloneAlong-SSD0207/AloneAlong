@@ -1,14 +1,11 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.product;
 
-import java.util.Base64;
-import java.util.Base64.Encoder;
-
+import com.dwu.alonealong.exception.NullProductException;
+import com.dwu.alonealong.exception.StockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -28,26 +25,18 @@ public class ViewProductController {
 	
 	@RequestMapping("/shop/{productId}")
 	public String handleRequest(@PathVariable("productId") String productId,
-			@RequestParam(value="quantity",  defaultValue="1") int quantity, 
-			@RequestParam(value="insertProductId", required=false) String insertProductId,  
-			@RequestParam(value="stockError", required=false) boolean stockError,  
+			@RequestParam(value="quantity",  defaultValue="1") int quantity,
 			ModelMap model) throws Exception {
 		Product product = this.aloneAlong.getProduct(productId);
 		if(product == null) {
-			model.put("errorMessage", "존재하지 않는 상품입니다.");
-			return "error";
+			throw new NullProductException();
 		}
-		int stock = product.getProductStock();
-		if(stock < quantity && !stockError) {
-			return "redirect:/shop/" + productId + "?stockError=true&insertProductId=" + productId + "&stock=" + stock;
+		if(product.getProductStock() < quantity) {
+			throw new StockException();
 		}
-        if(stockError) {
-    		model.put("insertProductName", aloneAlong.getProduct(insertProductId).getProductName());
-        }
 		product.setQuantity(quantity);
 		model.put("product", product);
 		model.put("pcId", product.getPcId());
 		return "product";
 	}
-
 }

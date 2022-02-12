@@ -6,17 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.dwu.alonealong.domain.FoodOrder;
 import com.dwu.alonealong.domain.Order;
-import com.dwu.alonealong.domain.Payment;
 import com.dwu.alonealong.domain.Together;
 import com.dwu.alonealong.domain.TogetherMember;
 import com.dwu.alonealong.domain.TogetherOrder;
@@ -26,11 +21,6 @@ import com.dwu.alonealong.service.AloneAlongFacade;
 @Controller
 @SessionAttributes({"together"})
 public class TogetherOrderController {
-	public static final int GATHERING = 0;
-	public static final int GATHERED = 1;
-	public static final int IS_NOT_HOST = 0;
-	public static final int IS_HOST = 1;
-	
 	public static Order order;
 
 	private AloneAlongFacade aloneAlong;
@@ -52,7 +42,6 @@ public class TogetherOrderController {
 		}
 		
 		return "together/togetherOrder";
-//		return "togetherOrder";
 	}
 	
 	//결제하기
@@ -123,13 +112,13 @@ public class TogetherOrderController {
 	}
 	
 	public void insertUserIntoMember(User user, Together together) {
-		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), IS_NOT_HOST);
+		TogetherMember togetherMember = new TogetherMember("TOGMEM_ID.NEXTVAL", user.getId(), together.getTogetherId(), TogetherMember.IS_NOT_HOST);
 		aloneAlong.insertTogetherMember(togetherMember);
 	}
 	
 	public void completeGathering(Together together) {
 		Together newTogether = new Together(together.getTogetherId(), together.getTogetherName(), together.getHeadCount(), together.getTogetherDate(), together.getTogetherTime(), 
-				together.getSex(), together.getAge(), together.getTogetherDes(), together.getResId(), GATHERED, together.getPrice());
+				together.getSex(), together.getAge(), together.getTogetherDes(), together.getResId(), Together.GATHERED, together.getPrice());
 		aloneAlong.updateTogether(newTogether);
 	}
 	

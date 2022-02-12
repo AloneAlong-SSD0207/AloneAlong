@@ -75,11 +75,6 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	@Autowired
 	private CartItemDAO cartItemDao;
 	
-//	private ProductDAO productDao;
-//	private ProductReviewDAO productReviewDao;
-//	private ProductOrderDAO productOrderDao;
-//	private PaymentDAO paymentDao;
-	
 	@Autowired
 	private TogetherDAO togetherDao;
 	@Autowired
@@ -306,9 +301,9 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		orderInfoDao.deleteFoodOrderInfo(orderId);
 	}
 	@Override
-	public FoodOrder getFoodOrder(int orderId) {
+	public FoodOrder getFoodOrder(String orderId) {
 		// TODO Auto-generated method stub
-		return null;
+		return foodOrderDao.getFoodOrder(orderId);
 	}
 	@Override
 	public List<FoodOrder> getFoodOrdersByUserId(String userId) {

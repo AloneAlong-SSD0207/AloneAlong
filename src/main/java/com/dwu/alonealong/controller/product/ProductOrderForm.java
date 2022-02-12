@@ -1,4 +1,4 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.product;
 
 import java.util.List;
 
@@ -29,14 +29,8 @@ public class ProductOrderForm {
 	public User getOrderUser() { return orderUser; }
 	public void setOrderUser(User orderUser) { this.orderUser = orderUser; }
 
-	public User getShipUser() { return shipUser; }
-	public void setShipUser(User shipUser) { this.shipUser = shipUser; }
-
 	public Payment getPayment() { return payment; }
 	public void setPayment(Payment payment) { this.payment = payment; }
-
-	public List<ProductLineItem> getOrderList() { return orderList; }
-	public void setOrderList(List<ProductLineItem> orderList) { this.orderList = orderList; }
 	
 	public int getTotalPrice() { return totalPrice; }
 	public void setTotalPrice(int totalPrice) { this.totalPrice = totalPrice; }

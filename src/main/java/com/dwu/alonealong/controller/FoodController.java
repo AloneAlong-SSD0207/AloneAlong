@@ -1,7 +1,6 @@
 package com.dwu.alonealong.controller;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Base64;
 import java.util.List;
 import java.util.Base64.Encoder;
@@ -15,64 +14,54 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dwu.alonealong.domain.Food;
-import com.dwu.alonealong.domain.Restaurant;
+import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.service.AloneAlongFacade;
 import com.dwu.alonealong.service.FoodFormValidator;
-import com.dwu.alonealong.service.RestaurantFormValidator;
 
 @Controller
 @RequestMapping("/eating/{resId}/adminFood")
-//@RequestMapping("/eating/adminFood")
 public class FoodController {
-	
-	//사용x
-	private static final String FOOD_INSERT_FORM = "eating/FoodForm";
 	
 	private AloneAlongFacade alonealong;
 	
 	@Autowired
-	public void setAlonealong(AloneAlongFacade alonealong) {
+	private void setAlonealong(AloneAlongFacade alonealong) {
 		this.alonealong = alonealong;
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String form(
+	private String insertFoodForm(
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId) {
 		return "foodForm";
-//		return "thyme/restaurant/foodForm";
-//		return FOOD_INSERT_FORM;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public String insert(
+	private String insertFood(
 			@ModelAttribute("food") FoodForm foodForm,
 			BindingResult result,
 			@PathVariable("resId") String resId,
 			Model model) {
 		
-		new FoodFormValidator().validate(foodForm, result); // 검증 실행
+		new FoodFormValidator().validate(foodForm, result);
 		if (result.hasErrors()) { 
-			// 검증 오류 발생 시
 			return "foodForm"; 
 		}
 		
-		Food food = new Food(resId, "FOOD_ID.NEXTVAL", foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), getImgFile(foodForm), foodForm.getMaxPeopleNum());
+		Food food = new Food(resId, "FOOD_ID.NEXTVAL", foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), FoodFunction.getImgFile(foodForm), foodForm.getMaxPeopleNum());
 		alonealong.insertFood(food);
 		
 		List<Food> foodList = alonealong.getFoodListByRestaurant(resId);
 		model.addAttribute("foodList", foodList);
-//		return "eating/Food";
+		
 		return "redirect:/eating/{resId}";
-//		return form;
 	}
 	
 	@RequestMapping(value = "/update", method = RequestMethod.GET) 
-	public String form2(
+	private String updateFoodForm(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId,
@@ -80,22 +69,21 @@ public class FoodController {
 		System.out.println("update");
 		Food foodData = alonealong.getFood(foodId);
 		
-		encodeImg(foodData); //이미지 변경을 하지 않을 경우 기존의 이미지값을 저장하고있음.
+		FoodFunction.encodeImg(foodData); //이미지 변경을 하지 않을 경우 기존의 이미지값을 저장하고있음.
 		
 		model.addAttribute("food", foodData);
 		return "foodForm";
 	}
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(
+	private String updateFood(
 			@RequestParam("foodId") String foodId,
 			@ModelAttribute("food") FoodForm foodForm,
 			@PathVariable("resId") String resId,
 			BindingResult result,
 			Model model) {
 		
-		new FoodFormValidator().validate(foodForm, result); // 검증 실행
+		new FoodFormValidator().validate(foodForm, result); 
 		if (result.hasErrors()) { 
-			// 검증 오류 발생 시
 			return "foodForm"; 
 		}
 		
@@ -103,7 +91,7 @@ public class FoodController {
 		if(foodForm.getImgFile() == null)
 			food = new Food(resId, foodId, foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), null, foodForm.getMaxPeopleNum());
 		else {
-			food = new Food(resId, foodId, foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), getImgFile(foodForm), foodForm.getMaxPeopleNum());
+			food = new Food(resId, foodId, foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), FoodFunction.getImgFile(foodForm), foodForm.getMaxPeopleNum());
 		}
 			
 		alonealong.updateFood(food);
@@ -113,10 +101,9 @@ public class FoodController {
 		return "redirect:/eating/{resId}";
 	}
 	@RequestMapping(value = "/delete")
-	public String delete(
+	private String deleteFood(
 			@RequestParam("foodId") String foodId,
 			@PathVariable("resId") String resId,
-//			BindingResult bindingResult,
 			Model model) {
 		
 		alonealong.deleteFood(foodId);
@@ -125,23 +112,6 @@ public class FoodController {
 		model.addAttribute("foodList", foodList);
 		return "redirect:/eating/{resId}";
 	}
-	private void encodeImg(Food food){
-		Encoder encoder = Base64.getEncoder();
-		byte[] imagefile;
-		String encodedString;
-        imagefile = food.getImgFile();
-        encodedString = encoder.encodeToString(imagefile);
-        food.setImg64(encodedString);
-	}
-	private byte[] getImgFile(FoodForm foodForm) {
-		MultipartFile mf = foodForm.getImgFile();
-		byte[] img = null;
-		try {
-			img = mf.getBytes();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return img;
-	}
+	
 	
 }
