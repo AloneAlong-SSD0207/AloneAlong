@@ -1,29 +1,64 @@
 package com.dwu.alonealong.domain;
 
+import lombok.*;
+
 import java.io.Serializable;
-import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
+import javax.persistence.*;
+
+@SuppressWarnings("serial")
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Restaurant implements Serializable{
-	private String resId;
-	private String resName;
-	private String resAddress;
-	private String resPhone;
-	private String ownerId;
-	private String resDescription;
-	private Double avgRating;
-	private String categoryId; //음식분류
-	private byte[] imgFile;
-	private String img64;
-	private boolean isTogetherOk;
-	private String area;
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name="res_id")
+	private String resId;
+	@Column(name="res_name")
+	private String resName;
+	@Column(name="res_address")
+	private String resAddress;
+	@Column(name="res_phone")
+	private String resPhone;
+	@Column(name="owner_id")
+	private String ownerId;
+	@Column(name="res_des")
+	private String resDescription;
+	@Column(name="avg_rating")
+	private Double avgRating;
+	@Column(name="res_category")
+	private String categoryId; //음식분류
+	@Column(name="res_img")
+	private byte[] imgFile;
+	@Transient
+	private String img64;
+	@Column(name="is_together_ok")
+	private boolean isTogetherOk;
+	@Column(name="area")
+	private String area;
+	@Column(name="res_date")
+	private LocalDateTime resDate = LocalDateTime.now();
+	@Column(name="rev_count")
+	private int revCount;
+	
+	
+	@Transient
 	private User owner;
+	@Transient
 	private FoodReview[] reviewList;
+	@Transient
 	private Food[] menuList;
+	@Transient
 	private Together[] togetherList;
 	
 	//조회용
+	@Builder
 	public Restaurant(String resId, String resName, String resAddress, String resPhone, String ownerId,
 			String resDescription, Double avgRating, String categoryId, byte[] imgFile, boolean isTogetherOk, String area) {
 		super();
@@ -41,6 +76,7 @@ public class Restaurant implements Serializable{
 	}
 	
 	//생성용
+	@Builder
 	public Restaurant(String resId, String resName, String resAddress, String resPhone,
 			String resDescription, String categoryId, byte[] imgFile, boolean isTogetherOk, String area) {
 		super();
@@ -55,10 +91,27 @@ public class Restaurant implements Serializable{
 		this.area = area;
 	}
 	
-	
+	@Builder
 	public Restaurant(){
 		
 	}
+	public LocalDateTime getResDate() {
+		return resDate;
+	}
+
+	public void setResDate(LocalDateTime resDate) {
+		this.resDate = resDate;
+	}
+
+	public int getRevCount() {
+		return revCount;
+	}
+
+	public void setRevCount(int revCount) {
+		this.revCount = revCount;
+	}
+
+
 	
 	public String getArea() {
 		return area;
@@ -169,13 +222,16 @@ public class Restaurant implements Serializable{
 	public void setTogetherList(Together[] togetherList) {
 		this.togetherList = togetherList;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Restaurant [resId=" + resId + ", resName=" + resName + ", categoryId=" + categoryId + ", resAddress="
-				+ resAddress + ", owner=" + owner + ", resPhone=" + resPhone + ", resDescription=" + resDescription
-				+ ", avgRating=" + avgRating + ", imgFile=" + imgFile + ", isTogetherOk=" + isTogetherOk
+		return "Restaurant [resId=" + resId + ", resName=" + resName + ", resAddress=" + resAddress + ", resPhone="
+				+ resPhone + ", ownerId=" + ownerId + ", resDescription=" + resDescription + ", avgRating=" + avgRating
+				+ ", categoryId=" + categoryId + ", imgFile=" + Arrays.toString(imgFile) + ", img64=" + img64
+				+ ", isTogetherOk=" + isTogetherOk + ", area=" + area + ", res_date=" + resDate + ", owner=" + owner
 				+ ", reviewList=" + Arrays.toString(reviewList) + ", menuList=" + Arrays.toString(menuList)
 				+ ", togetherList=" + Arrays.toString(togetherList) + "]";
 	}
+	
+	
 }
