@@ -4,26 +4,53 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.*;
+import lombok.*;
+
+
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 public class FoodOrder implements Serializable{
 	
-	String resId;
-	String userId;
-	List<FoodCartItem> foodList;
-	List<FoodLineItem> orderedList;
-	String reserveType;
-	String visitDate;
-	Payment payment;
-	
-	String firstFoodId;
-	String firstFoodName;
-	byte[] resImg;
-	String resName;
-	String img64;
-	int totalPrice;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name="order_id")
 	String orderId;
+	@Column(name="reserve_type")
+	String reserveType;
+	@Column(name="visit_date")
+	String visitDate;
+	@Column(name="food_id")
+	String firstFoodId;
+	@Column(name="res_id")
+	String resId;
+	
+	@Transient
+	String userId;
+	@Transient
+	List<FoodCartItem> foodList;
+	@Transient
+	List<FoodLineItem> orderedList;
+	@Transient
+	Payment payment;
+	@Transient
+	String firstFoodName;
+	@Transient
+	byte[] resImg;
+	@Transient
+	String resName;
+	@Transient
+	String img64;
+	@Transient
+	int totalPrice;
+	@Transient
 	String orderDate;
 	
   //togetherOrder 넣기 위해 추가
+	@Transient
 	String foodId;
 	public FoodOrder() {
 		

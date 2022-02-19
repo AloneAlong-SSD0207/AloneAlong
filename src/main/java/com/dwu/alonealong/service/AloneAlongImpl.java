@@ -1,5 +1,7 @@
 package com.dwu.alonealong.service;
 
+import lombok.Builder;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,7 @@ import com.dwu.alonealong.domain.Product;
 import com.dwu.alonealong.domain.ProductOrder;
 import com.dwu.alonealong.domain.ProductReview;
 import com.dwu.alonealong.domain.Restaurant;
+import com.dwu.alonealong.domain.RestaurantRepository;
 import com.dwu.alonealong.domain.Together;
 import com.dwu.alonealong.domain.TogetherFood;
 import com.dwu.alonealong.domain.TogetherMember;
@@ -49,6 +52,8 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	//restaurant
 	@Autowired
 	private RestaurantDAO restaurantDao;	
+	@Autowired
+	private RestaurantRepository restaurantRepository;
 	@Autowired
 	private FoodDAO foodDao;
 	@Autowired
@@ -222,35 +227,53 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	//Restaurant
 	@Override
 	public void insertRestaurant(Restaurant res) {
-		restaurantDao.insertRestaurant(res);
+		//Restaurant params = Restaurant.builder().resId()
+		restaurantRepository.save(res);
+		//restaurantDao.insertRestaurant(res);
 	}
 	@Override
 	public void updateRestaurant(Restaurant res) {
-		restaurantDao.updateRestaurant(res);
+		restaurantRepository.save(res);
+		//restaurantDao.updateRestaurant(res);
 	}
 	@Override
 	public void deleteRestaurant(String ownerId) {
-		restaurantDao.deleteRestaurant(ownerId);
+		//restaurantDao.deleteRestaurant(ownerId);
+		restaurantRepository.deleteById(ownerId);
 	}
 	@Override
 	public List<Restaurant> getRestaurantList() {
-		return restaurantDao.getRestaurantList();
+		return (List<Restaurant>) restaurantRepository.findAll();
+		//return restaurantDao.getRestaurantList();
 	}
 	@Override
 	public List<Restaurant> getRestaurantListByCategory(String category1, String category2, String sortType){
-		return restaurantDao.getRestaurantListByCategory(category1, category2, sortType);
+		if(category1.equals("지역")) category1 = "";
+		if(category2.equals("분류")) category2 = "";
+		if(sortType.equals("RES_DATE")) {
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByResDateDesc(category1, category2);
+		}else if(sortType.equals("REV_COUNT")) {
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByRevCountDesc(category1, category2);
+		}else if(sortType.equals("AVG_RATING")) {
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByAvgRatingDesc(category1, category2);
+		}
+		return null;
+		//return restaurantDao.getRestaurantListByCategory(category1, category2, sortType);
 	}
 	@Override
 	public List<Restaurant> searchRestaurantList(String keywords) {
-		return restaurantDao.searchRestaurantList(keywords);
+		return restaurantRepository.findByResNameContainingIgnoreCaseOrResDescriptionContainingIgnoreCase(keywords, keywords);
+		//return restaurantDao.searchRestaurantList(keywords);
 	}
 	@Override
 	public Restaurant getRestaurantByUserId(String userId) {
-		return restaurantDao.getRestaurantByOwnerId(userId);
+		return restaurantRepository.findByOwnerId(userId);
+		//return restaurantDao.getRestaurantByOwnerId(userId);
 	}
 	@Override
 	public Restaurant getRestaurantByResId(String resId) {
-		return restaurantDao.getRestaurant(resId);
+		return restaurantRepository.findByResId(resId);
+		//return restaurantDao.getRestaurant(resId);
 	}
 	
 	

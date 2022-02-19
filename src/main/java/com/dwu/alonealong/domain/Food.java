@@ -4,20 +4,45 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.URL;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.*;
+
+import lombok.*;
+
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 public class Food implements Serializable{
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	@Column(name="food_id")
 	private String foodId;
+	@Column(name="res_id")
 	private String resId;
-	private String ownerId; //일단 필요없음.
+	//private String ownerId; //일단 필요없음.
+	@Column(name="food_price")
 	private int price;
+	@Column(name="food_name")
 	private String name;
+	@Column(name="food_des")
 	private String description;
+	@Column(name="food_img")
 	private byte[] imgFile;
+	@Transient
 	private String img64;
+	@Column(name="max_people_num")
 	private int maxPeopleNum;
+	@Column(name="food_sell")
+	private String foodSell;
 	
 	public Food() {
 	}
-
+	
 	public Food(String resId, String id, String name, int price, String des, byte[] img, int maxPeopleNum){
 		this.resId = resId;
 		this.foodId = id;
@@ -31,7 +56,7 @@ public class Food implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Food [foodId=" + foodId + ", resId=" + resId + ", ownerId=" + ownerId + ", price=" + price + ", name="
+		return "Food [foodId=" + foodId + ", resId=" + resId + ", ownerId=" + ", price=" + price + ", name="
 				+ name + ", description=" + description + ", maxPeopleNum=" + maxPeopleNum + "]";
 	}
 	public String getFoodId() {
@@ -46,12 +71,12 @@ public class Food implements Serializable{
 	public void setResId(String resId) {
 		this.resId = resId;
 	}
-	public String getOwnerId() {
-		return ownerId;
-	}
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
+//	public String getOwnerId() {
+//		return ownerId;
+//	}
+//	public void setOwnerId(String ownerId) {
+//		this.ownerId = ownerId;
+//	}
 	public int getPrice() {
 		return price;
 	}
@@ -77,12 +102,11 @@ public class Food implements Serializable{
 		this.maxPeopleNum = maxPeopleNum;
 	}
 
-	public Food(String foodId, String resId, String ownerId, int price, String name, String description, byte[] img,
+	public Food(String foodId, String resId, int price, String name, String description, byte[] img,
 			int maxPeopleNum) {
 		super();
 		this.foodId = foodId;
 		this.resId = resId;
-		this.ownerId = ownerId;
 		this.price = price;
 		this.name = name;
 		this.description = description;
