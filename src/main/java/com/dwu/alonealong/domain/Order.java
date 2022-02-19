@@ -20,8 +20,9 @@ public class Order implements Serializable{
 	@Id
 	@Column(name="order_id")
 	private String orderId;
+	@CreationTimestamp
 	@Column(name="order_date")
-	private String orderDate;
+	private Date orderDate;
 	@Column(name="total_price")
 	private int totalPrice;
 	@Column(name="order_status")

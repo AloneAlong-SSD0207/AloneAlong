@@ -11,11 +11,7 @@ import javax.persistence.*;
 import lombok.*;
 
 @SuppressWarnings("serial")
-@Getter
-@Setter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
 public class Restaurant implements Serializable{
 	
 	@Id

@@ -5,11 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
 public class FoodLineItem implements Serializable{
 	
 	@Id
