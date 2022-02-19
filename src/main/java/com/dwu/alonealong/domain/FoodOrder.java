@@ -7,12 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 import lombok.*;
 
-
-@Getter
-@Setter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
 public class FoodOrder implements Serializable{
 	
 	@Id

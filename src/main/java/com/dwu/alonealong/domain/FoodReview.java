@@ -5,13 +5,8 @@ import javax.persistence.*;
 import lombok.*;
 
 @SuppressWarnings("serial")
-@Getter
-@Setter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
-@AllArgsConstructor
 public class FoodReview implements Serializable{
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name="review_id")
