@@ -4,22 +4,21 @@ import lombok.Builder;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dwu.alonealong.domain.*;
+import com.dwu.alonealong.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dwu.alonealong.dao.UserDAO;
-import com.dwu.alonealong.dao.CartItemDAO;
 import com.dwu.alonealong.dao.FoodDAO;
 import com.dwu.alonealong.dao.FoodLineItemDAO;
 import com.dwu.alonealong.dao.FoodOrderDAO;
 import com.dwu.alonealong.dao.FoodReviewDAO;
 import com.dwu.alonealong.dao.OrderInfoDAO;
 import com.dwu.alonealong.dao.PaymentDAO;
-import com.dwu.alonealong.dao.ProductDAO;
-import com.dwu.alonealong.dao.ProductOrderDAO;
-import com.dwu.alonealong.dao.ProductReviewDAO;
 import com.dwu.alonealong.dao.RestaurantDAO;
 import com.dwu.alonealong.dao.TogetherDAO;
 import com.dwu.alonealong.dao.TogetherFoodDAO;
@@ -48,7 +47,6 @@ import com.dwu.alonealong.domain.User;
 @Service
 @Transactional
 public class AloneAlongImpl implements AloneAlongFacade{
-
 	//restaurant
 	@Autowired
 	private RestaurantDAO restaurantDao;	
@@ -69,16 +67,22 @@ public class AloneAlongImpl implements AloneAlongFacade{
     @Autowired
 	private UserDAO userDao;
 	@Autowired
-	private ProductDAO productDao;
+	private ProductRepository productRepository;
 	@Autowired
-	private ProductReviewDAO productReviewDao;
+	private ProductReviewRepository pReviewRepository;
 	@Autowired
-	private ProductOrderDAO productOrderDao;
-	
+	private ProductReviewRecommendRepository prRecommendRepository;
+	@Autowired
+	private ProductOrderRepository productOrderRepository;
+	@Autowired
+	private OrderRepository orderRepository;
+	@Autowired
+	private ProductLineItemRepository productLineItemRepository;
+
 	@Autowired
 	private PaymentDAO paymentDao;
 	@Autowired
-	private CartItemDAO cartItemDao;
+	private CartItemRepository cartItemRepository;
 	
 	@Autowired
 	private TogetherDAO togetherDao;
@@ -119,98 +123,119 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	}
 	
 	//Product
-	public List<Product> getProductList(int pcId, String sortType){
-		return productDao.getProductList(pcId, sortType);
+	public List<Product> getProductList(int _pcId, String sortType){
+		String pcId =  Integer.toString(_pcId);
+		switch(sortType) {
+			case "past" : return productRepository.findByPcIdOrderByProductDateAsc(pcId);
+			case "sales" : return productRepository.findByPcIdOrderByProductSalesDesc(pcId);
+			case "lowPrice" : return productRepository.findByPcIdOrderByProductPriceAsc(pcId);
+			default: return productRepository.findByPcIdOrderByProductDateDesc(pcId);
+		}
 	}
 	public List<Product> searchProductList(String keywords){
-		return productDao.searchProductList(keywords);
+		return productRepository.findByProductNameContaining(keywords);
 	}
 	public Product getProduct(String productId){
-		return productDao.getProduct(productId);
-	}
-	public void updateProduct(Product product) {
-		productDao.updateProduct(product);
+		return productRepository.findByProductId(productId);
 	}
 	
 	//Product Review
-	public ProductReview getProductReview(String reviewId, String userId){
-		return productReviewDao.getProductReview(reviewId, userId);
+	public ProductReview getProductReview(long reviewId, String userId){
+		ProductReview review = pReviewRepository.findByReviewId(reviewId);
+		review.setCheckRecommend(prRecommendRepository.existsByReviewIdAndUserId(reviewId, userId));
+		return review;
 	}
 	public List<ProductReview> getProductReviewList(String productId, String sortType, String userId){
-		return productReviewDao.getProductReviewList(productId, sortType, userId);
-	}
-	public List<ProductReview> getProductReviewListByUserId(String userId){
-		return productReviewDao.getProductReviewListByUserId(userId);
+		Sort sort;
+		switch(sortType) {
+			case "recommend" : sort = Sort.by(Sort.Direction.DESC, "recommend"); break;
+			case "lowRating" : sort = Sort.by(Sort.Direction.ASC, "rating"); break;
+			case "highRating" : sort = Sort.by(Sort.Direction.DESC, "rating"); break;
+			default: sort = Sort.by(Sort.Direction.DESC, "reviewDate");
+		}
+		List<ProductReview> reviewList = pReviewRepository.findByProductId(productId, sort);
+		for (ProductReview review : reviewList){
+			review.setCheckRecommend(prRecommendRepository.existsByReviewIdAndUserId(review.getReviewId(), userId));
+		}
+		return reviewList;
 	}
 	public void insertProductReview(ProductReview productReview) {
-		productReviewDao.insertProductReview(productReview);
-		return;
+		pReviewRepository.save(productReview);
 	}
 	public void updateProductReview(ProductReview productReview) {
-		productReviewDao.updateProductReview(productReview);
-		return;
+		pReviewRepository.save(productReview);
 	}
-	public void deleteProductReview(String reviewId) {
-		productReviewDao.deleteProductReview(reviewId);
-		return;
-	}
-	public int numOfReviews(String productId) {
-		return productReviewDao.numOfReviews(productId);
-	}
-	public double averageOfReviews(String productId){
-		return productReviewDao.averageOfReviews(productId);
+	public void deleteProductReview(long reviewId) {
+		prRecommendRepository.deleteByReviewId(reviewId);
+		pReviewRepository.deleteByReviewId(reviewId);
 	}
 	public int mostRatingOfReviews(String productId){
-		return productReviewDao.mostRatingOfReviews(productId);
+		return pReviewRepository.mostRatingOfReviews(productId).get(0);
 	}
-	public void insertProductReviewRecommend(String reviewId, String userId){
-		productReviewDao.insertProductReviewRecommend(reviewId, userId);
+	public void insertProductReviewRecommend(long reviewId, String userId){
+		ProductReviewRecommend recommend = new ProductReviewRecommend();
+		recommend.setReviewId(reviewId);
+		recommend.setUserId(userId);
+		prRecommendRepository.save(recommend);
 		return;
 	}
-	public void deleteProductReviewRecommend(String reviewId, String userId){
-		productReviewDao.deleteProductReviewRecommend(reviewId, userId);
+	public void deleteProductReviewRecommend(long reviewId, String userId){
+		prRecommendRepository.deleteByReviewIdAndUserId(reviewId, userId);
 		return;
 	}
 	
 	//PRODUCT Order
-	public List<ProductOrder> getOrdersByUserId(String userId){
-		return productOrderDao.getOrdersByUserId(userId);
+	public List<Order> getOrdersByUserId(String userId){
+		List<Order> orderList = orderRepository.findByUserId(userId);
+		for(Order order : orderList){
+			ProductOrder po = order.getProductOrder();
+			po.setLineItems(productLineItemRepository.findByOrderId(order.getOrderId()));
+			order.setProductOrder(po);
+		}
+		return orderRepository.findByUserId(userId);
 	}
-//	public List<ProductOrder> getProductOrdersByProductId(String productId){
-//		return productOrderDao.getOrdersByProductId(productId);
-//	}
 	public ProductOrder getProductOrder(String orderId){
-		return productOrderDao.getProductOrder(orderId);
+		return productOrderRepository.findByOrderId(orderId);
 	}
-	public void insertProductOrder(ProductOrder order){
-		productOrderDao.insertProductOrder(order);
+	public void insertProductOrder(ProductOrder productOrder){
+		String orderId = "p" + productOrderRepository.getOrderId();
+		productOrder.setOrderId(orderId);
+		productOrder.setShipPhoneByForm();
+		productOrder.setOrder(productOrder.getOrder().saveSet(productOrder.getOrder(), orderId));
+		productOrderRepository.save(productOrder);
+		for(ProductLineItem item : productOrder.getLineItems()){
+			item.setOrderId(orderId);
+			productLineItemRepository.save(item);
+		}
 	}
 	public boolean checkUsersOrder(String userId, String productId){
-		return productOrderDao.checkUsersOrder(userId, productId);
+		return orderRepository.existsByOrderIdAndUserId(userId, productId);
 	}
 	
 	//cart
 	public List<CartItem> getAllCartItem(String userId) throws DataAccessException{
-		return cartItemDao.getAllCartItem(userId);
+		return cartItemRepository.findByUserId(userId);
 	}
-	public CartItem getCartItem(String cartItemId) throws DataAccessException{
-		return cartItemDao.getCartItem(cartItemId);
+	public CartItem getCartItem(long cartItemId) throws DataAccessException{
+		return cartItemRepository.findByCartItemId(cartItemId);
 	}
 	public void insertCartItem(String productId, int quantity, String userId)  throws DataAccessException{
-		cartItemDao.insertCartItem(productId, quantity, userId);
-		return;
-	}
-	public void deleteCartItem(String cartItemId) throws DataAccessException{
-		cartItemDao.deleteCartItem(cartItemId);
-		return;
+		CartItem cartItem = new CartItem(userId, productId, quantity);
+		CartItem existItem = cartItemRepository.findByUserIdAndProductId(userId, productId);
+		if(existItem != null){
+			cartItem.setCartItemId(existItem.getCartItemId());
+			cartItem.setQuantity(quantity + existItem.getQuantity());
+		}
+		cartItemRepository.save(cartItem);
 	}
 	public void deleteAllCartItem(String userId) throws DataAccessException{
-		cartItemDao.deleteAllCartItem(userId);
-		return;
+		cartItemRepository.deleteByUserId(userId);
+	}
+	public void deleteCartItem(long cartItemId) throws DataAccessException{
+		cartItemRepository.deleteByCartItemId(cartItemId);
 	}
 	public void updateCartItem(CartItem cartItem) throws DataAccessException{
-		cartItemDao.updateCartItem(cartItem);
-		return;
+		cartItemRepository.save(cartItem);
 	}
 	
 	//Payment
