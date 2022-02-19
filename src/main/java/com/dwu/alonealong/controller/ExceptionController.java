@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class ExceptionController{
-    @ExceptionHandler({ Exception.class, NullProductException.class, UserNotMatchException.class })
+    @ExceptionHandler({ NullProductException.class, UserNotMatchException.class })
     public String NullProductException(Exception e, Model model) {
         model.addAttribute("errorMessage", e.getMessage());
         return "error";

@@ -31,10 +31,6 @@ public class Product implements Serializable {
     private String productInfo;
     @Column(name="product_date")
     private String productDate;
-    @Column(name="product_img")
-    private byte[] productImg;
-    @Column(name="product_contents")
-    private byte[] productContents;
     @Column(name="product_price")
     private int productPrice;
     @Column(name="product_sales")
@@ -43,8 +39,6 @@ public class Product implements Serializable {
     private int productStock;
     @Transient
     private int quantity;
-    @Column(name="shippingfee")
-    private int fee;
 
     public int getShippingFee() {
       return SHIPPING_FEE;

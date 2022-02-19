@@ -2,7 +2,6 @@ package com.dwu.alonealong.repository;
 
 import java.util.List;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import com.dwu.alonealong.domain.Product;
 
