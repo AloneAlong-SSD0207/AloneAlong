@@ -1,50 +1,58 @@
 package com.dwu.alonealong.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @SuppressWarnings("serial")
+@Getter
+@Setter
+@Entity
+@Table(name="product_review")
+@NoArgsConstructor
+@AllArgsConstructor
+@SequenceGenerator(
+        name = "PRODUCTREVIEW_SEQ_GEN"
+        , sequenceName = "PRODUCTREVIEW_SEQ"
+        , initialValue = 1
+        , allocationSize = 1
+)
 public class ProductReview implements Serializable {
   public final static int MAX_CONTENT_SIZE = 300;
 
   /* Private Fields */
-  private String reviewId;
+  @Id
+  @Column(name="review_id")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUCTREVIEW_SEQ_GEN")
+  private long reviewId;
+
+  @Column(name="product_id")
   private String productId;
+  @Column(name="user_id")
   private String userId;
-  private String nickname;
+  @CreationTimestamp
+  @Column(name="review_date")
   private Date reviewDate;
-  private String reviewContents;
+  @Column(name="review_rating")
   private int rating;
+  @Column(name="review_contents")
+  private String reviewContents;
+  @Column(name="review_recommend")
   private int recommend;
+  @Transient
   private boolean checkRecommend;
-  
-  public String getReviewId() { return reviewId; }
-  public void setReviewId(String reviewId) { this.reviewId = reviewId; }
+  @ManyToOne
+  @JoinColumn(name="user_id", insertable = false, updatable = false)
+  private UserVO user;
 
-  public String getProductId() { return productId; }
-  public void setProductId(String productId) { this.productId = productId; }
-
-  public String getUserId() { return userId; }
-  public void setUserId(String userId) { this.userId = userId; }
-
-  public String getNickname() { return nickname; }
-  public void setNickname(String nickname) { this.nickname = nickname; }
-  
-  public Date getReviewDate() { return reviewDate; }
-  public void setReviewDate(Date reviewDate) { this.reviewDate = reviewDate; }
-  
-  public String getReviewContents() { return reviewContents; }
-  public void setReviewContents(String reviewContents) { this.reviewContents = reviewContents; }
-  
-  public int getRating() { return rating; }
-  public void setRating(int rating) { this.rating = rating; }
-  
-  public int getRecommend() { return recommend; }
-  public void setRecommend(int recommend) { this.recommend = recommend; }
-  
-  public boolean getCheckRecommend() { return checkRecommend; }
-  public void setCheckRecommend(boolean checkRecommend) { this.checkRecommend = checkRecommend; }
-  
   /* Public Methods */
   public void increaseRecommend() {
 	  this.recommend++;
@@ -53,4 +61,5 @@ public class ProductReview implements Serializable {
 	  this.recommend--;
   }
 
+  public boolean getCheckRecommend() { return checkRecommend; }
 }
