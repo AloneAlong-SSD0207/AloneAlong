@@ -5,26 +5,56 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 @SuppressWarnings("serial")
+@Entity
+@Table(name="TOGETHER")
 public class Together implements Serializable {
 	public static final int MIN_HEAD_COUNT = 2;
 	public static final int GATHERING = 0;
 	public static final int GATHERED = 1;
 	
+	@Id
+	@Column(name="tog_id")
 	private String togetherId;
+	@Column(name="tog_name")
 	private String togetherName;
 	private int headCount;
+	@Column(name="tog_date")
 	private String togetherDate;
+	@Column(name="tog_time")
 	private String togetherTime;
+	@Column(name="tog_sex")
 	private String sex;
+	@Column(name="tog_age")
 	private String age;
+	@Column(name="tog_des")
 	private String togetherDes;
+	@Column(name="res_id")
 	private String resId;
+	@Column(name="tog_status")
 	private int status;
 	private int price;
 	
+	@ManyToOne
+	@JoinColumn(name = "res_id", insertable=false, updatable=false)
 	private Restaurant restaurant;
+	
+	@OneToMany
+	@JoinColumn(name="tog_id")
 	private List<TogetherFood> togetherFoodList = new ArrayList<TogetherFood>();
+	
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinColumn(name="tog_id")
 	private List<TogetherMember> togetherMemberList = new ArrayList<TogetherMember>();
 	
 	public Together() {
