@@ -36,26 +36,24 @@ public interface AloneAlongFacade {
 	void insertContact(String contents);
 	  
 	//PRODUCT
-	List<Product> getProductList(int pcId, String sortType);	
+	List<Product> getProductList(int pcId, String sortType);
 	List<Product> searchProductList(String keywords);
 	Product getProduct(String productId);
-	void updateProduct(Product product);
 	
 	//PRODUCT Review
-	ProductReview getProductReview(String reviewId, String userId);
+	ProductReview getProductReview(long reviewId, String userId);
 	List<ProductReview> getProductReviewList(String productId, String sortType, String userId);
-	List<ProductReview> getProductReviewListByUserId(String userId);
 	void insertProductReview(ProductReview productReview);
 	void updateProductReview(ProductReview productReview);
-	void deleteProductReview(String reviewId);
-	int numOfReviews(String productId);
-	double averageOfReviews(String productId);
+	void deleteProductReview(long reviewId);
+//	int numOfReviews(String productId);
+//	double averageOfReviews(String productId);
 	int mostRatingOfReviews(String productId);
-	void insertProductReviewRecommend(String reviewId, String userId);
-	void deleteProductReviewRecommend(String reviewId, String userId);
+	void insertProductReviewRecommend(long reviewId, String userId);
+	void deleteProductReviewRecommend(long reviewId, String userId);
 	
 	//PRODUCT Order
-	List<ProductOrder> getOrdersByUserId(String userId);
+	List<Order> getOrdersByUserId(String userId);
 //	List<ProductOrder> getOrdersByProductId(String productId);
   	ProductOrder getProductOrder(String orderId);
 	void insertProductOrder(ProductOrder order);
@@ -63,10 +61,10 @@ public interface AloneAlongFacade {
 	
 	//CART
 	List<CartItem> getAllCartItem(String userId) throws DataAccessException;
-	CartItem getCartItem(String cartItemId) throws DataAccessException;
+	CartItem getCartItem(long cartItemId) throws DataAccessException;
 	void insertCartItem(String productId, int quantity, String userId)  throws DataAccessException;
-	void deleteCartItem(String cartItemId) throws DataAccessException;
 	void deleteAllCartItem(String userId) throws DataAccessException;
+	void deleteCartItem(long cartItemId) throws DataAccessException;
 	void updateCartItem(CartItem cartItem) throws DataAccessException;
 	
 	//PAYMENT
