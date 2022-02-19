@@ -2,14 +2,32 @@ package com.dwu.alonealong.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.*;
+import lombok.*;
+
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 public class FoodLineItem implements Serializable{
+	
+	@Id
+	@Column(name="order_id")
 	private String orderId;
+	@Column(name="food_id")
 	private String foodId;
+	@Column(name="quantity")
 	private int quantity;
+	@Column(name="unit_price")
 	private int unitPrice;
 	
+	@Transient
 	private String foodName;
 	
+	public FoodLineItem() {
+		
+	}
 	
 	public FoodLineItem(String orderId, String foodId, int quantity, int unitPrice) {
 		super();

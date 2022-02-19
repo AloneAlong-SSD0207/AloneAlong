@@ -2,15 +2,32 @@ package com.dwu.alonealong.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.*;
+import lombok.*;
 @SuppressWarnings("serial")
+@Getter
+@Setter
+@Entity
+@Table(name="orderinfo")
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@AllArgsConstructor
 public class Order implements Serializable{
+	@Id
+	@Column(name="order_id")
 	private String orderId;
+	@Column(name="order_date")
 	private String orderDate;
+	@Column(name="total_price")
 	private int totalPrice;
+	@Column(name="order_status")
 	private String status;
+	@Column(name="user_id")
 	private String userId;
+	@Column(name="card_num")
 	private String cardNum;
+	@Column(name="card_date")
 	private String cardDate;
+	@Column(name="card_name")
 	private String cardName;
 	
 	public Order() {}
