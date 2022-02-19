@@ -205,6 +205,10 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		productOrderRepository.save(productOrder);
 		for(ProductLineItem item : productOrder.getLineItems()){
 			item.setOrderId(orderId);
+			Product product = item.getProduct();
+			product.setProductSales(product.getProductSales() + item.getQuantity());
+			product.setProductStock(product.getProductStock() - item.getQuantity());
+			productRepository.save(product);
 			productLineItemRepository.save(item);
 		}
 	}
