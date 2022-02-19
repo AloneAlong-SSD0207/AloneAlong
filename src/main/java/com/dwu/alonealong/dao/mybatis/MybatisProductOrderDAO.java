@@ -37,7 +37,6 @@ public class MybatisProductOrderDAO implements ProductOrderDAO{
 	@Transactional
 	public void insertProductOrder(ProductOrder order) throws DataAccessException{
 	    productOrderMapper.insertProductOrder(order);
-		productMapper.updateProductStock(order.getLineItems());
 	}
 	
 	public boolean checkUsersOrder(String userId, String productId) throws DataAccessException{

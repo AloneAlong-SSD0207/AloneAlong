@@ -27,13 +27,13 @@
 								</a>
 								<div class="cart-title text-left ml-3">
 									<a class="text-uppercase text-dark" href="<c:url value='/shop/${orderItem.getProductId()}'/>">
-										<strong>${orderItem.getProductName()}</strong></a>
+										<strong>${orderItem.product.productName}</strong></a>
 								</div>
 							</div>
 						</div>
 						<div class="mt-4 mt-md-0 col-md-5">
 							<div class="align-items-center row">
-								<div class="col-md-3"><fmt:formatNumber value="${orderItem.getPrice()}" pattern="#,###,###"/>원</div>
+								<div class="col-md-3"><fmt:formatNumber value="${orderItem.product.productPrice}" pattern="#,###,###"/>원</div>
 								<div class="col-md-3 text-center"><fmt:formatNumber value="${orderItem.getQuantity()}" pattern="#,###,###"/></div>
 								<div class="col-md-3"><fmt:formatNumber value="${orderItem.getUnitPrice()}" pattern="#,###,###"/>원</div>
 							</div>

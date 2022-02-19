@@ -3,6 +3,8 @@ package com.dwu.alonealong.controller;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.List;
+
+import com.dwu.alonealong.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,19 +23,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 
-import com.dwu.alonealong.domain.TogetherOrder;
-import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
 
 
-import com.dwu.alonealong.domain.Food;
-import com.dwu.alonealong.domain.FoodCart;
-import com.dwu.alonealong.domain.FoodLineItem;
-import com.dwu.alonealong.domain.FoodOrder;
-import com.dwu.alonealong.domain.ProductLineItem;
-import com.dwu.alonealong.domain.ProductOrder;
-import com.dwu.alonealong.domain.Restaurant;
-import com.dwu.alonealong.domain.Together;
 import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
 
@@ -57,7 +49,7 @@ public class ViewMypageController {
 		}
 		String userId = userSession.getUser().getId();
 		User user = aloneAlong.getUserByUserId(userId);
-		List<ProductOrder> productOrderList = aloneAlong.getOrdersByUserId(userId);
+		List<Order> productOrderList = aloneAlong.getOrdersByUserId(userId);
 		
 		model.addAttribute("productOrderList", productOrderList);
 		return "myOrder";
