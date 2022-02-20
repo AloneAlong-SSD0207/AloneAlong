@@ -2,16 +2,17 @@ package com.dwu.alonealong.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name = "TOGETHER_MEMBER")
+@SequenceGenerator(
+		name = "TOGMEM_SEQ_GENERATOR"
+		, sequenceName = "TOGMEM_ID_SEQ"
+		, initialValue = 1
+		, allocationSize = 1
+)
 public class TogetherMember implements Serializable {
 	public static final int IS_NOT_HOST = 0;
 	public static final int IS_HOST = 1;
