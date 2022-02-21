@@ -28,6 +28,7 @@ public class Together implements Serializable {
 	private String togetherId;
 	@Column(name="tog_name")
 	private String togetherName;
+	@Column(name="headcount")
 	private int headCount;
 	@Column(name="tog_date")
 	private String togetherDate;

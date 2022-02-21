@@ -91,7 +91,9 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	@Autowired
 	private TogetherMemberRepository togetherMemberRepository;
 	@Autowired
-	private TogetherOrderDAO togetherOrderDao;
+	private TogetherOrderDAO togetherOrderDao; //findByUserId 때문에 남김
+	@Autowired
+	private TogetherOrderRepository togetherOrderRepository;
 
 	//User
 	public User getUserByUserId(String Id) throws DataAccessException{
@@ -466,7 +468,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	//TogetherOrder
 	@Override
 	public void insertTogetherOrder(TogetherOrder togetherOrder) {
-		togetherOrderDao.insertTogetherOrder(togetherOrder);
+		togetherOrderRepository.save(togetherOrder);
 	}
 	
 	@Override
@@ -481,17 +483,17 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	
 	@Override
 	public List<TogetherOrder> getTogetherOrderByUserId(String userId) {
-		return togetherOrderDao.getTogetherOrderByUserId(userId);
+		return togetherOrderDao.getTogetherOrderByUserId(userId); //JOIN 때문에 해결 못함
 	}
 
 	@Override
 	public List<TogetherOrder> getTogetherOrderByTogId(String togId) {
-		return togetherOrderDao.getTogetherOrderByTogId(togId);
+		return togetherOrderRepository.findByTogetherId(togId);
 	}
 
 	@Override
 	public void deleteTogetherOrder(String togId) {
-		togetherOrderDao.deleteTogetherOrder(togId);
+		togetherOrderRepository.deleteByTogetherId(togId);
 	}
 
 	@Override
