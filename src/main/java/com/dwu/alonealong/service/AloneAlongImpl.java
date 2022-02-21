@@ -87,7 +87,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	@Autowired
 	private TogetherDAO togetherDao;
 	@Autowired
-	private TogetherFoodDAO togetherFoodDao;
+	private TogetherFoodRepository togetherFoodRepository;
 	@Autowired
 	private TogetherMemberRepository togetherMemberRepository;
 	@Autowired
@@ -429,23 +429,21 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	//TogetherFood
 	@Override
 	public List<TogetherFood> getTogetherFoodListByTogId(String togId) {
-		return togetherFoodDao.getTogetherFoodListByTogId(togId);
+		return togetherFoodRepository.findByTogetherId(togId);
 	}
 	
 	@Override
 	public void insertTogetherFood(TogetherFood togetherFood) {
-		togetherFoodDao.insertTogetherFood(togetherFood);
+		String togetherFoodId = String.valueOf(togetherFoodRepository.getTogFoodIdFromSeq());
+		togetherFood.setTogetherFoodId(togetherFoodId);
+		togetherFoodRepository.save(togetherFood);
 	}
 	
 	@Override
-	public void deleteTogetherFood(String togId) {
-		togetherFoodDao.deleteTogetherFood(togId);
-	}
+	public void deleteTogetherFood(String togId) {togetherFoodRepository.deleteByTogetherId(togId);}
 	
 	@Override
-	public void updateTogetherFood(TogetherFood togetherFood) {
-		togetherFoodDao.updateTogetherFood(togetherFood);
-	}
+	public void updateTogetherFood(TogetherFood togetherFood) {togetherFoodRepository.save(togetherFood);}
 	
 	//TogetherMember
 	@Override
