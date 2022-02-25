@@ -30,7 +30,7 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		Together together = togetherMapper.getTogetherByTogId(togId);
 		String togetherId = together.getTogetherId();
 		together.setTogetherFoodList(togetherFoodRepository.findByTogetherId(togetherId));
-		together.setTogetherMemberList(togetherMemberRepository.findByTogetherId(togetherId));
+		together.setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togetherId));
 		
 		return together;
 	}
@@ -56,7 +56,7 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
 			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		
 		return togetherList;
@@ -68,7 +68,7 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
 			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		return togetherList;
 	}
@@ -116,7 +116,7 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
 			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		
 		return togetherList;
@@ -131,7 +131,7 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
 			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		
 		return togetherList;
@@ -143,7 +143,7 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
 			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		
 		return togetherList;

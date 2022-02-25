@@ -390,39 +390,49 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	//together
 	@Override
 	public Together getTogetherByTogId(String togId) {
-		return togetherDao.getTogetherByTodId(togId);
+		Together together = togetherRepository.getByTogetherId(togId);
+		String togetherId = together.getTogetherId();
+		together.setTogetherFoodList(togetherFoodRepository.findByTogetherId(togetherId));
+		together.setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togetherId));
+
+		return together;
 	}
 	
 	@Override
 	public List<Together> getTogetherList() {
-//		List<Together> togetherList = (List<Together>) togetherRepository.findAll(); //JPA 여기서 에러남
-//		for(int i = 0; i < togetherList.size(); i++) {
-//			String togId = togetherList.get(i).getTogetherId();
-//			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
-//			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherId(togId));
-//		}
-//
-//		return togetherList;
-		return togetherDao.getTogetherList();
+		List<Together> togetherList = togetherRepository.findAll();
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
 	
 	@Override
 	public void insertTogether(Together together) {
-		String togetherId = String.valueOf(togetherRepository.getTogIdFromSeq());
-		together.setTogetherId(togetherId);
+//		String togetherId = String.valueOf(togetherRepository.getTogIdFromSeq());
+//		together.setTogetherId(togetherId);
 //		togetherRepository.save(together); //DB에는 저장이 되는데, 뷰에는 반영x
 		togetherDao.insertTogether(together);
+	}
+
+	@Override
+	public void updateTogether(Together together) {
+//		togetherRepository.save(together); //DB에는 저장이 되는데, 뷰에는 반영x
+		togetherDao.updateTogether(together);
+	}
+
+	@Override
+	public void deleteTogether(String togId) throws DataAccessException {
+//		togetherRepository.deleteByTogetherId(togId); //delete도 수행 잘 안됨 - db에는 수행되었는데 뷰에는 적용x
+		togetherDao.deleteTogether(togId);
 	}
 	
 	@Override
 	public List<Together> getTogetherListByCategory(String area, String date, String kind, int price, String sex, String age) {
 		return togetherDao.getTogetherListByCategory(area, date, kind, price, sex, age);
-	}
-	
-	@Override
-	public void updateTogether(Together together) {
-//		togetherRepository.save(together); //DB에는 저장이 되는데, 뷰에는 반영x
-		togetherDao.updateTogether(together);
 	}
 	
 	@Override
@@ -432,16 +442,18 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	
 	@Override
 	public List<Together> getTogetherListByResId(String resId) {
+//		List<Together> togetherList = togetherRepository.findByResId(resId); // status = 0 조건 붙여줘야 함
+//		for(int i = 0; i < togetherList.size(); i++) {
+//			String togId = togetherList.get(i).getTogetherId();
+//			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+//			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherId(togId));
+//		}
+//
+//		return togetherList;
 		return togetherDao.getTogetherListByResId(resId);
 	}
-	
-	@Override
-	public void deleteTogether(String togId) throws DataAccessException {
-//		togetherRepository.deleteByTogetherId(togId); //delete도 수행 잘 안됨 - db에는 수행되었는데 뷰에는 적용x
-		togetherDao.deleteTogether(togId);
-  }
   
-  @Override
+  	@Override
 	public List<Together> searchTogetherList(String keyword) {
 		return togetherDao.searchTogetherList(keyword);
 	}
@@ -468,7 +480,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	//TogetherMember
 	@Override
 	public List<TogetherMember> getTogetherMemberListByTogId(String togId) {
-		return togetherMemberRepository.findByTogetherId(togId);
+		return togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId);
 	}
 	
 	@Override
@@ -507,8 +519,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	//OrderInfo for Together
 	@Override
 	public void insertTogetherOrderInfo(Order order) {
-//		orderInfoDao.insertTogetherOrderInfo(order);
-		String orderId = String.valueOf(togetherOrderRepository.getTogOrderIdFromSeq());
+		String orderId = "t" + togetherOrderRepository.getTogOrderIdFromSeq();
 		order.setOrderId(orderId);
 
 		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -530,6 +541,6 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 	@Override
 	public void insertFoodOrderForTogetherOrder(FoodOrder foodOrder) {
-		foodOrderDao.insertFoodOrderForTogetherOrder(foodOrder);
+		foodOrderDao.insertFoodOrderForTogetherOrder(foodOrder); //나중에 merge 후 전환 예정
 	}
 }

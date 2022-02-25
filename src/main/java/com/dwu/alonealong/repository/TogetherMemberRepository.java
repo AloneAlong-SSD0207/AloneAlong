@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface TogetherMemberRepository extends CrudRepository<TogetherMember, String>{
-    List<TogetherMember> findByTogetherId(String togId) throws DataAccessException;
+    List<TogetherMember> findByTogetherIdOrderByTogetherMemberIdAsc(String togId) throws DataAccessException;
 
     @Query(value = "SELECT TOGMEM_ID_SEQ.NEXTVAL FROM DUAL", nativeQuery = true )
     long getTogMemIdFromSeq();
