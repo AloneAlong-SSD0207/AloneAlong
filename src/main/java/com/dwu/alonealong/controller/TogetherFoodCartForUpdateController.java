@@ -33,9 +33,9 @@ public class TogetherFoodCartForUpdateController {
 	
 	@RequestMapping("/togetherUpdate/{resId}/addFoodToCart")
 	public String addFoodCart(
-			@RequestParam("foodId") String foodId,
+			@RequestParam("foodId") long foodId,
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") String resId,
+			@PathVariable("resId") long resId,
 			ModelMap model
 			) throws Exception {
 
@@ -65,7 +65,7 @@ public class TogetherFoodCartForUpdateController {
 	public String UpdateFoodCart(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") String resId,
+			@PathVariable("resId") long resId,
 			ModelMap model
 			) throws Exception {
 		
@@ -89,7 +89,7 @@ public class TogetherFoodCartForUpdateController {
 	public String deleteFoodCart(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") String resId,
+			@PathVariable("resId") long resId,
 			ModelMap model
 			) throws Exception {
 		

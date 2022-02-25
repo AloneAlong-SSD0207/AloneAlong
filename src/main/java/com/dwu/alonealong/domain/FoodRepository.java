@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.repository.CrudRepository;
 
-public interface FoodRepository extends CrudRepository<Food, String>{
-	List<Food> findByResId(String resId) throws DataAccessException;
-	Food findByFoodId(String foodId) throws DataAccessException;
+public interface FoodRepository extends CrudRepository<Food, Long>{
+	List<Food> findByResId(long resId) throws DataAccessException;
+	Food findByFoodId(Long foodId) throws DataAccessException;
 }

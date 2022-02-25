@@ -19,14 +19,14 @@ public class TogetherFood implements Serializable {
 	@Column(name = "tog_id")
 	private String togetherId;
 	@Column(name = "food_id")
-	private String foodId;
+	private long foodId;
 	private int quantity;
 	
 	@ManyToOne
 	@JoinColumn(name="food_id", insertable=false, updatable=false)
 	private Food food;
 	
-	public TogetherFood(String togetherFoodId, String togetherId, String foodId, int quantity) {
+	public TogetherFood(String togetherFoodId, String togetherId, long foodId, int quantity) {
 		super();
 		this.togetherFoodId = togetherFoodId;
 		this.togetherId = togetherId;
@@ -40,8 +40,8 @@ public class TogetherFood implements Serializable {
 	public String getTogetherId() {return togetherId;}
 	public void setTogetherId(String togetherId) {this.togetherId = togetherId;}
 	
-	public String getFoodId() {return foodId;}
-	public void setFoodId(String foodId) {this.foodId = foodId;}
+	public long getFoodId() {return foodId;}
+	public void setFoodId(long foodId) {this.foodId = foodId;}
 	
 	public int getQuantity() {return quantity;}
 	public void setQuantity(int quantity) {this.quantity = quantity;}

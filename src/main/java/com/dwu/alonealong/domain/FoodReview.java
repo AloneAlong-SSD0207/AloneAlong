@@ -19,7 +19,7 @@ public class FoodReview implements Serializable{
 	@Column(name="order_id")
 	String orderId;
 	@Column(name="res_id")
-	String resId;
+	long resId;
 	@Column(name="user_id")
 	String userId;
 	@Column(name="review_date")
@@ -41,10 +41,7 @@ public class FoodReview implements Serializable{
 	public void setUserNickName(String userNickName) {
 		this.userNickName = userNickName;
 	}
-	public FoodReview() {
-		
-	}
-	public FoodReview(String orderId, String resId, String userId, int rating,
+	public FoodReview(String orderId, long resId, String userId, int rating,
 			String contents, int recommend) {
 		super();
 		this.orderId = orderId;
@@ -54,7 +51,7 @@ public class FoodReview implements Serializable{
 		this.contents = contents;
 		this.recommend = recommend;
 	}
-	public FoodReview(String reviewId, String orderId, String resId, String userId, String reviewDate, int rating,
+	public FoodReview(String reviewId, String orderId, long resId, String userId, String reviewDate, int rating,
 			String contents, int recommend) {
 		super();
 		this.reviewId = reviewId;
@@ -78,10 +75,10 @@ public class FoodReview implements Serializable{
 	public void setOrderId(String orderId) {
 		this.orderId = orderId;
 	}
-	public String getResId() {
+	public long getResId() {
 		return resId;
 	}
-	public void setResId(String resId) {
+	public void setResId(long resId) {
 		this.resId = resId;
 	}
 	public String getUserId() {

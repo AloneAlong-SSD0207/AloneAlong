@@ -16,6 +16,6 @@ public interface TogetherMapper {
 	void updateTogether(Together together) throws DataAccessException;
 	void deleteTogether(String togId) throws DataAccessException;
 	List<Together> recommandTogetherList(String sex, String address) throws DataAccessException;
-	List<Together> getTogetherListByResId(String resId) throws DataAccessException;
+	List<Together> getTogetherListByResId(long resId) throws DataAccessException;
 	List<Together> searchTogetherList(String keyword)throws DataAccessException;
 }

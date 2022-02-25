@@ -68,6 +68,7 @@ public class ViewMypageController {
 		Encoder encoder = Base64.getEncoder();
 		for(FoodOrder order : foodOrderList) {
 			Restaurant res = aloneAlong.getRestaurantByResId(order.getResId());
+			if(res == null) System.out.println(order.getOrderId() + "에서 res == null이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			order.setResName(res.getResName());
 			byte[] imagefile = res.getImgFile();
 			String encodedString = encoder.encodeToString(imagefile);

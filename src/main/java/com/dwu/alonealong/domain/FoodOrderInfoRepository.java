@@ -5,5 +5,6 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 public interface FoodOrderInfoRepository extends CrudRepository<Order, String> {
-	List<FoodOrder> findByUserId(String userId);
+	//List<FoodOrder> findByUserId(String userId);
+	List<Order> findByUserId(String userId);
 }
