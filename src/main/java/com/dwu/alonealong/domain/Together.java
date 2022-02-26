@@ -5,15 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @SuppressWarnings("serial")
 @Entity
@@ -28,6 +20,7 @@ public class Together implements Serializable {
 	private String togetherId;
 	@Column(name="tog_name")
 	private String togetherName;
+	@Column(name="headcount")
 	private int headCount;
 	@Column(name="tog_date")
 	private String togetherDate;
@@ -49,12 +42,14 @@ public class Together implements Serializable {
 	@JoinColumn(name = "res_id", insertable=false, updatable=false)
 	private Restaurant restaurant;
 	
-	@OneToMany
-	@JoinColumn(name="tog_id")
+//	@OneToMany
+//	@JoinColumn(name="tog_id", insertable=false, updatable=false)
+	@Transient
 	private List<TogetherFood> togetherFoodList = new ArrayList<TogetherFood>();
 	
-	@OneToMany(fetch = FetchType.EAGER)
-	@JoinColumn(name="tog_id")
+//	@OneToMany(fetch = FetchType.EAGER)
+//	@JoinColumn(name="tog_id", insertable=false, updatable=false)
+	@Transient
 	private List<TogetherMember> togetherMemberList = new ArrayList<TogetherMember>();
 	
 	public Together() {

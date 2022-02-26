@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import com.dwu.alonealong.repository.TogetherFoodRepository;
+import com.dwu.alonealong.repository.TogetherMemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
@@ -18,18 +20,17 @@ import com.dwu.alonealong.domain.Together;
 public class MybatisTogetherDAO implements TogetherDAO {
 	@Autowired
 	private TogetherMapper togetherMapper;
-	//추가함
 	@Autowired
-	private TogetherFoodMapper togetherFoodMapper;
+	private TogetherFoodRepository togetherFoodRepository;
 	@Autowired
-	private TogetherMemberMapper togetherMemberMapper;
+	private TogetherMemberRepository togetherMemberRepository;
 	
 	@Override
 	public Together getTogetherByTodId(String togId) throws DataAccessException {
 		Together together = togetherMapper.getTogetherByTogId(togId);
 		String togetherId = together.getTogetherId();
-		together.setTogetherFoodList(togetherFoodMapper.getTogetherFoodListByTogId(togetherId));
-		together.setTogetherMemberList(togetherMemberMapper.getTogetherMemberListByTogId(togetherId));
+		together.setTogetherFoodList(togetherFoodRepository.findByTogetherId(togetherId));
+		together.setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togetherId));
 		
 		return together;
 	}
@@ -54,8 +55,8 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		List<Together> togetherList = togetherMapper.getTogetherList();
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
-			togetherList.get(i).setTogetherFoodList(togetherFoodMapper.getTogetherFoodListByTogId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberMapper.getTogetherMemberListByTogId(togId));
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		
 		return togetherList;
@@ -66,8 +67,8 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		List<Together> togetherList = togetherMapper.searchTogetherList(keyword);
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
-			togetherList.get(i).setTogetherFoodList(togetherFoodMapper.getTogetherFoodListByTogId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberMapper.getTogetherMemberListByTogId(togId));
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		return togetherList;
 	}
@@ -114,8 +115,8 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		List<Together> togetherList = togetherMapper.getTogetherListByCategory(area, date, kind, price, sex, age);
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
-			togetherList.get(i).setTogetherFoodList(togetherFoodMapper.getTogetherFoodListByTogId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberMapper.getTogetherMemberListByTogId(togId));
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		
 		return togetherList;
@@ -129,8 +130,8 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		List<Together> togetherList = togetherMapper.recommandTogetherList(sex, addressTag);
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
-			togetherList.get(i).setTogetherFoodList(togetherFoodMapper.getTogetherFoodListByTogId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberMapper.getTogetherMemberListByTogId(togId));
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		
 		return togetherList;
@@ -141,8 +142,8 @@ public class MybatisTogetherDAO implements TogetherDAO {
 		List<Together> togetherList = togetherMapper.getTogetherListByResId(resId);
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
-			togetherList.get(i).setTogetherFoodList(togetherFoodMapper.getTogetherFoodListByTogId(togId));
-			togetherList.get(i).setTogetherMemberList(togetherMemberMapper.getTogetherMemberListByTogId(togId));
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
 		}
 		
 		return togetherList;

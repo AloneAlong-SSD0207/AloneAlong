@@ -1,13 +1,24 @@
 package com.dwu.alonealong.domain;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 @SuppressWarnings("serial")
+@Entity
+@Table(name="TOGETHER_ORDER")
 public class TogetherOrder implements Serializable {
-	
+	@Id
+	@Column(name = "order_id")
 	private String orderId;
+	@Column(name = "tog_id")
 	private String togetherId;
+
+	@ManyToOne
+	@JoinColumn(name="order_id", insertable=false, updatable=false)
 	private Order order;
+
+	@ManyToOne
+	@JoinColumn(name="tog_id", insertable=false, updatable=false)
 	private Together together;
 	
 	public TogetherOrder() {}

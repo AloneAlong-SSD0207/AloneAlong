@@ -28,20 +28,15 @@ public class TogetherDeleteController {
 			HttpServletRequest request,
 			@PathVariable("togetherId") String togId,
 			ModelMap model) {
-		aloneAlong.deleteTogetherFood(togId); //음식 리스트 삭제
-		
-		aloneAlong.deleteTogetherMember(togId); //멤버 삭제
-		
-		//OrderInfo 삭제
 		String orderId = aloneAlong.getTogetherOrderByTogId(togId).get(0).getOrderId();
-		aloneAlong.deleteTogetherOrderInfo(orderId);
-		
-		//TogetherOrder 삭제
-		aloneAlong.deleteTogetherOrder(togId);
-		
+
+		aloneAlong.deleteTogetherFood(togId); //음식 리스트 삭제
+		aloneAlong.deleteTogetherMember(togId); //멤버 삭제
+		aloneAlong.deleteTogetherOrder(togId); //TogetherOrder 삭제
+		aloneAlong.deleteTogetherOrderInfo(orderId); //OrderInfo 삭제
 		aloneAlong.deleteTogether(togId); //together 삭제
 		
-		List<Together> togetherList = aloneAlong.getTogetherList();
+		List<Together> togetherList = aloneAlong.getTogetherList(); //JPA 여기서 에러남
 		model.addAttribute("togetherList", togetherList);
 		
 		return "redirect:/together";

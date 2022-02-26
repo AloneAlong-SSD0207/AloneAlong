@@ -2,19 +2,20 @@ package com.dwu.alonealong.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(name="TOGETHER_FOOD")
+@SequenceGenerator(
+		name = "TOGFOOD_SEQ_GENERATOR"
+		, sequenceName = "TOGFOOD_ID_SEQ"
+		, initialValue = 1
+		, allocationSize = 1
+)
 public class TogetherFood implements Serializable {
 	@Id
-	@Column(name = "togFood_id")
+	@Column(name = "togfood_id")
 	private String togetherFoodId;
 	@Column(name = "tog_id")
 	private String togetherId;
@@ -33,7 +34,9 @@ public class TogetherFood implements Serializable {
 		this.foodId = foodId;
 		this.quantity = quantity;
 	}
-	
+
+	public TogetherFood() { }
+
 	public String getTogetherFoodId() {return togetherFoodId;}
 	public void setTogetherFoodId(String togetherFoodId) {this.togetherFoodId = togetherFoodId;}
 	

@@ -1,10 +1,12 @@
 package com.dwu.alonealong.service;
 
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import com.dwu.alonealong.domain.*;
 import com.dwu.alonealong.repository.*;
@@ -94,15 +96,15 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	private PaymentDAO paymentDao;
 	@Autowired
 	private CartItemRepository cartItemRepository;
-	
+
 	@Autowired
-	private TogetherDAO togetherDao;
+	private TogetherRepository togetherRepository;
 	@Autowired
-	private TogetherFoodDAO togetherFoodDao;
+	private TogetherFoodRepository togetherFoodRepository;
 	@Autowired
-	private TogetherMemberDAO togetherMemberDao;
+	private TogetherMemberRepository togetherMemberRepository;
 	@Autowired
-	private TogetherOrderDAO togetherOrderDao;
+	private TogetherOrderRepository togetherOrderRepository;
 
 	//User
 	public User getUserByUserId(String Id) throws DataAccessException{
@@ -422,126 +424,213 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	//together
 	@Override
 	public Together getTogetherByTogId(String togId) {
-		return togetherDao.getTogetherByTodId(togId);
+		Together together = togetherRepository.getByTogetherId(togId);
+		String togetherId = together.getTogetherId();
+		together.setTogetherFoodList(togetherFoodRepository.findByTogetherId(togetherId));
+		together.setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togetherId));
+
+		return together;
 	}
 	
 	@Override
 	public List<Together> getTogetherList() {
-		return togetherDao.getTogetherList();
+		List<Together> togetherList = togetherRepository.findAll();
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
 	
 	@Override
 	public void insertTogether(Together together) {
-		togetherDao.insertTogether(together);
+		String togetherId = String.valueOf(togetherRepository.getTogIdFromSeq());
+		together.setTogetherId(togetherId);
+		togetherRepository.save(together);
+	}
+
+	@Override
+	public void updateTogether(Together together) {
+		togetherRepository.save(together);
+	}
+
+	@Override
+	public void deleteTogether(String togId) throws DataAccessException {
+		togetherRepository.deleteByTogetherId(togId);
 	}
 	
 	@Override
 	public List<Together> getTogetherListByCategory(String area, String date, String kind, int price, String sex, String age) {
-		return togetherDao.getTogetherListByCategory(area, date, kind, price, sex, age);
-	}
-	
-	@Override
-	public void updateTogether(Together together) {
-		togetherDao.updateTogether(together);
+		switch(area) {
+			case "all" : area = ""; break;
+			case "seoul" : area = "서울특별시"; break;
+			case "gyenggi" : area = "경기도"; break;
+			case "busan" : area = "부산광역시"; break;
+			case "incheon" : area = "인천광역시"; break;
+			case "deagu" : area = "대구광역시"; break;
+			case "deageon" : area = "대전광역시"; break;
+			case "guangju" : area = "광주광역시"; break;
+			case "ulsan" : area = "울산광역시"; break;
+		}
+
+		switch(kind) {
+			case "all" : kind = ""; break;
+			case "korean" : kind = "한식"; break;
+			case "western" : kind = "양식"; break;
+			case "japanese" : kind = "일식"; break;
+			case "chinese" : kind = "중식"; break;
+			case "etc" : kind = "기타"; break;
+		}
+
+		switch(sex) {
+			case "all" : sex = ""; break;
+			case "female" : sex = "여성"; break;
+			case "male" : sex = "남성"; break;
+		}
+
+		switch(age) {
+			case "all" : age = ""; break;
+			case "10" : age = "10대"; break;
+			case "20" : age = "20대"; break;
+			case "30" : age = "30대"; break;
+			case "40" : age = "40대"; break;
+			case "50" : age = "50대 이상"; break;
+		}
+
+		List<Together> togetherList = togetherRepository.findGatheringsByCategory(area, date, kind, price, sex, age);
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
 	
 	@Override
 	public List<Together> recommandTogetherList(String sex, String address) {
-		return togetherDao.recommandTogetherList(sex, address);
+		StringTokenizer st = new StringTokenizer(address);
+		String addressTag = st.nextToken();
+
+		List<Together> togetherList = togetherRepository.findGatheringsBySexAndAddress(sex, addressTag);
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
 	
 	@Override
-	public List<Together> getTogetherListByResId(long resId) {
-		return togetherDao.getTogetherListByResId(resId);
+	public List<Together> getTogetherListByResId(String resId) {
+		List<Together> togetherList = togetherRepository.findGatheringsByResId(resId);
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
-	
-	@Override
-	public void deleteTogether(String togId) throws DataAccessException {
-		togetherDao.deleteTogether(togId); 
-  }
   
-  @Override
+  	@Override
 	public List<Together> searchTogetherList(String keyword) {
-		return togetherDao.searchTogetherList(keyword);
+		List<Together> togetherList = togetherRepository.findGatheringsByKeyword(keyword);
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
 	
 	//TogetherFood
 	@Override
 	public List<TogetherFood> getTogetherFoodListByTogId(String togId) {
-		return togetherFoodDao.getTogetherFoodListByTogId(togId);
+		return togetherFoodRepository.findByTogetherId(togId);
 	}
 	
 	@Override
 	public void insertTogetherFood(TogetherFood togetherFood) {
-		togetherFoodDao.insertTogetherFood(togetherFood);
+		String togetherFoodId = String.valueOf(togetherFoodRepository.getTogFoodIdFromSeq());
+		togetherFood.setTogetherFoodId(togetherFoodId);
+		togetherFoodRepository.save(togetherFood);
 	}
 	
 	@Override
-	public void deleteTogetherFood(String togId) {
-		togetherFoodDao.deleteTogetherFood(togId);
-	}
+	public void deleteTogetherFood(String togId) {togetherFoodRepository.deleteByTogetherId(togId);}
 	
 	@Override
-	public void updateTogetherFood(TogetherFood togetherFood) {
-		togetherFoodDao.updateTogetherFood(togetherFood);
-	}
+	public void updateTogetherFood(TogetherFood togetherFood) {togetherFoodRepository.save(togetherFood);}
 	
 	//TogetherMember
 	@Override
 	public List<TogetherMember> getTogetherMemberListByTogId(String togId) {
-		return togetherMemberDao.getTogetherMemberListByTogId(togId);
+		return togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId);
 	}
 	
 	@Override
 	public void insertTogetherMember(TogetherMember togetherMember) {
-		togetherMemberDao.insertTogetherMember(togetherMember);
+		String togetherMemberId = String.valueOf(togetherMemberRepository.getTogMemIdFromSeq());
+		togetherMember.setTogetherMemberId(togetherMemberId);
+		togetherMemberRepository.save(togetherMember);
 	}
 	
 	@Override
 	public void deleteTogetherMember(String togId) {
-		togetherMemberDao.deleteTogetherMember(togId);
+		togetherMemberRepository.deleteByTogetherId(togId);
 	}
 	
 	//TogetherOrder
 	@Override
 	public void insertTogetherOrder(TogetherOrder togetherOrder) {
-		togetherOrderDao.insertTogetherOrder(togetherOrder);
-	}
-	
-	@Override
-	public void insertTogetherOrderInfo(Order order) {
-		orderInfoDao.insertTogetherOrderInfo(order);
-	}
-	
-	@Override
-	public void insertFoodOrderForTogetherOrder(FoodOrder foodOrder) {
-		foodOrderDao.insertFoodOrderForTogetherOrder(foodOrder);
+		togetherOrderRepository.save(togetherOrder);
 	}
 	
 	@Override
 	public List<TogetherOrder> getTogetherOrderByUserId(String userId) {
-		return togetherOrderDao.getTogetherOrderByUserId(userId);
+		return togetherOrderRepository.findByUserId(userId);
 	}
 
 	@Override
 	public List<TogetherOrder> getTogetherOrderByTogId(String togId) {
-		// TODO Auto-generated method stub
-		return togetherOrderDao.getTogetherOrderByTogId(togId);
+		return togetherOrderRepository.findByTogetherId(togId);
 	}
 
 	@Override
 	public void deleteTogetherOrder(String togId) {
-		togetherOrderDao.deleteTogetherOrder(togId);
+		togetherOrderRepository.deleteByTogetherId(togId);
+	}
+
+	//OrderInfo for Together
+	@Override
+	public void insertTogetherOrderInfo(Order order) {
+		String orderId = "t" + togetherOrderRepository.getTogOrderIdFromSeq();
+		order.setOrderId(orderId);
+
+		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		order.setOrderDate(curDate);
+
+		orderRepository.save(order);
 	}
 
 	@Override
-	public void deleteTogetherOrderInfo(String orderId) {
-		orderInfoDao.deleteTogetherOrderInfo(orderId);
-	}
+	public void deleteTogetherOrderInfo(String orderId) {orderRepository.deleteByOrOrderId(orderId);}
 
 	@Override
 	public void updateTogetherOrderInfo(Order order) {
-		orderInfoDao.updateTogetherOrderInfo(order);
+		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		order.setOrderDate(curDate);
+
+		orderRepository.save(order);
 	}
 
+	@Override
+	public void insertFoodOrderForTogetherOrder(FoodOrder foodOrder) {
+		foodOrderDao.insertFoodOrderForTogetherOrder(foodOrder); //나중에 merge 후 전환 예정
+	}
 }
