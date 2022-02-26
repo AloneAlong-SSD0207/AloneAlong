@@ -7,9 +7,6 @@ import javax.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-
-@Getter
-@Setter
 @Entity
 @Table(name="food_order")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)

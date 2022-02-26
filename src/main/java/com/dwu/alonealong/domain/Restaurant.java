@@ -11,8 +11,6 @@ import javax.persistence.*;
 import lombok.*;
 
 @SuppressWarnings("serial")
-@Getter
-@Setter
 @Entity
 @SequenceGenerator(
 		name = "RES_SEQ_GENERATOR"

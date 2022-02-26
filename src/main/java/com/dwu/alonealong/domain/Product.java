@@ -72,9 +72,4 @@ public class Product implements Serializable {
           return 0;
       }
     }
-
-    /* Public Methods*/
-    public String toString() {
-    return getProductName();
-    }
 }

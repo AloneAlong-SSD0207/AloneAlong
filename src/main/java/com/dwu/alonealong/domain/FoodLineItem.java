@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
 @Entity
 @Table(name="food_lineitem")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)

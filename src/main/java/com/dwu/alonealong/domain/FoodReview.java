@@ -7,8 +7,6 @@ import javax.persistence.*;
 import lombok.*;
 
 @SuppressWarnings("serial")
-@Getter
-@Setter
 @Entity
 @Table(name="food_review")
 @SequenceGenerator(
@@ -20,7 +18,6 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 public class FoodReview implements Serializable{
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REV_SEQ_GENERATOR")
 	@Column(name="review_id")
