@@ -24,5 +24,5 @@ public interface TogetherDAO {
 	
 	List<Together> recommandTogetherList(String sex, String address) throws DataAccessException;
 	
-	List<Together> getTogetherListByResId(String resId) throws DataAccessException;
+	List<Together> getTogetherListByResId(long resId) throws DataAccessException;
 }			

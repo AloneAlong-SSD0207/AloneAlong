@@ -71,7 +71,7 @@ public class TogetherRegisterController {
 	//해당 식당의 메뉴 가져오기
 	@RequestMapping("/togetherRegister/searchMenu")
 	public String selectRestaurant(
-			@RequestParam("resId") String resId,
+			@RequestParam("resId") long resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
 			ModelMap model) throws Exception {
 		Restaurant restaurant = aloneAlong.getRestaurantByResId(resId);
@@ -99,10 +99,10 @@ public class TogetherRegisterController {
 			@RequestParam("date") String date,
 			@RequestParam("time") String time,
 			@RequestParam("description") String description,
-			@RequestParam("resId") String resId,
+			@RequestParam("resId") long resId,
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
 			ModelMap model) {
-		if(resId == null)
+		if(resId == 0)
 			return "redirect:/togetherRegister";
 		
 		//together 넣기		

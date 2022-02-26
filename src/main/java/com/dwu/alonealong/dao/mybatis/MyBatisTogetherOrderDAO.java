@@ -33,7 +33,7 @@ public class MyBatisTogetherOrderDAO implements TogetherOrderDAO{
 		List<TogetherOrder> togetherOrderList = togetherOrderMapper.getTogetherOrderByUserId(userId);
 		
 		for(int i = 0; i < togetherOrderList.size(); i++) {
-			String resId = togetherOrderList.get(i).getTogether().getResId();
+			long resId = togetherOrderList.get(i).getTogether().getResId();
 			togetherOrderList.get(i).getTogether().setRestaurant(restaurantMapper.getRestaurant(resId));
 		}
 		

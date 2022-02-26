@@ -1,7 +1,9 @@
 package com.dwu.alonealong.service;
 
-import lombok.Builder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.dwu.alonealong.domain.*;
@@ -26,7 +28,6 @@ import com.dwu.alonealong.dao.TogetherMemberDAO;
 import com.dwu.alonealong.dao.TogetherOrderDAO;
 import com.dwu.alonealong.domain.CartItem;
 import com.dwu.alonealong.domain.Food;
-import com.dwu.alonealong.domain.FoodCart;
 import com.dwu.alonealong.domain.FoodCartItem;
 import com.dwu.alonealong.domain.FoodLineItem;
 import com.dwu.alonealong.domain.FoodOrder;
@@ -49,19 +50,29 @@ import com.dwu.alonealong.domain.User;
 public class AloneAlongImpl implements AloneAlongFacade{
 	//restaurant
 	@Autowired
-	private RestaurantDAO restaurantDao;	
+	private RestaurantDAO restaurantDao;
 	@Autowired
 	private RestaurantRepository restaurantRepository;
 	@Autowired
 	private FoodDAO foodDao;
 	@Autowired
+	private FoodRepository foodRepository;
+	@Autowired
 	private FoodLineItemDAO foodLineItemDao;
+	@Autowired
+	private FoodLineItemRepository foodLineItemRepository;
 	@Autowired
 	private FoodOrderDAO foodOrderDao;
 	@Autowired
+	private FoodOrderRepository foodOrderRepository;
+	@Autowired
 	private OrderInfoDAO orderInfoDao;
 	@Autowired
+	private FoodOrderInfoRepository foodOrderInfoRepository;
+	@Autowired
 	private FoodReviewDAO foodReviewDao;
+	@Autowired
+	private FoodReviewRepository foodReviewRepository;
 	
 	
     @Autowired
@@ -252,28 +263,24 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public void updateCard(Payment payment) {
 		paymentDao.updateCard(payment);
 	}
-	
+
 	//Restaurant
 	@Override
 	public void insertRestaurant(Restaurant res) {
-		//Restaurant params = Restaurant.builder().resId()
 		restaurantRepository.save(res);
-		//restaurantDao.insertRestaurant(res);
 	}
 	@Override
 	public void updateRestaurant(Restaurant res) {
 		restaurantRepository.save(res);
-		//restaurantDao.updateRestaurant(res);
 	}
 	@Override
-	public void deleteRestaurant(String ownerId) {
+	public void deleteRestaurant(long resId) {
 		//restaurantDao.deleteRestaurant(ownerId);
-		restaurantRepository.deleteById(ownerId);
+		restaurantRepository.deleteById(resId);
 	}
 	@Override
 	public List<Restaurant> getRestaurantList() {
 		return (List<Restaurant>) restaurantRepository.findAll();
-		//return restaurantDao.getRestaurantList();
 	}
 	@Override
 	public List<Restaurant> getRestaurantListByCategory(String category1, String category2, String sortType){
@@ -287,46 +294,42 @@ public class AloneAlongImpl implements AloneAlongFacade{
 			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByAvgRatingDesc(category1, category2);
 		}
 		return null;
-		//return restaurantDao.getRestaurantListByCategory(category1, category2, sortType);
 	}
 	@Override
 	public List<Restaurant> searchRestaurantList(String keywords) {
 		return restaurantRepository.findByResNameContainingIgnoreCaseOrResDescriptionContainingIgnoreCase(keywords, keywords);
-		//return restaurantDao.searchRestaurantList(keywords);
 	}
 	@Override
 	public Restaurant getRestaurantByUserId(String userId) {
 		return restaurantRepository.findByOwnerId(userId);
-		//return restaurantDao.getRestaurantByOwnerId(userId);
 	}
 	@Override
-	public Restaurant getRestaurantByResId(String resId) {
+	public Restaurant getRestaurantByResId(long resId) {
 		return restaurantRepository.findByResId(resId);
-		//return restaurantDao.getRestaurant(resId);
 	}
-	
-	
+
+
 	//Food
 	@Override
-	public List<Food> getFoodListByRestaurant(String resId) {
-		return foodDao.getFoodListByResId(resId);
+	public List<Food> getFoodListByRestaurant(long resId) {
+		return foodRepository.findByResId(resId);
 	}
 	@Override
 	public void insertFood(Food food) {
-		foodDao.insertFood(food);
+		foodRepository.save(food);
 	}
 	@Override
 	public void updateFood(Food food) {
-		foodDao.updateFood(food);
+		foodRepository.save(food);
 	}
 	@Override
-	public void deleteFood(String foodId) {
-		foodDao.deleteFood(foodId);
+	public void deleteFood(long foodId) {
+		foodRepository.deleteById(foodId);
 	}
-	
+
 	@Override
-	public Food getFood(String foodId) {
-		return foodDao.getFood(foodId);
+	public Food getFood(long foodId) {
+		return foodRepository.findByFoodId(foodId);
 	}
 
 	//Food Order
@@ -339,49 +342,87 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		//주문 하나의 예약정보
 		newOrderId = "fo" + orderInfoDao.getRecentOrderId();
 		foodOrderDao.insertFoodOrder(order, newOrderId);
-		
-		
+
+
 		//카트 item들 모두 넣기
 		for(FoodCartItem val : order.getFoodList()) {
 			FoodLineItem item = new FoodLineItem(newOrderId, val.getFood().getFoodId(), val.getQuantity(), val.getUnitPrice());
+			//foodLineItemRepository.save(item);
 			foodLineItemDao.insertFoodLineItem(item);
 		}
-		
+
 	}
+
+	@Transactional
 	public void deleteFoodOrder(String orderId) {
-		//orderinfo - foodorder - foodlineitme 종속삭제
-		orderInfoDao.deleteFoodOrderInfo(orderId);
+		foodOrderInfoRepository.deleteById(orderId);
 	}
 	@Override
 	public FoodOrder getFoodOrder(String orderId) {
-		// TODO Auto-generated method stub
-		return foodOrderDao.getFoodOrder(orderId);
+		return foodOrderRepository.findByOrderId(orderId);
 	}
 	@Override
 	public List<FoodOrder> getFoodOrdersByUserId(String userId) {
-		List<FoodOrder> orderList = orderInfoDao.getOrdersByUserId(userId);
-		for(FoodOrder order : orderList) {
-			List<FoodLineItem> orderedItemList = foodLineItemDao.getFoodLineItemByOrderId(order.getOrderId());
-			for(FoodLineItem orderedItem : orderedItemList) {
-				String foodName = foodDao.getFood(orderedItem.getFoodId()).getName();
-				orderedItem.setFoodName(foodName);
+		List<Order> orderList = foodOrderInfoRepository.findByUserIdOrderByOrderDateDesc(userId);
+		List<FoodOrder> foodOrderList = new ArrayList<>();
+		for(Order order : orderList){
+			String orderId = order.getOrderId();
+			if(orderId.startsWith("fo")){
+				System.out.println("foodOrder 아이디 : " + orderId);
+				List<FoodLineItem> lineItemList = foodLineItemRepository.findByOrderId(orderId);
+				FoodOrder foodOrder = order.getFoodOrder();
+				foodOrder.setOrderedList(lineItemList);
+				foodOrder.setTotalPrice(order.getTotalPrice());
+
+				SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				Date date = null;
+				try {
+					date = dt.parse(order.getOrderDate());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				String newstring = new SimpleDateFormat("yy-MM-dd").format(date);
+
+
+				foodOrder.setOrderDate(newstring);
+				for(FoodLineItem foodLineItem : foodOrder.getOrderedList()){
+					String foodName = foodRepository.findByFoodId(foodLineItem.getFoodId()).getName();
+					foodLineItem.setFoodName(foodName);
+				}
+				foodOrderList.add(foodOrder);
 			}
-			order.setOrderedList(orderedItemList);
+
 		}
-		
-		return orderList;
+
+		return foodOrderList;
+
 	}
 	//FoodReview
-	public List<FoodReview> getFoodReviewListByResId(String resId, String sortType) {
-		return foodReviewDao.getFoodReviewListByResId(resId, sortType);
+	public List<FoodReview> getFoodReviewListByResId(long resId, String sortType) {
+		if(sortType.equals("REVIEW_DATE DESC")) {
+			return foodReviewRepository.findByResIdOrderByReviewDateDesc(resId);
+		}else if(sortType.equals("REVIEW_RATING DESC")) {
+			return foodReviewRepository.findByResIdOrderByRatingDesc(resId);
+		}else if(sortType.equals("REVIEW_RATING")) {
+			return foodReviewRepository.findByResIdOrderByRatingAsc(resId);
+		}
+		return null;
 	}
-	
+
 	public void insertFoodReview(FoodReview foodReview) {
-		foodReviewDao.insertFoodReview(foodReview);
+		//foodReviewDao.insertFoodReview(foodReview);
+		foodReviewRepository.save(foodReview);
 	}
 	@Override
-	public void updateAvgRating(int rating, String resId) {
-		restaurantDao.updateAvgRating(rating, resId);
+	public void updateAvgRating(int rating, long resId) {
+		Restaurant res = restaurantRepository.findByResId(resId);
+
+		double avg_rating = ((res.getAvgRating() * res.getRevCount() + rating) / (res.getRevCount() + 1));
+		res.setAvgRating(avg_rating);
+		res.setRevCount(res.getRevCount() + 1);
+
+		restaurantRepository.save(res);
+		//restaurantDao.updateAvgRating(rating, resId);
 	}
   
 	//together
@@ -416,7 +457,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	}
 	
 	@Override
-	public List<Together> getTogetherListByResId(String resId) {
+	public List<Together> getTogetherListByResId(long resId) {
 		return togetherDao.getTogetherListByResId(resId);
 	}
 	

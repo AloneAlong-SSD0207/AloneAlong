@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.*;
 import lombok.*;
@@ -44,6 +45,10 @@ public class Order implements Serializable{
 	private String cardMonth;
 	@Transient
 	private String cardCVC;
+
+	@OneToOne
+	@JoinColumn(name="order_id", insertable = false, updatable = false)
+	FoodOrder foodOrder;
 
 	public int getShippingFee() {
 		return Product.SHIPPING_FEE;

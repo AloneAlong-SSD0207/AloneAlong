@@ -10,14 +10,14 @@ import java.util.Map;
 
 
 public class FoodCart implements Serializable{
-	private final Map<String, FoodCartItem> foodMap = Collections.synchronizedMap(new HashMap<String, FoodCartItem>());
+	private final Map<Long, FoodCartItem> foodMap = Collections.synchronizedMap(new HashMap<Long, FoodCartItem>());
 	private List<FoodCartItem> foodItemList = new ArrayList<FoodCartItem>();
 	
 	public FoodCart() {}
 	public Iterator<FoodCartItem> getAllFoodCartItems() { return foodItemList.iterator(); }
 	
 	
-	public Map<String, FoodCartItem> getFoodMap() {
+	public Map<Long, FoodCartItem> getFoodMap() {
 		return foodMap;
 	}
 	public List<FoodCartItem> getFoodItemList() {
@@ -39,7 +39,7 @@ public class FoodCart implements Serializable{
 		//foodCartItem.incrementQuantity(); //카트 내의 음식 개수 추가
 	}
 	
-	public boolean containsFoodId(String id) {
+	public boolean containsFoodId(long id) {
 		return foodMap.containsKey(id);
 	}
 	public FoodCartItem getFoodCartItem(String foodId) {
@@ -56,11 +56,11 @@ public class FoodCart implements Serializable{
 	      return foodCartItem.getFood(); //이거 받아서 어디다 쓰지
 	    }
 	 }
-	public void incrementQuantityByFoodId(String id) { //카트에서 수량 증가
+	public void incrementQuantityByFoodId(long id) { //카트에서 수량 증가
 		FoodCartItem foodCartItem = foodMap.get(id);
 		foodCartItem.incrementQuantity();
 	}
-	public void decrementQuantityByFoodId(String id) { //카트에서 수량 감소
+	public void decrementQuantityByFoodId(long id) { //카트에서 수량 감소
 		FoodCartItem foodCartItem = foodMap.get(id);
 		foodCartItem.decrementQuantity();
 	}
@@ -77,7 +77,7 @@ public class FoodCart implements Serializable{
 		return subTotal;
 		
 	}
-	public void setQuantityByFoodId(String itemId, int quantity) {
+	public void setQuantityByFoodId(long itemId, int quantity) {
 		FoodCartItem cartItem = foodMap.get(itemId);
 	    cartItem.setQuantity(quantity);
 	}
