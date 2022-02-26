@@ -87,17 +87,13 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	private PaymentDAO paymentDao;
 	@Autowired
 	private CartItemRepository cartItemRepository;
-	
-	@Autowired
-	private TogetherDAO togetherDao;
+
 	@Autowired
 	private TogetherRepository togetherRepository;
 	@Autowired
 	private TogetherFoodRepository togetherFoodRepository;
 	@Autowired
 	private TogetherMemberRepository togetherMemberRepository;
-	@Autowired
-	private TogetherOrderDAO togetherOrderDao; //findByUserId 때문에 남김
 	@Autowired
 	private TogetherOrderRepository togetherOrderRepository;
 
@@ -560,8 +556,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	
 	@Override
 	public List<TogetherOrder> getTogetherOrderByUserId(String userId) {
-//		return togetherOrderRepository.findByUserId(userId); //쿼리 이상 생김
-		return togetherOrderDao.getTogetherOrderByUserId(userId);
+		return togetherOrderRepository.findByUserId(userId);
 	}
 
 	@Override

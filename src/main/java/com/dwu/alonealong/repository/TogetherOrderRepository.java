@@ -15,6 +15,6 @@ public interface TogetherOrderRepository extends CrudRepository<TogetherOrder, S
     @Query(value = "SELECT TOGORDER_ID_SEQ.NEXTVAL FROM DUAL", nativeQuery = true )
     long getTogOrderIdFromSeq() throws DataAccessException;
 
-    //findByUserId도 추가해야 함
-
+    @Query("SELECT t, o FROM TogetherOrder t, Order o WHERE t.orderId = o.orderId AND o.userId = ?1")
+    List<TogetherOrder> findByUserId(String userId) throws DataAccessException;
 }
