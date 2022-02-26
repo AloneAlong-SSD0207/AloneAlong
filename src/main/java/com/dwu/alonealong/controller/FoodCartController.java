@@ -57,7 +57,7 @@ public class FoodCartController {
 			ModelMap model
 			) throws Exception {
 		
-		cart.setQuantityByFoodId(request.getParameter("foodId"), Integer.parseInt(request.getParameter("quantity")));
+		cart.setQuantityByFoodId(Long.parseLong(request.getParameter("foodId")), Integer.parseInt(request.getParameter("quantity")));
 				
 		putCartSessionData(model, cart, resId);
 		return "redirect:/eating/{resId}";

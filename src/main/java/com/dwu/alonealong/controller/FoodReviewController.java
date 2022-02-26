@@ -40,7 +40,14 @@ public class FoodReviewController {
 		String userId = user.getId(); 
 		int rating = Integer.parseInt(request.getParameter("rating"));
 		String contents = request.getParameter("review");
-		FoodReview foodReview = new FoodReview(orderId, resId, userId, rating, contents, FoodFunction.defaultInt);
+
+		FoodReview foodReview = new FoodReview();
+		foodReview.setOrderId(orderId);
+		foodReview.setResId(resId);
+		foodReview.setUserId(userId);
+		foodReview.setRating(rating);
+		foodReview.setContents(contents);
+		foodReview.setRecommend(FoodFunction.defaultInt);
 
 		alonealong.insertFoodReview(foodReview);
 		alonealong.updateAvgRating(rating, resId);

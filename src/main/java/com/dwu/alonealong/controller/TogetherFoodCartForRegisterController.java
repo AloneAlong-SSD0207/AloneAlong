@@ -69,7 +69,7 @@ public class TogetherFoodCartForRegisterController {
 			ModelMap model
 			) throws Exception {
 		
-		cart.setQuantityByFoodId(request.getParameter("foodId"), Integer.parseInt(request.getParameter("quantity")));
+		cart.setQuantityByFoodId(Long.parseLong(request.getParameter("foodId")), Integer.parseInt(request.getParameter("quantity")));
 				
 		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
 		getFoodsImage(foodList);

@@ -77,7 +77,7 @@ public class FoodCart implements Serializable{
 		return subTotal;
 		
 	}
-	public void setQuantityByFoodId(String itemId, int quantity) {
+	public void setQuantityByFoodId(long itemId, int quantity) {
 		FoodCartItem cartItem = foodMap.get(itemId);
 	    cartItem.setQuantity(quantity);
 	}

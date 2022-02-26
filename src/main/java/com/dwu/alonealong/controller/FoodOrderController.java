@@ -87,6 +87,7 @@ public class FoodOrderController {
 		
 		FoodOrder order = new FoodOrder(resId, userId, foodList, reserveType, visitDate, payment);
 		order.setTotalPrice(order.calcTotalPrice());
+		order.setFoodId(foodList.get(0).getFood().getFoodId());
 		
 		aloneAlong.insertFoodOrder(order);
 

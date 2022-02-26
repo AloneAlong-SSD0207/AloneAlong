@@ -1,7 +1,9 @@
 package com.dwu.alonealong.service;
 
-import lombok.Builder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.dwu.alonealong.domain.*;
@@ -26,7 +28,6 @@ import com.dwu.alonealong.dao.TogetherMemberDAO;
 import com.dwu.alonealong.dao.TogetherOrderDAO;
 import com.dwu.alonealong.domain.CartItem;
 import com.dwu.alonealong.domain.Food;
-import com.dwu.alonealong.domain.FoodCart;
 import com.dwu.alonealong.domain.FoodCartItem;
 import com.dwu.alonealong.domain.FoodLineItem;
 import com.dwu.alonealong.domain.FoodOrder;
@@ -67,7 +68,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	@Autowired
 	private OrderInfoDAO orderInfoDao;
 	@Autowired
-	private FoodOrderInfoRepository orderInfoRepository;
+	private FoodOrderInfoRepository foodOrderInfoRepository;
 	@Autowired
 	private FoodReviewDAO foodReviewDao;
 	@Autowired
@@ -347,66 +348,50 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		}
 
 	}
+
+	@Transactional
 	public void deleteFoodOrder(String orderId) {
-		//orderinfo - foodorder - foodlineitme 종속삭제
-		orderInfoDao.deleteFoodOrderInfo(orderId);
-		//db반영이 너무 느린데..? redirect가 안돼
-		//orderInfoRepository.deleteById(orderId);
+		foodOrderInfoRepository.deleteById(orderId);
 	}
 	@Override
 	public FoodOrder getFoodOrder(String orderId) {
-		// TODO Auto-generated method stub
-		return foodOrderDao.getFoodOrder(orderId);
-		//return foodOrderRepository.findByOrderId(orderId);
+		return foodOrderRepository.findByOrderId(orderId);
 	}
 	@Override
 	public List<FoodOrder> getFoodOrdersByUserId(String userId) {
-//		//List<FoodOrder> orderList = orderInfoDao.getOrdersByUserId(userId);
-//		//조인써야함.....
-//		//List<FoodOrder> orderList = foodOrderRepository.findByUserId(userId);
-//		List<Order> list = orderInfoRepository.findByUserId(userId);
-//		List<FoodOrder> orderList = null;
-//		for(Order order : list){
-//			orderList.add(order.getFoodOrder());
-//		}
-//
-//		for(FoodOrder order : orderList){
-//			List<FoodLineItem> orderedItemList = foodLineItemDao.getFoodLineItemByOrderId(order.getOrderId());
-//			for(FoodLineItem orderedItem : orderedItemList) {
-//				String foodName = foodRepository.findByFoodId(orderedItem.getFoodId()).getName();
-//				//String foodName = foodDao.getFood(orderedItem.getFoodId()).getName();
-//				orderedItem.setFoodName(foodName);
-//			}
-//			order.setOrderedList(orderedItemList);
-//		}
-//		return orderList;
+		List<Order> orderList = foodOrderInfoRepository.findByUserIdOrderByOrderDateDesc(userId);
+		List<FoodOrder> foodOrderList = new ArrayList<>();
+		for(Order order : orderList){
+			String orderId = order.getOrderId();
+			if(orderId.startsWith("fo")){
+				System.out.println("foodOrder 아이디 : " + orderId);
+				List<FoodLineItem> lineItemList = foodLineItemRepository.findByOrderId(orderId);
+				FoodOrder foodOrder = order.getFoodOrder();
+				foodOrder.setOrderedList(lineItemList);
+				foodOrder.setTotalPrice(order.getTotalPrice());
 
-//		for(FoodOrder order : orderList) {
-//			List<FoodLineItem> orderedItemList = foodLineItemDao.getFoodLineItemByOrderId(order.getOrderId());
-//			//resultset오류 mapper확인요망List<FoodLineItem> orderedItemList = foodLineItemRepository.findByOrderId(order.getOrderId());
-//			for(FoodLineItem orderedItem : orderedItemList) {
-//				String foodName = foodRepository.findByFoodId(orderedItem.getFoodId()).getName();
-//				//String foodName = foodDao.getFood(orderedItem.getFoodId()).getName();
-//				orderedItem.setFoodName(foodName);
-//			}
-//			order.setOrderedList(orderedItemList);
-//		}
-
-//		return orderList;
+				SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				Date date = null;
+				try {
+					date = dt.parse(order.getOrderDate());
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+				String newstring = new SimpleDateFormat("yy-MM-dd").format(date);
 
 
-		List<FoodOrder> orderList = orderInfoDao.getOrdersByUserId(userId);
-		for(FoodOrder order : orderList) {
-			List<FoodLineItem> orderedItemList = foodLineItemDao.getFoodLineItemByOrderId(order.getOrderId());
-			for(FoodLineItem orderedItem : orderedItemList) {
-				String foodName = foodRepository.findByFoodId(orderedItem.getFoodId()).getName();
-				//String foodName = foodDao.getFood(Long.toString(orderedItem.getFoodId())).getName();
-				orderedItem.setFoodName(foodName);
+				foodOrder.setOrderDate(newstring);
+				for(FoodLineItem foodLineItem : foodOrder.getOrderedList()){
+					String foodName = foodRepository.findByFoodId(foodLineItem.getFoodId()).getName();
+					foodLineItem.setFoodName(foodName);
+				}
+				foodOrderList.add(foodOrder);
 			}
-			order.setOrderedList(orderedItemList);
+
 		}
 
-		return orderList;
+		return foodOrderList;
+
 	}
 	//FoodReview
 	public List<FoodReview> getFoodReviewListByResId(long resId, String sortType) {
@@ -421,11 +406,19 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	}
 
 	public void insertFoodReview(FoodReview foodReview) {
-		foodReviewDao.insertFoodReview(foodReview);
+		//foodReviewDao.insertFoodReview(foodReview);
+		foodReviewRepository.save(foodReview);
 	}
 	@Override
 	public void updateAvgRating(int rating, long resId) {
-		restaurantDao.updateAvgRating(rating, resId);
+		Restaurant res = restaurantRepository.findByResId(resId);
+
+		double avg_rating = ((res.getAvgRating() * res.getRevCount() + rating) / (res.getRevCount() + 1));
+		res.setAvgRating(avg_rating);
+		res.setRevCount(res.getRevCount() + 1);
+
+		restaurantRepository.save(res);
+		//restaurantDao.updateAvgRating(rating, resId);
 	}
   
 	//together

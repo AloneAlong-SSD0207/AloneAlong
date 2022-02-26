@@ -8,13 +8,16 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@Table(name="food_lineitem")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
+@IdClass(FoodIdClass.class)
 public class FoodLineItem implements Serializable{
-	
+
 	@Id
 	@Column(name="order_id")
 	private String orderId;
+	@Id
 	@Column(name="food_id")
 	private long foodId;
 	@Column(name="quantity")

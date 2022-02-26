@@ -5,25 +5,26 @@ import java.util.List;
 
 import javax.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 
 @Getter
 @Setter
 @Entity
+@Table(name="food_order")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 public class FoodOrder implements Serializable{
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	@Column(name="order_id")
 	String orderId;
 	@Column(name="reserve_type")
 	String reserveType;
 	@Column(name="visit_date")
 	String visitDate;
-//	@Column(name="food_id")
-//	long firstFoodId;
+	@Column(name="food_id")
+	long foodId;
 	@Column(name="res_id")
 	long resId;
 
@@ -47,13 +48,9 @@ public class FoodOrder implements Serializable{
 	int totalPrice;
 	@Transient
 	String orderDate;
-//	@ManyToOne(fetch = FetchType.EAGER)
-//	@JoinColumn(name="order_id", insertable = false, updatable = false)
-//	private Order order;
-	
+
   //togetherOrder 넣기 위해 추가
-	@Transient
-  	long foodId;
+
 	
 	//주문용 생성자
 	public FoodOrder(long resId, String userId, List<FoodCartItem> foodList, String reserveType, String visitDate, Payment payment) {
