@@ -8,6 +8,8 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
+@Getter
+@Setter
 @Table(name="food_order")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor

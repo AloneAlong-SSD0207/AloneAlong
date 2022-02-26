@@ -375,14 +375,8 @@ public class AloneAlongImpl implements AloneAlongFacade{
 				foodOrder.setTotalPrice(order.getTotalPrice());
 
 				SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-				Date date = null;
-				try {
-					date = dt.parse(order.getOrderDate());
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
+				Date date = order.getOrderDate();
 				String newstring = new SimpleDateFormat("yy-MM-dd").format(date);
-
 
 				foodOrder.setOrderDate(newstring);
 				for(FoodLineItem foodLineItem : foodOrder.getOrderedList()){

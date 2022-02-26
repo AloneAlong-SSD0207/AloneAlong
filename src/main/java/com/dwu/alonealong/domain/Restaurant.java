@@ -12,6 +12,8 @@ import lombok.*;
 
 @SuppressWarnings("serial")
 @Entity
+@Getter
+@Setter
 @SequenceGenerator(
 		name = "RES_SEQ_GENERATOR"
 		, sequenceName = "RESID_SEQ"

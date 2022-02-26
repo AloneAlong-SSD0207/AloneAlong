@@ -1,5 +1,8 @@
 package com.dwu.alonealong.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 
+@Getter
+@Setter
 public class FoodCart implements Serializable{
 	private final Map<Long, FoodCartItem> foodMap = Collections.synchronizedMap(new HashMap<Long, FoodCartItem>());
 	private List<FoodCartItem> foodItemList = new ArrayList<FoodCartItem>();

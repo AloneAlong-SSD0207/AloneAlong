@@ -6,6 +6,8 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
+@Getter
+@Setter
 @Table(name="food_lineitem")
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
