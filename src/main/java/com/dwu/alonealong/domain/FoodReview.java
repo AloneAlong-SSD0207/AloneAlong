@@ -8,6 +8,8 @@ import lombok.*;
 
 @SuppressWarnings("serial")
 @Entity
+@Getter
+@Setter
 @Table(name="food_review")
 @SequenceGenerator(
 		name = "REV_SEQ_GENERATOR"

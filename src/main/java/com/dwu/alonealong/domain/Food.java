@@ -12,6 +12,8 @@ import javax.persistence.*;
 import lombok.*;
 
 @Entity
+@Getter
+@Setter
 @SequenceGenerator(
 		name = "FOOD_SEQ_GENERATOR"
 		, sequenceName = "FOODID_SEQ"
