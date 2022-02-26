@@ -38,7 +38,7 @@ public class ViewFoodController {
 	//메뉴 탭
 	@RequestMapping("/eating/{resId}")
 	private String viewFoodListByResId(
-			@PathVariable("resId") String resId,
+			@PathVariable("resId") long resId,
 			@SessionAttribute(value="sessionFoodCart", required=false) FoodCart foodCart,
 			HttpServletRequest request,
 			ModelMap model) throws Exception {
@@ -75,7 +75,7 @@ public class ViewFoodController {
 	@RequestMapping("/eating/{resId}/RestaurantReview")
 	private String viewReviewListByResId(
 			@RequestParam(value="page", defaultValue="1") int page, 
-			@PathVariable("resId") String resId,
+			@PathVariable("resId") long resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
 			@RequestParam(value="sortType", defaultValue="REVIEW_DATE DESC") String sortType, 
 			HttpServletRequest request,
@@ -120,7 +120,7 @@ public class ViewFoodController {
 	//같이먹기 탭
 	@RequestMapping("/eating/{resId}/togetherList")
 	private String viewTogetherListByResId(
-			@PathVariable("resId") String resId,
+			@PathVariable("resId") long resId,
 			@SessionAttribute("sessionFoodCart") FoodCart foodCart,
 			ModelMap model
 			) throws Exception {

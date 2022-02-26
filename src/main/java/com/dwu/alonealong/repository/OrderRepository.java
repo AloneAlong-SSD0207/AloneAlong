@@ -10,6 +10,7 @@ import java.util.List;
 public interface OrderRepository  extends CrudRepository<Order, Long> {
     Order findByOrderId(String orderId);
     List<Order> findByUserId(String userId);
+    List<Order> findByUserIdAndOrderIdStartingWith(String userId, String code);
     boolean existsByOrderIdAndUserId(String orderId, String userId);
 
     void deleteByOrOrderId(String orderId) throws DataAccessException;

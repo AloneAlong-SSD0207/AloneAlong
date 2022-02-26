@@ -36,11 +36,18 @@ public class FoodReviewController {
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
 		User user = alonealong.getUserByUserId(userSession.getUser().getId());
 		
-		String resId = alonealong.getFoodOrder(orderId).getResId();
+		long resId = alonealong.getFoodOrder(orderId).getResId();
 		String userId = user.getId(); 
 		int rating = Integer.parseInt(request.getParameter("rating"));
 		String contents = request.getParameter("review");
-		FoodReview foodReview = new FoodReview(orderId, resId, userId, rating, contents, FoodFunction.defaultInt);
+
+		FoodReview foodReview = new FoodReview();
+		foodReview.setOrderId(orderId);
+		foodReview.setResId(resId);
+		foodReview.setUserId(userId);
+		foodReview.setRating(rating);
+		foodReview.setContents(contents);
+		foodReview.setRecommend(FoodFunction.defaultInt);
 
 		alonealong.insertFoodReview(foodReview);
 		alonealong.updateAvgRating(rating, resId);

@@ -2,6 +2,8 @@ package com.dwu.alonealong.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+
 import lombok.Setter;
 import lombok.Getter;
 import lombok.AllArgsConstructor;
@@ -30,7 +32,7 @@ public class Product implements Serializable {
     @Column(name="product_info")
     private String productInfo;
     @Column(name="product_date")
-    private String productDate;
+    private Date productDate;
     @Column(name="product_price")
     private int productPrice;
     @Column(name="product_sales")
@@ -71,10 +73,5 @@ public class Product implements Serializable {
       } catch(NumberFormatException e) {
           return 0;
       }
-    }
-
-    /* Public Methods*/
-    public String toString() {
-    return getProductName();
     }
 }

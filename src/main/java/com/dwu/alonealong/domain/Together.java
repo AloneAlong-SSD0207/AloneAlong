@@ -33,7 +33,7 @@ public class Together implements Serializable {
 	@Column(name="tog_des")
 	private String togetherDes;
 	@Column(name="res_id")
-	private String resId;
+	private long resId;
 	@Column(name="tog_status")
 	private int status;
 	private int price;
@@ -57,7 +57,7 @@ public class Together implements Serializable {
 	}
 	
 	public Together(String togetherId, String togetherName, int headCount, String togetherDate, String togetherTime,
-			String sex, String age, String togetherDes, String resId, int status, int price) {
+			String sex, String age, String togetherDes, long resId, int status, int price) {
 		super();
 		this.togetherId = togetherId;
 		this.togetherName = togetherName;
@@ -70,6 +70,14 @@ public class Together implements Serializable {
 		this.resId = resId;
 		this.status = status;
 		this.price = price;
+	}
+
+	public Together(String name, int headCount, int headCount1, long resId, String date, String time, String sex, String age, int gathering, long resId1, int price) {
+	//오류나서 만든 임의 생성자. 삭제요망
+	}
+
+	public Together(long resId, String s, int headCount, String name, int i, String sex, String age, int gathering, String description, String date, String time) {
+	//오류나서 만든 임의 생성자. 삭제요망
 	}
 
 	public String getTogetherId() {return togetherId;}
@@ -96,8 +104,8 @@ public class Together implements Serializable {
 	public String getTogetherDes() {return togetherDes;}
 	public void setTogetherDes(String togetherDes) {this.togetherDes = togetherDes;}
 
-	public String getResId() {return resId;}
-	public void setResId(String resId) {this.resId = resId;}
+	public long getResId() {return resId;}
+	public void setResId(long resId) {this.resId = resId;}
 
 	public int getStatus() {return status;}
 	public void setStatus(int status) {this.status = status;}

@@ -138,7 +138,7 @@ public class MybatisTogetherDAO implements TogetherDAO {
 	}
 
 	@Override
-	public List<Together> getTogetherListByResId(String resId) throws DataAccessException {
+	public List<Together> getTogetherListByResId(long resId) throws DataAccessException {
 		List<Together> togetherList = togetherMapper.getTogetherListByResId(resId);
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();

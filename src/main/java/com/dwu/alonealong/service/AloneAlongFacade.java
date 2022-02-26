@@ -75,29 +75,29 @@ public interface AloneAlongFacade {
 	//Restaurant
 	void insertRestaurant(Restaurant res);
 	void updateRestaurant(Restaurant res);
-	void deleteRestaurant(String ownerId);
+	void deleteRestaurant(long resId);
 	List<Restaurant> getRestaurantList();
 	List<Restaurant> getRestaurantListByCategory(String category1, String category2, String sortType);
 	List<Restaurant> searchRestaurantList(String keywords);
 //
 	Restaurant getRestaurantByUserId(String userId);
-	Restaurant getRestaurantByResId(String resId);
+	Restaurant getRestaurantByResId(long resId);
 	
 	//Food
 	void insertFood(Food food);
 	void updateFood(Food food);
-	void deleteFood(String foodId );
-	List<Food> getFoodListByRestaurant(String resId); 
-	Food getFood(String foodId);
+	void deleteFood(long foodId);
+	List<Food> getFoodListByRestaurant(long resId);
+	Food getFood(long foodId);
 
 	void insertFoodOrder(FoodOrder order);
 	FoodOrder getFoodOrder(String orderId); 
 	List<FoodOrder> getFoodOrdersByUserId(String userId);
 	void deleteFoodOrder(String orderId);
 	
-	public List<FoodReview> getFoodReviewListByResId(String resId, String sortType);
+	public List<FoodReview> getFoodReviewListByResId(long resId, String sortType);
 	public void insertFoodReview(FoodReview foodReview);
-	void updateAvgRating(int rating, String resId);
+	void updateAvgRating(int rating, long resId);
 	
 	//Together
 	Together getTogetherByTogId(String togId);
@@ -106,7 +106,7 @@ public interface AloneAlongFacade {
 	List<Together> getTogetherListByCategory(String area, String date, String kind, int price, String sex, String age);
 	void updateTogether(Together together);
 	List<Together> recommandTogetherList(String sex, String address);
-	List<Together> getTogetherListByResId(String resId);
+	List<Together> getTogetherListByResId(long resId);
 	void deleteTogether(String togId);
 	List<Together> searchTogetherList(String keyword);
 	
