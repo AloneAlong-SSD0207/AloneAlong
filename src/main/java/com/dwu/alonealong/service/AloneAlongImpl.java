@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import com.dwu.alonealong.domain.*;
 import com.dwu.alonealong.repository.*;
@@ -412,50 +413,106 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	
 	@Override
 	public void insertTogether(Together together) {
-//		String togetherId = String.valueOf(togetherRepository.getTogIdFromSeq());
-//		together.setTogetherId(togetherId);
-//		togetherRepository.save(together); //DB에는 저장이 되는데, 뷰에는 반영x
-		togetherDao.insertTogether(together);
+		String togetherId = String.valueOf(togetherRepository.getTogIdFromSeq());
+		together.setTogetherId(togetherId);
+		togetherRepository.save(together);
 	}
 
 	@Override
 	public void updateTogether(Together together) {
-//		togetherRepository.save(together); //DB에는 저장이 되는데, 뷰에는 반영x
-		togetherDao.updateTogether(together);
+		togetherRepository.save(together);
 	}
 
 	@Override
 	public void deleteTogether(String togId) throws DataAccessException {
-//		togetherRepository.deleteByTogetherId(togId); //delete도 수행 잘 안됨 - db에는 수행되었는데 뷰에는 적용x
-		togetherDao.deleteTogether(togId);
+		togetherRepository.deleteByTogetherId(togId);
 	}
 	
 	@Override
 	public List<Together> getTogetherListByCategory(String area, String date, String kind, int price, String sex, String age) {
-		return togetherDao.getTogetherListByCategory(area, date, kind, price, sex, age);
+		switch(area) {
+			case "all" : area = ""; break;
+			case "seoul" : area = "서울특별시"; break;
+			case "gyenggi" : area = "경기도"; break;
+			case "busan" : area = "부산광역시"; break;
+			case "incheon" : area = "인천광역시"; break;
+			case "deagu" : area = "대구광역시"; break;
+			case "deageon" : area = "대전광역시"; break;
+			case "guangju" : area = "광주광역시"; break;
+			case "ulsan" : area = "울산광역시"; break;
+		}
+
+		switch(kind) {
+			case "all" : kind = ""; break;
+			case "korean" : kind = "한식"; break;
+			case "western" : kind = "양식"; break;
+			case "japanese" : kind = "일식"; break;
+			case "chinese" : kind = "중식"; break;
+			case "etc" : kind = "기타"; break;
+		}
+
+		switch(sex) {
+			case "all" : sex = ""; break;
+			case "female" : sex = "여성"; break;
+			case "male" : sex = "남성"; break;
+		}
+
+		switch(age) {
+			case "all" : age = ""; break;
+			case "10" : age = "10대"; break;
+			case "20" : age = "20대"; break;
+			case "30" : age = "30대"; break;
+			case "40" : age = "40대"; break;
+			case "50" : age = "50대 이상"; break;
+		}
+
+		List<Together> togetherList = togetherRepository.findGatheringsByCategory(area, date, kind, price, sex, age);
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
 	
 	@Override
 	public List<Together> recommandTogetherList(String sex, String address) {
-		return togetherDao.recommandTogetherList(sex, address);
+		StringTokenizer st = new StringTokenizer(address);
+		String addressTag = st.nextToken();
+
+		List<Together> togetherList = togetherRepository.findGatheringsBySexAndAddress(sex, addressTag);
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
 	
 	@Override
 	public List<Together> getTogetherListByResId(String resId) {
-//		List<Together> togetherList = togetherRepository.findByResId(resId); // status = 0 조건 붙여줘야 함
-//		for(int i = 0; i < togetherList.size(); i++) {
-//			String togId = togetherList.get(i).getTogetherId();
-//			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
-//			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherId(togId));
-//		}
-//
-//		return togetherList;
-		return togetherDao.getTogetherListByResId(resId);
+		List<Together> togetherList = togetherRepository.findGatheringsByResId(resId);
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
   
   	@Override
 	public List<Together> searchTogetherList(String keyword) {
-		return togetherDao.searchTogetherList(keyword);
+		List<Together> togetherList = togetherRepository.findGatheringsByKeyword(keyword);
+		for(int i = 0; i < togetherList.size(); i++) {
+			String togId = togetherList.get(i).getTogetherId();
+			togetherList.get(i).setTogetherFoodList(togetherFoodRepository.findByTogetherId(togId));
+			togetherList.get(i).setTogetherMemberList(togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId));
+		}
+
+		return togetherList;
 	}
 	
 	//TogetherFood
@@ -503,7 +560,8 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	
 	@Override
 	public List<TogetherOrder> getTogetherOrderByUserId(String userId) {
-		return togetherOrderDao.getTogetherOrderByUserId(userId); //JOIN 때문에 해결 못함
+//		return togetherOrderRepository.findByUserId(userId); //쿼리 이상 생김
+		return togetherOrderDao.getTogetherOrderByUserId(userId);
 	}
 
 	@Override
