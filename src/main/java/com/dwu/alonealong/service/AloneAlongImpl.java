@@ -199,12 +199,11 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public List<Order> getOrdersByUserId(String userId){
 		List<Order> orderList = orderRepository.findByUserIdAndOrderIdStartingWith(userId, "p");
 		for(Order order : orderList){
-			System.out.println(order.toString());
 			ProductOrder po = order.getProductOrder();
 			po.setLineItems(productLineItemRepository.findByOrderId(order.getOrderId()));
 			order.setProductOrder(po);
 		}
-		return orderRepository.findByUserId(userId);
+		return orderList;
 	}
 	public ProductOrder getProductOrder(String orderId){
 		return productOrderRepository.findByOrderId(orderId);
