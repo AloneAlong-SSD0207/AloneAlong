@@ -3,6 +3,7 @@ package com.dwu.alonealong.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -338,19 +339,21 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	@Override
 	@Transactional
 	public void insertFoodOrder(FoodOrder order) {
-		String newOrderId;
+		String newOrderId = "fo" + foodOrderRepository.getNewOrderId();
+		order.setOrderId(newOrderId);
 		//주문 하나의 주문자정보
-		orderInfoDao.insertFoodOrderInfo(order); //foodId는 그냥 맨 처음 대표적인 list[0]로 foodId 넣음.
+		Order orderInfo = new Order(newOrderId,order.getTotalPrice(),
+				"예약완료", order.getUserId(), order.getPayment().getCard_num(),
+				order.getPayment().getCard_date(), order.getPayment().getCard_name());
+		orderInfo.setOrderDate(new Date());
+		foodOrderInfoRepository.save(orderInfo); //foodId는 그냥 맨 처음 대표적인 list[0]로 foodId 넣음.
 		//주문 하나의 예약정보
-		newOrderId = "fo" + orderInfoDao.getRecentOrderId();
-		foodOrderDao.insertFoodOrder(order, newOrderId);
-
+		foodOrderRepository.save(order);
 
 		//카트 item들 모두 넣기
 		for(FoodCartItem val : order.getFoodList()) {
 			FoodLineItem item = new FoodLineItem(newOrderId, val.getFood().getFoodId(), val.getQuantity(), val.getUnitPrice());
-			//foodLineItemRepository.save(item);
-			foodLineItemDao.insertFoodLineItem(item);
+			foodLineItemRepository.save(item);
 		}
 
 	}
@@ -525,7 +528,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	}
 	
 	@Override
-	public List<Together> getTogetherListByResId(String resId) {
+	public List<Together> getTogetherListByResId(long resId) {
 		List<Together> togetherList = togetherRepository.findGatheringsByResId(resId);
 		for(int i = 0; i < togetherList.size(); i++) {
 			String togId = togetherList.get(i).getTogetherId();
@@ -612,8 +615,8 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		String orderId = "t" + togetherOrderRepository.getTogOrderIdFromSeq();
 		order.setOrderId(orderId);
 
-		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-		order.setOrderDate(curDate);
+//		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+//		order.setOrderDate(curDate);
 
 		orderRepository.save(order);
 	}
@@ -623,8 +626,8 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 	@Override
 	public void updateTogetherOrderInfo(Order order) {
-		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-		order.setOrderDate(curDate);
+//		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+//		order.setOrderDate(curDate);
 
 		orderRepository.save(order);
 	}

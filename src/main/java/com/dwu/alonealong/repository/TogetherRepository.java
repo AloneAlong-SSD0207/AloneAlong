@@ -18,7 +18,7 @@ public interface TogetherRepository extends JpaRepository<Together, String> {
     void deleteByTogetherId(String togId) throws DataAccessException;
 
     @Query("SELECT t, r FROM Together t, Restaurant r WHERE t.resId = r.resId AND t.resId = ?1 AND t.status = 0")
-    List<Together> findGatheringsByResId(String resId) throws DataAccessException;
+    List<Together> findGatheringsByResId(long resId) throws DataAccessException;
 
     @Query("SELECT t, r FROM Together t, Restaurant r WHERE t.resId = r.resId AND t.status = 0 AND (t.sex = ?1 OR t.sex = '상관없음') AND r.resAddress LIKE %?2%")
     List<Together> findGatheringsBySexAndAddress(String sex, String address) throws DataAccessException;

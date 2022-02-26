@@ -48,8 +48,6 @@ public class FoodOrder implements Serializable{
 	@Transient
 	String orderDate;
 
-  //togetherOrder 넣기 위해 추가
-
 	
 	//주문용 생성자
 	public FoodOrder(long resId, String userId, List<FoodCartItem> foodList, String reserveType, String visitDate, Payment payment) {
