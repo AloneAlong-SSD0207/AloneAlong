@@ -23,7 +23,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor
 public class Food implements Serializable{
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FOOD_SEQ_GENERATOR")
 	@Column(name="food_id")
@@ -58,5 +58,5 @@ public class Food implements Serializable{
 		return "Food [foodId=" + foodId + ", resId=" + resId + ", ownerId=" + ", price=" + price + ", name="
 				+ name + ", description=" + description + ", maxPeopleNum=" + maxPeopleNum + "]";
 	}
-	
+
 }

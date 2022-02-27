@@ -38,7 +38,7 @@ public class FoodReview implements Serializable{
 	String contents;
 	@Column(name="review_recommend")
 	int recommend;
-	
+
 	@Transient
 	String userNickName;
 
@@ -48,6 +48,6 @@ public class FoodReview implements Serializable{
 				+ ", reviewDate=" + reviewDate + ", rating=" + rating + ", contents=" + contents + ", recommend="
 				+ recommend + "]";
 	}
-	
-	
+
+
 }

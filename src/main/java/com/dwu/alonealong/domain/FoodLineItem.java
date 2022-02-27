@@ -24,7 +24,7 @@ public class FoodLineItem implements Serializable{
 	private int quantity;
 	@Column(name="unit_price")
 	private int unitPrice;
-	
+
 	@Transient
 	private String foodName;
 

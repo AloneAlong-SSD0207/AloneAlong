@@ -1,5 +1,10 @@
 package com.dwu.alonealong.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 import javax.persistence.*;
@@ -13,6 +18,10 @@ import javax.persistence.*;
 		, initialValue = 1
 		, allocationSize = 1
 )
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class TogetherFood implements Serializable {
 	@Id
 	@Column(name = "togfood_id")
@@ -35,29 +44,6 @@ public class TogetherFood implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public TogetherFood() { }
-
-	public String getTogetherFoodId() {return togetherFoodId;}
-	public void setTogetherFoodId(String togetherFoodId) {this.togetherFoodId = togetherFoodId;}
-	
-	public String getTogetherId() {return togetherId;}
-	public void setTogetherId(String togetherId) {this.togetherId = togetherId;}
-	
-	public long getFoodId() {return foodId;}
-	public void setFoodId(long foodId) {this.foodId = foodId;}
-	
-	public int getQuantity() {return quantity;}
-	public void setQuantity(int quantity) {this.quantity = quantity;}
-	
-	public Food getFood() {return food;}
-	public void setFood(Food food) {this.food = food;}
-	
-	@Override
-	public String toString() {
-		return "TogetherFood [togetherFoodId=" + togetherFoodId + ", togetherId=" + togetherId + ", foodId=" + foodId
-				+ ", quantity=" + quantity + ", food=" + food + "]";
-	}
-	
 	//음식가격 * 수량 구하기
 	public int getUnitTotalPrice() {
 		return food.getPrice() * quantity;
