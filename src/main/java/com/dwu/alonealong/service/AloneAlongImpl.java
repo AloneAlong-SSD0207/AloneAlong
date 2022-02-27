@@ -25,10 +25,6 @@ import com.dwu.alonealong.dao.FoodReviewDAO;
 import com.dwu.alonealong.dao.OrderInfoDAO;
 import com.dwu.alonealong.dao.PaymentDAO;
 import com.dwu.alonealong.dao.RestaurantDAO;
-import com.dwu.alonealong.dao.TogetherDAO;
-import com.dwu.alonealong.dao.TogetherFoodDAO;
-import com.dwu.alonealong.dao.TogetherMemberDAO;
-import com.dwu.alonealong.dao.TogetherOrderDAO;
 import com.dwu.alonealong.domain.CartItem;
 import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCartItem;
@@ -76,9 +72,9 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	private FoodReviewDAO foodReviewDao;
 	@Autowired
 	private FoodReviewRepository foodReviewRepository;
-	
-	
-    @Autowired
+
+
+	@Autowired
 	private UserDAO userDao;
 	@Autowired
 	private ProductRepository productRepository;
@@ -111,7 +107,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public User getUserByUserId(String Id) throws DataAccessException{
 		return userDao.getUserByUserId(Id);
 	}
-	
+
 	public User getUserByUserIdAndPassword(String Id, String password) throws DataAccessException{
 		return userDao.getUserByUserIdAndPassword(Id, password);
 	}
@@ -130,12 +126,12 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public List<String> getUserIdList(){
 		return userDao.getUserIdList();
 	}
-	
+
 	//Contact
 	public void insertContact(String contents) {
 		userDao.insertContact(contents);
 	}
-	
+
 	//Product
 	public List<Product> getProductList(int _pcId, String sortType){
 		String pcId =  Integer.toString(_pcId);
@@ -152,7 +148,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public Product getProduct(String productId){
 		return productRepository.findByProductId(productId);
 	}
-	
+
 	//Product Review
 	public ProductReview getProductReview(long reviewId, String userId){
 		ProductReview review = pReviewRepository.findByReviewId(reviewId);
@@ -197,7 +193,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		prRecommendRepository.deleteByReviewIdAndUserId(reviewId, userId);
 		return;
 	}
-	
+
 	//PRODUCT Order
 	public List<Order> getOrdersByUserId(String userId){
 		List<Order> orderList = orderRepository.findByUserIdAndOrderIdStartingWith(userId, "p");
@@ -229,7 +225,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public boolean checkUsersOrder(String userId, String productId){
 		return orderRepository.existsByOrderIdAndUserId(userId, productId);
 	}
-	
+
 	//cart
 	public List<CartItem> getAllCartItem(String userId) throws DataAccessException{
 		return cartItemRepository.findByUserId(userId);
@@ -255,7 +251,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public void updateCartItem(CartItem cartItem) throws DataAccessException{
 		cartItemRepository.save(cartItem);
 	}
-	
+
 	//Payment
 	public Payment getCard(String Id) throws DataAccessException{
 		return paymentDao.getCard(Id);
@@ -423,7 +419,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		restaurantRepository.save(res);
 		//restaurantDao.updateAvgRating(rating, resId);
 	}
-  
+
 	//together
 	@Override
 	public Together getTogetherByTogId(String togId) {
@@ -434,7 +430,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 		return together;
 	}
-	
+
 	@Override
 	public List<Together> getTogetherList() {
 		List<Together> togetherList = togetherRepository.findAll();
@@ -446,7 +442,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 		return togetherList;
 	}
-	
+
 	@Override
 	public void insertTogether(Together together) {
 		String togetherId = String.valueOf(togetherRepository.getTogIdFromSeq());
@@ -463,7 +459,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public void deleteTogether(String togId) throws DataAccessException {
 		togetherRepository.deleteByTogetherId(togId);
 	}
-	
+
 	@Override
 	public List<Together> getTogetherListByCategory(String area, String date, String kind, int price, String sex, String age) {
 		switch(area) {
@@ -511,7 +507,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 		return togetherList;
 	}
-	
+
 	@Override
 	public List<Together> recommandTogetherList(String sex, String address) {
 		StringTokenizer st = new StringTokenizer(address);
@@ -526,7 +522,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 		return togetherList;
 	}
-	
+
 	@Override
 	public List<Together> getTogetherListByResId(long resId) {
 		List<Together> togetherList = togetherRepository.findGatheringsByResId(resId);
@@ -538,8 +534,8 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 		return togetherList;
 	}
-  
-  	@Override
+
+	@Override
 	public List<Together> searchTogetherList(String keyword) {
 		List<Together> togetherList = togetherRepository.findGatheringsByKeyword(keyword);
 		for(int i = 0; i < togetherList.size(); i++) {
@@ -550,50 +546,50 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 		return togetherList;
 	}
-	
+
 	//TogetherFood
 	@Override
 	public List<TogetherFood> getTogetherFoodListByTogId(String togId) {
 		return togetherFoodRepository.findByTogetherId(togId);
 	}
-	
+
 	@Override
 	public void insertTogetherFood(TogetherFood togetherFood) {
 		String togetherFoodId = String.valueOf(togetherFoodRepository.getTogFoodIdFromSeq());
 		togetherFood.setTogetherFoodId(togetherFoodId);
 		togetherFoodRepository.save(togetherFood);
 	}
-	
+
 	@Override
 	public void deleteTogetherFood(String togId) {togetherFoodRepository.deleteByTogetherId(togId);}
-	
+
 	@Override
 	public void updateTogetherFood(TogetherFood togetherFood) {togetherFoodRepository.save(togetherFood);}
-	
+
 	//TogetherMember
 	@Override
 	public List<TogetherMember> getTogetherMemberListByTogId(String togId) {
 		return togetherMemberRepository.findByTogetherIdOrderByTogetherMemberIdAsc(togId);
 	}
-	
+
 	@Override
 	public void insertTogetherMember(TogetherMember togetherMember) {
 		String togetherMemberId = String.valueOf(togetherMemberRepository.getTogMemIdFromSeq());
 		togetherMember.setTogetherMemberId(togetherMemberId);
 		togetherMemberRepository.save(togetherMember);
 	}
-	
+
 	@Override
 	public void deleteTogetherMember(String togId) {
 		togetherMemberRepository.deleteByTogetherId(togId);
 	}
-	
+
 	//TogetherOrder
 	@Override
 	public void insertTogetherOrder(TogetherOrder togetherOrder) {
 		togetherOrderRepository.save(togetherOrder);
 	}
-	
+
 	@Override
 	public List<TogetherOrder> getTogetherOrderByUserId(String userId) {
 		return togetherOrderRepository.findByUserId(userId);
@@ -614,9 +610,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	public void insertTogetherOrderInfo(Order order) {
 		String orderId = "t" + togetherOrderRepository.getTogOrderIdFromSeq();
 		order.setOrderId(orderId);
-
-//		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-//		order.setOrderDate(curDate);
+		order.setOrderDate(new Date());
 
 		orderRepository.save(order);
 	}
@@ -626,14 +620,12 @@ public class AloneAlongImpl implements AloneAlongFacade{
 
 	@Override
 	public void updateTogetherOrderInfo(Order order) {
-//		String curDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-//		order.setOrderDate(curDate);
-
+		order.setOrderDate(new Date());
 		orderRepository.save(order);
 	}
 
 	@Override
 	public void insertFoodOrderForTogetherOrder(FoodOrder foodOrder) {
-		foodOrderDao.insertFoodOrderForTogetherOrder(foodOrder); //나중에 merge 후 전환 예정
+		foodOrderRepository.save(foodOrder);
 	}
 }

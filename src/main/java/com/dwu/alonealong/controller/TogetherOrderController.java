@@ -59,13 +59,13 @@ public class TogetherOrderController {
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
 		User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
 		
-		String orderDate = cardDate1 + "/" + cardDate2;
+		String cardDate = cardDate1 + "/" + cardDate2;
 		
 		if(isHost(together, user)) {
-			completePayment(true, together, user, cardNum, orderDate, cardName); //카드 결제
+			completePayment(true, together, user, cardNum, cardDate, cardName); //카드 결제
 			
 		} else {
-			completePayment(false, together, user, cardNum, orderDate, cardName); //카드 결제
+			completePayment(false, together, user, cardNum, cardDate, cardName); //카드 결제
 			insertUserIntoMember(user, together); //같이먹기 멤버에 추가
 			
 			if(isMemberFull(together)) {
@@ -96,13 +96,13 @@ public class TogetherOrderController {
 		}
 	}
 	
-	public void completePayment(boolean isHost, Together together, User user, String cardNum, String orderDate, String cardName) {
+	public void completePayment(boolean isHost, Together together, User user, String cardNum, String cardDate, String cardName) {
 		if(isHost) {
 			String orderId = aloneAlong.getTogetherOrderByTogId(together.getTogetherId()).get(0).getOrderId();
-			order = new Order(orderId, together.getPrice(), "결제완료", user.getId(), cardNum, orderDate, cardName);
+			order = new Order(orderId, together.getPrice(), "결제완료", user.getId(), cardNum, cardDate, cardName);
 			aloneAlong.updateTogetherOrderInfo(order);
 		}else {
-			order = new Order("ORDER_ID.NEXTVAL", together.getPrice(), "결제완료", user.getId(), cardNum, orderDate, cardName);
+			order = new Order("ORDER_ID.NEXTVAL", together.getPrice(), "결제완료", user.getId(), cardNum, cardDate, cardName);
 			aloneAlong.insertTogetherOrderInfo(order);
 			
 			//주문목록에 넣기
