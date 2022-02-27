@@ -1,5 +1,10 @@
 package com.dwu.alonealong.domain;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 import javax.persistence.*;
@@ -13,6 +18,10 @@ import javax.persistence.*;
 		, initialValue = 1
 		, allocationSize = 1
 )
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class TogetherMember implements Serializable {
 	public static final int IS_NOT_HOST = 0;
 	public static final int IS_HOST = 1;
@@ -31,8 +40,6 @@ public class TogetherMember implements Serializable {
 	@JoinColumn(name="user_id", insertable=false, updatable=false)
 	private User user;
 	
-	public TogetherMember() {}
-	
 	public TogetherMember(String togetherMemberId, String userId, String togetherId,  int isHost) {
 		super();
 		this.togetherMemberId = togetherMemberId;
@@ -40,27 +47,5 @@ public class TogetherMember implements Serializable {
 		this.togetherId = togetherId;
 		this.isHost = isHost;
 	}
-	
-	public String getTogetherMemberId() {return togetherMemberId;}
-	public void setTogetherMemberId(String togetherMemberId) {this.togetherMemberId = togetherMemberId;}
-	
-	public String getUserId() {return userId;}
-	public void setUserId(String userId) {this.userId = userId;}
-	
-	public String getTogetherId() {return togetherId;}
-	public void setTogetherId(String togetherId) {this.togetherId = togetherId;}
-	
-	public int getIsHost() {return isHost;}
-	public void setIsHost(int isHost) {this.isHost = isHost;}
-
-	public User getUser() {return user;}
-	public void setUser(User user) {this.user = user;}
-	
-	@Override
-	public String toString() {
-		return "TogetherMember [togetherMemberId=" + togetherMemberId + ", togetherId=" + togetherId + ", userId="
-				+ userId + ", user=" + user + "]";
-	}
-	
 	
 }
