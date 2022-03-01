@@ -1,9 +1,7 @@
 package com.dwu.alonealong.service;
 
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,7 +35,7 @@ import com.dwu.alonealong.domain.Product;
 import com.dwu.alonealong.domain.ProductOrder;
 import com.dwu.alonealong.domain.ProductReview;
 import com.dwu.alonealong.domain.Restaurant;
-import com.dwu.alonealong.domain.RestaurantRepository;
+import com.dwu.alonealong.repository.RestaurantRepository;
 import com.dwu.alonealong.domain.Together;
 import com.dwu.alonealong.domain.TogetherFood;
 import com.dwu.alonealong.domain.TogetherMember;
@@ -49,27 +47,15 @@ import com.dwu.alonealong.domain.User;
 public class AloneAlongImpl implements AloneAlongFacade{
 	//restaurant
 	@Autowired
-	private RestaurantDAO restaurantDao;
-	@Autowired
 	private RestaurantRepository restaurantRepository;
-	@Autowired
-	private FoodDAO foodDao;
 	@Autowired
 	private FoodRepository foodRepository;
 	@Autowired
-	private FoodLineItemDAO foodLineItemDao;
-	@Autowired
 	private FoodLineItemRepository foodLineItemRepository;
-	@Autowired
-	private FoodOrderDAO foodOrderDao;
 	@Autowired
 	private FoodOrderRepository foodOrderRepository;
 	@Autowired
-	private OrderInfoDAO orderInfoDao;
-	@Autowired
 	private FoodOrderInfoRepository foodOrderInfoRepository;
-	@Autowired
-	private FoodReviewDAO foodReviewDao;
 	@Autowired
 	private FoodReviewRepository foodReviewRepository;
 
@@ -273,10 +259,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		restaurantRepository.save(res);
 	}
 	@Override
-	public void deleteRestaurant(long resId) {
-		//restaurantDao.deleteRestaurant(ownerId);
-		restaurantRepository.deleteById(resId);
-	}
+	public void deleteRestaurant(long resId) { restaurantRepository.deleteById(resId); }
 	@Override
 	public List<Restaurant> getRestaurantList() {
 		return (List<Restaurant>) restaurantRepository.findAll();
@@ -404,10 +387,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		return null;
 	}
 
-	public void insertFoodReview(FoodReview foodReview) {
-		//foodReviewDao.insertFoodReview(foodReview);
-		foodReviewRepository.save(foodReview);
-	}
+	public void insertFoodReview(FoodReview foodReview) { foodReviewRepository.save(foodReview); }
 	@Override
 	public void updateAvgRating(int rating, long resId) {
 		Restaurant res = restaurantRepository.findByResId(resId);
@@ -417,7 +397,6 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		res.setRevCount(res.getRevCount() + 1);
 
 		restaurantRepository.save(res);
-		//restaurantDao.updateAvgRating(rating, resId);
 	}
 
 	//together

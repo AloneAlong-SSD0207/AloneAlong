@@ -1,11 +1,10 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.food;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.controller.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.dwu.alonealong.domain.FoodFunction;
 import com.dwu.alonealong.domain.Restaurant;

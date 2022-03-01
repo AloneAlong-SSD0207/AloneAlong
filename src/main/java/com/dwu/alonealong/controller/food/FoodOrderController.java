@@ -1,12 +1,11 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.food;
 
 
-import java.util.Base64;
-import java.util.Base64.Encoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.controller.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCart;
 import com.dwu.alonealong.domain.FoodCartItem;
 import com.dwu.alonealong.domain.FoodFunction;

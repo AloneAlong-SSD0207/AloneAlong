@@ -1,7 +1,8 @@
-package com.dwu.alonealong.domain;
+package com.dwu.alonealong.repository;
 
 import java.util.List;
 
+import com.dwu.alonealong.domain.FoodReview;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.repository.CrudRepository;
 

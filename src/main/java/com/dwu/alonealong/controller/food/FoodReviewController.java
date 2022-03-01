@@ -1,8 +1,9 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.food;
 
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.controller.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
