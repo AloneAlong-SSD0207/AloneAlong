@@ -111,15 +111,17 @@ $(document).on("click", ".open-deleteModal", function () {
 					<div class="my-3 mx-2">
 						<c:out value="${review.reviewContents}"/>
 					</div>
+					<c:if test="${review.checkRecommend eq false}">
 					<a class="btn btn-sm btn-recommend rounded-pill mt-3 py-1 w-25 text-center text-green-roboto"
-						href='<c:url value="/shop/${productId}/review/recommend/${review.reviewId}"/>'>
-						<c:if test="${review.checkRecommend eq false}">
-						<i class="far fa-thumbs-up"></i>
-						</c:if>
-						<c:if test="${review.checkRecommend eq true}">
-						<i class="fas fa-thumbs-up"></i>
-						</c:if>
-						${review.recommend}<small class="text-gray"> 명이 추천</small>
+					   onclick="insertProductReviewRecommend(${review.reviewId})">
+						<i class="far fa-thumbs-up"></i> ${review.recommend}<small class="text-gray"> 명이 추천</small></a>
+					</c:if>
+					<c:if test="${review.checkRecommend eq true}">
+					<a class="btn btn-sm btn-recommend rounded-pill mt-3 py-1 w-25 text-center text-green-roboto"
+					   onclick="deleteProductReviewRecommend(${review.reviewId})">
+						<i class="fas fa-thumbs-up"></i> ${review.recommend}<small class="text-gray"> 명이 추천</small></a>
+					</c:if>
+
 					</a>
 				</div>
 			</div>
@@ -139,7 +141,7 @@ $(document).on("click", ".open-deleteModal", function () {
 				 <c:forEach var="pageNum" begin="${startPage}" end="${startPage + 4}" varStatus="status">
 					 <c:if test="${pageNum == page}">
 				 		<div class="btn-group"><button type="button" class="btn active rounded-circle" 
-				 			onClick="location.href='<c:url value='/shop/${productId}}/review?quantity=${quantity}&page=${pageNum}&sortType=${param.sortType}' />'">${pageNum}</button></div>
+				 			onClick="location.href='<c:url value='/shop/${productId}/review?quantity=${quantity}&page=${pageNum}&sortType=${param.sortType}' />'">${pageNum}</button></div>
 					 </c:if>
 					 <c:if test="${pageNum != page && pageNum <= lastPage}">
 				 		<div class="btn-group"><button type="button" class="btn rounded-circle"
@@ -163,7 +165,6 @@ $(document).on("click", ".open-deleteModal", function () {
 <!-- Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
 	aria-hidden="true">
-	<form action='<c:url value="/shop/review/delete"/>'>
 	<div class="modal-dialog modal-dialog-centered" role="document">
 		<div class="modal-content py-5">
 			<div class="modal-body text-center pb-4">
@@ -174,16 +175,14 @@ $(document).on("click", ".open-deleteModal", function () {
 			<div class="row mx-5 mb-2 justify-content-center">
 				<a type="button" class="btn btn-green rounded-pill mx-2 py-2 px-3"
 					data-dismiss="modal">취소</a>
-				<button type="submit" class="btn btn-orange rounded-pill mx-2 py-2 px-3">삭제</button>
+				<button class="btn btn-orange rounded-pill mx-2 py-2 px-3" onclick="deleteProductReview()">삭제</button>
 			</div>
 		</div>
 	</div>
-	</form>
 </div>
 <div class="modal fade" id="updateModal" tabindex="-1" role="dialog"
 	aria-hidden="true">
-	<form
-		action='<c:url value="/shop/review/update"/>'>
+	<form name="updateForm" id="updateForm" method="POST">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content pb-4">
 				<div class="modal-header">
@@ -215,14 +214,14 @@ $(document).on("click", ".open-deleteModal", function () {
 					<input type="hidden" name="reviewId" id="reviewId" value=""/>
 				</div>
 				<div class="text-center">
-					<button type="submit" class="btn btn-orange rounded-pill w-25 pb-2">수정하기</button>
+					<button onclick="updateProductReview()" class="btn btn-orange rounded-pill w-25 pb-2">수정하기</button>
 				</div>
 			</div>
 		</div>
 	</form>
 </div>
 <div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-hidden="true">
-	<form action='<c:url value="/shop/review/insert"/>'>
+	<form name="insertForm" id="insertForm" method="POST">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content pb-4">
 				<div class="modal-header">
@@ -250,10 +249,9 @@ $(document).on("click", ".open-deleteModal", function () {
 							<textarea rows="4" name="contents" id="review"
 								placeholder="리뷰를 작성하세요" required="" class="form-control"  maxlength="300"></textarea>
 						</div>
-					<input type="hidden" name="productId" id="productId" value="${productId}"/>
 				</div>
 				<div class="text-center">
-					<button type="submit" class="btn btn-orange rounded-pill w-25 pb-2">작성하기</button>
+					<button onclick="insertProductReview()" class="btn btn-orange rounded-pill w-25 pb-2">작성하기</button>
 				</div>
 			</div>
 		</div>
