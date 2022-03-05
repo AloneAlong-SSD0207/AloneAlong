@@ -112,6 +112,12 @@ public class ViewFoodController {
 		Restaurant res = alonealong.getRestaurantByResId(resId);
 		FoodFunction.encodeImg(res);
         model.put("restaurant", res);
+
+		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
+		if(userSession == null){
+			System.out.println("null에러............");
+		}
+		model.put("userId", userSession.getUser().getId());
         
         FoodFunction.pagingReviewList(reviewList, model, page);
         

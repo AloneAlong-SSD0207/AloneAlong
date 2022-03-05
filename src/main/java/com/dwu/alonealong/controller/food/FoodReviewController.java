@@ -51,7 +51,6 @@ public class FoodReviewController {
 		foodReview.setRecommend(FoodFunction.defaultInt);
 
 		alonealong.insertFoodReview(foodReview);
-		alonealong.updateAvgRating(rating, resId);
 		
 		String url = "redirect:/eating/" + resId + "/RestaurantReview";
 		return url;

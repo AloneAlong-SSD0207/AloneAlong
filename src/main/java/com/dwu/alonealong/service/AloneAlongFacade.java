@@ -96,8 +96,10 @@ public interface AloneAlongFacade {
 	void deleteFoodOrder(String orderId);
 	
 	public List<FoodReview> getFoodReviewListByResId(long resId, String sortType);
+	public FoodReview getFoodReview(long reviewId);
 	public void insertFoodReview(FoodReview foodReview);
-	void updateAvgRating(int rating, long resId);
+	public void updateFoodReview(FoodReview foodReview, int originRating);
+	public void deleteFoodReview(long reviewId);
 	
 	//Together
 	Together getTogetherByTogId(String togId);

@@ -16,13 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dwu.alonealong.dao.UserDAO;
-import com.dwu.alonealong.dao.FoodDAO;
-import com.dwu.alonealong.dao.FoodLineItemDAO;
-import com.dwu.alonealong.dao.FoodOrderDAO;
-import com.dwu.alonealong.dao.FoodReviewDAO;
-import com.dwu.alonealong.dao.OrderInfoDAO;
 import com.dwu.alonealong.dao.PaymentDAO;
-import com.dwu.alonealong.dao.RestaurantDAO;
 import com.dwu.alonealong.domain.CartItem;
 import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCartItem;
@@ -387,17 +381,40 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		return null;
 	}
 
-	public void insertFoodReview(FoodReview foodReview) { foodReviewRepository.save(foodReview); }
-	@Override
-	public void updateAvgRating(int rating, long resId) {
+	public FoodReview getFoodReview(long reviewId){ return foodReviewRepository.findByReviewId(reviewId); }
+	public void insertFoodReview(FoodReview foodReview) {
+		foodReviewRepository.save(foodReview);
+		updateResReviewInfo(foodReview.getResId(), foodReview.getRating(), "insert");
+	}
+	@Transactional
+	public void updateFoodReview(FoodReview foodReview, int ratingChange){
+		foodReviewRepository.save(foodReview);
+		updateResReviewInfo(foodReview.getResId(), ratingChange, "update");
+	}
+	public void deleteFoodReview(long reviewId){
+		FoodReview review = foodReviewRepository.findByReviewId(reviewId);
+		foodReviewRepository.deleteById(reviewId);
+		updateResReviewInfo(review.getResId(), review.getRating(), "delete");
+	}
+
+	public void updateResReviewInfo(long resId, int rating, String status){
 		Restaurant res = restaurantRepository.findByResId(resId);
 
-		double avg_rating = ((res.getAvgRating() * res.getRevCount() + rating) / (res.getRevCount() + 1));
-		res.setAvgRating(avg_rating);
-		res.setRevCount(res.getRevCount() + 1);
+		if(status.equals("insert")){
+			double avg_rating = ((res.getAvgRating() * res.getRevCount() + rating) / (res.getRevCount() + 1));
+			res.setAvgRating(avg_rating);
+			res.setRevCount(res.getRevCount() + 1);
+		}else if(status.equals("delete")){
+			res.setAvgRating((res.getAvgRating() * res.getRevCount() - rating) / (res.getRevCount() - 1));
+			res.setRevCount(res.getRevCount() - 1);
+		}else if(status.equals("update")){
+			double totalRating = (res.getAvgRating() * res.getRevCount()) + rating;
+			res.setAvgRating(totalRating / res.getRevCount());
+		}
 
 		restaurantRepository.save(res);
 	}
+
 
 	//together
 	@Override
