@@ -1,4 +1,4 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.food;
 
 import java.util.Base64;
 import java.util.Base64.*;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.controller.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
@@ -111,6 +112,12 @@ public class ViewFoodController {
 		Restaurant res = alonealong.getRestaurantByResId(resId);
 		FoodFunction.encodeImg(res);
         model.put("restaurant", res);
+
+		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
+		if(userSession == null){
+			System.out.println("null에러............");
+		}
+		model.put("userId", userSession.getUser().getId());
         
         FoodFunction.pagingReviewList(reviewList, model, page);
         

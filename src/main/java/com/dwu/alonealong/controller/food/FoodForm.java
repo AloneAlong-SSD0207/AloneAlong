@@ -1,4 +1,4 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.food;
 
 import java.io.File;
 import java.net.URL;

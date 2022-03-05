@@ -5,7 +5,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.dwu.alonealong.controller.FoodForm;
+import com.dwu.alonealong.controller.food.FoodForm;
 
 
 public class FoodFormValidator implements Validator{

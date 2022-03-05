@@ -1,9 +1,7 @@
 package com.dwu.alonealong.service;
 
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,13 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dwu.alonealong.dao.UserDAO;
-import com.dwu.alonealong.dao.FoodDAO;
-import com.dwu.alonealong.dao.FoodLineItemDAO;
-import com.dwu.alonealong.dao.FoodOrderDAO;
-import com.dwu.alonealong.dao.FoodReviewDAO;
-import com.dwu.alonealong.dao.OrderInfoDAO;
 import com.dwu.alonealong.dao.PaymentDAO;
-import com.dwu.alonealong.dao.RestaurantDAO;
 import com.dwu.alonealong.domain.CartItem;
 import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCartItem;
@@ -37,7 +29,7 @@ import com.dwu.alonealong.domain.Product;
 import com.dwu.alonealong.domain.ProductOrder;
 import com.dwu.alonealong.domain.ProductReview;
 import com.dwu.alonealong.domain.Restaurant;
-import com.dwu.alonealong.domain.RestaurantRepository;
+import com.dwu.alonealong.repository.RestaurantRepository;
 import com.dwu.alonealong.domain.Together;
 import com.dwu.alonealong.domain.TogetherFood;
 import com.dwu.alonealong.domain.TogetherMember;
@@ -49,27 +41,15 @@ import com.dwu.alonealong.domain.User;
 public class AloneAlongImpl implements AloneAlongFacade{
 	//restaurant
 	@Autowired
-	private RestaurantDAO restaurantDao;
-	@Autowired
 	private RestaurantRepository restaurantRepository;
-	@Autowired
-	private FoodDAO foodDao;
 	@Autowired
 	private FoodRepository foodRepository;
 	@Autowired
-	private FoodLineItemDAO foodLineItemDao;
-	@Autowired
 	private FoodLineItemRepository foodLineItemRepository;
-	@Autowired
-	private FoodOrderDAO foodOrderDao;
 	@Autowired
 	private FoodOrderRepository foodOrderRepository;
 	@Autowired
-	private OrderInfoDAO orderInfoDao;
-	@Autowired
 	private FoodOrderInfoRepository foodOrderInfoRepository;
-	@Autowired
-	private FoodReviewDAO foodReviewDao;
 	@Autowired
 	private FoodReviewRepository foodReviewRepository;
 
@@ -273,10 +253,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		restaurantRepository.save(res);
 	}
 	@Override
-	public void deleteRestaurant(long resId) {
-		//restaurantDao.deleteRestaurant(ownerId);
-		restaurantRepository.deleteById(resId);
-	}
+	public void deleteRestaurant(long resId) { restaurantRepository.deleteById(resId); }
 	@Override
 	public List<Restaurant> getRestaurantList() {
 		return (List<Restaurant>) restaurantRepository.findAll();
@@ -404,21 +381,40 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		return null;
 	}
 
+	public FoodReview getFoodReview(long reviewId){ return foodReviewRepository.findByReviewId(reviewId); }
 	public void insertFoodReview(FoodReview foodReview) {
-		//foodReviewDao.insertFoodReview(foodReview);
 		foodReviewRepository.save(foodReview);
+		updateResReviewInfo(foodReview.getResId(), foodReview.getRating(), "insert");
 	}
-	@Override
-	public void updateAvgRating(int rating, long resId) {
+	@Transactional
+	public void updateFoodReview(FoodReview foodReview, int ratingChange){
+		foodReviewRepository.save(foodReview);
+		updateResReviewInfo(foodReview.getResId(), ratingChange, "update");
+	}
+	public void deleteFoodReview(long reviewId){
+		FoodReview review = foodReviewRepository.findByReviewId(reviewId);
+		foodReviewRepository.deleteById(reviewId);
+		updateResReviewInfo(review.getResId(), review.getRating(), "delete");
+	}
+
+	public void updateResReviewInfo(long resId, int rating, String status){
 		Restaurant res = restaurantRepository.findByResId(resId);
 
-		double avg_rating = ((res.getAvgRating() * res.getRevCount() + rating) / (res.getRevCount() + 1));
-		res.setAvgRating(avg_rating);
-		res.setRevCount(res.getRevCount() + 1);
+		if(status.equals("insert")){
+			double avg_rating = ((res.getAvgRating() * res.getRevCount() + rating) / (res.getRevCount() + 1));
+			res.setAvgRating(avg_rating);
+			res.setRevCount(res.getRevCount() + 1);
+		}else if(status.equals("delete")){
+			res.setAvgRating((res.getAvgRating() * res.getRevCount() - rating) / (res.getRevCount() - 1));
+			res.setRevCount(res.getRevCount() - 1);
+		}else if(status.equals("update")){
+			double totalRating = (res.getAvgRating() * res.getRevCount()) + rating;
+			res.setAvgRating(totalRating / res.getRevCount());
+		}
 
 		restaurantRepository.save(res);
-		//restaurantDao.updateAvgRating(rating, resId);
 	}
+
 
 	//together
 	@Override

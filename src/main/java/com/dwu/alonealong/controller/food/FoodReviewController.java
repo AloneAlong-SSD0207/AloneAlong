@@ -1,8 +1,9 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.food;
 
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.dwu.alonealong.controller.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +51,6 @@ public class FoodReviewController {
 		foodReview.setRecommend(FoodFunction.defaultInt);
 
 		alonealong.insertFoodReview(foodReview);
-		alonealong.updateAvgRating(rating, resId);
 		
 		String url = "redirect:/eating/" + resId + "/RestaurantReview";
 		return url;

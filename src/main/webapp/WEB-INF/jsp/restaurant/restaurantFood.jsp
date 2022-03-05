@@ -17,7 +17,7 @@
 				        <div class="tab-content px-lg-3 py-5">
 				        <div class="info-content px-4 pt-lg-3 pb-3 mb-5 border">
 				        <c:if test="${restaurant.ownerId eq userId}">
-				        	<button type = "button" class="btn btn-sm btn-warning" onClick="location.href='<c:url value='/eating/${restaurant.resId}/adminFood' />'">메뉴 추가</button> <!-- 여기 r2라고 해놨으니 바꿔야해 -->
+				        	<button type = "button" class="btn btn-sm btn-warning" onClick="location.href='<c:url value='/eating/${restaurant.resId}/adminFood' />'">메뉴 추가</button>
 				        </c:if>
 				        <c:forEach var="food" items="${foodList}">     
 							<div class="shadow-sm m-2">

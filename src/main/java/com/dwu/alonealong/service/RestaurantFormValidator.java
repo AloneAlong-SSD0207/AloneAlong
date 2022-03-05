@@ -2,12 +2,11 @@ package com.dwu.alonealong.service;
 
 import java.util.regex.Pattern;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-import com.dwu.alonealong.controller.RestaurantForm;
+import com.dwu.alonealong.controller.food.RestaurantForm;
 import com.dwu.alonealong.domain.Restaurant;
 
 public class RestaurantFormValidator implements Validator{
