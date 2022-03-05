@@ -5,11 +5,59 @@
     <title>Cart</title>
 </head>
 <body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
 $(document).on("click", ".open-deleteModal", function () {
     var cartItemId = $(this).data('id');
     $("#cartItemId").val(cartItemId);
 });
+function updateCart(cartItemId){
+	const nowQuantity = Number($('#quantity' + cartItemId).val());
+	const stock = Number($('#stock' + cartItemId).val());
+	const name = $('#name' + cartItemId).val();
+	if(nowQuantity > stock){
+		$("#pStock").text(stock);
+		$("#pName").text(name);
+		jQuery.noConflict();
+		$("#stockModal").modal("show");
+	}
+	else{
+		let cartItem = {
+			cartItemId : cartItemId,
+			quantity : nowQuantity
+		};
+		$.ajax({
+			url:"http://localhost:8080/cart/[[${userSession.user.user_id}]]/items/" + cartItemId,
+			type:"PUT",
+			contentType:"application/json",
+			data:JSON.stringify(cartItem),
+			success: function(){
+				location.href="/cart";
+			},
+			error:function(){
+				alert("오류가 발생했습니다.");
+			},
+		})
+	}
+};
+function deleteCart(){
+	const cartItemId = $('#cartItemId').val();
+	let cartItem = {
+		cartItemId : cartItemId
+	};
+	$.ajax({
+		url:"http://localhost:8080/cart/[[${userSession.user.user_id}]]/items/" + cartItemId,
+		type:"DELETE",
+		contentType:"application/json",
+		data:JSON.stringify(cartItem),
+		success: function(){
+			location.href="/cart";
+		},
+		error:function(){
+			alert("오류가 발생했습니다.");
+		},
+	})
+};
 </script>
 
 <div th:replace="thyme/Top :: header"></div>
@@ -35,6 +83,8 @@ $(document).on("click", ".open-deleteModal", function () {
 						장바구니에 상품이 없습니다.
 					</div>
 					<div class="cart-item mb-3 rounded-lg" th:each="cartItem : ${cart}">
+						<input type="hidden" th:id="name + ${cartItem.cartItemId}" th:value="${cartItem.getProduct().getProductName()}"/>
+						<input type="hidden" th:id="stock + ${cartItem.cartItemId}" th:value="${cartItem.getProduct().getProductStock()}"/>
 						<div
 							class=" d-flex align-items-center text-left text-md-center row">
 							<div class="col-12 col-md-5">
@@ -43,7 +93,9 @@ $(document).on("click", ".open-deleteModal", function () {
 											style="object-fit: cover; background-position: center; width: 100px; height: 100px;"/>
 									</a>
 									<div class="cart-title text-left ml-3">
-										<a class="text-uppercase text-dark" th:href="@{/shop/{productId}(productId=${cartItem.productId})}"><strong th:text="${cartItem.getProduct().getProductName()}"></strong></a>
+										<a class="text-uppercase text-dark" th:href="@{/shop/{productId}(productId=${cartItem.productId})}">
+											<strong th:text="${cartItem.getProduct().getProductName()}"></strong>
+										</a>
 									</div>
 								</div>
 							</div>
@@ -55,15 +107,15 @@ $(document).on("click", ".open-deleteModal", function () {
 										</div>
 									</div>
 									<div class="col-md-4 text-center">
-										<form class="form" th:action="@{/cart/update/{cartItemId}(cartItemId=${cartItem.cartItemId})}">
+<!--										<form class="form"> &lt;!&ndash;th:action="@{/cart/update/{cartItemId}(cartItemId=${cartItem.cartItemId})}"&ndash;&gt;-->
 										<div class="input-group">
-									      <input class="form-control text-center rounded" name="quantity"
+									      <input class="form-control text-center rounded" name="quantity" th:id="quantity + ${cartItem.cartItemId}"
 											type="number" th:value="${cartItem.quantity}" min="1">
 									      <span class="input-group-btn">
-									        <button class="btn" type="submit"><i class="text-orange fas fa-check"></i></button>
+									        <button class="btn"  th:onclick="|javascript:updateCart(${cartItem.cartItemId});|"><i class="text-orange fas fa-check"></i></button>
 									      </span>
 									    </div>
-									    </form>
+<!--									    </form>-->
 									</div>
 									<div class="col-md-2">
 										<div class="row">
@@ -117,7 +169,6 @@ $(document).on("click", ".open-deleteModal", function () {
 		aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content py-5">
-			<form th:action="@{/cart/delete}">
 				<div class="modal-body text-center pb-4">
 					<h6>정말 장바구니에서 삭제하시겠습니까?</h6>
 					<input type="hidden" name="cartItemId" id="cartItemId">
@@ -125,14 +176,13 @@ $(document).on("click", ".open-deleteModal", function () {
 				<div class="row mx-5 mb-2 justify-content-center">
 					<a type="button"class="btn btn-green rounded-pill mx-2 py-2 px-3"
 						data-dismiss="modal">취소</a> <button type="submit"
-						class="btn btn-orange rounded-pill mx-2 py-2 px-3">삭제</button>
+						class="btn btn-orange rounded-pill mx-2 py-2 px-3"
+						th:onclick="|javascript:deleteCart();|">삭제</button>
 				</div>
-			</form>
 			</div>
 		</div>
 	</div>
-	<div th:if="${param.stockError}" class="modal fade" id="alertModal"
-		tabindex="-1" role="dialog">
+	<div class="modal fade" id="stockModal" tabindex="-1" role="dialog" aria-hidden="true" >
 		<div class="modal-dialog modal-dialog-centered" role="document">
 			<div class="modal-content pb-4">
 				<div class="modal-header">
@@ -143,8 +193,8 @@ $(document).on("click", ".open-deleteModal", function () {
 					</button>
 				</div>
 				<div class="modal-body text-center">
-					현재 <span class="text-green" th:text="${cartItemName}"></span>의
-					재고수량은 <span class="text-orange" th:text="${param.stock}"></span>개
+					현재 <span class="text-green" th:id="pName"></span>의
+					재고수량은 <span class="text-orange" th:id="pStock"></span>개
 					입니다.
 				</div>
 			</div>

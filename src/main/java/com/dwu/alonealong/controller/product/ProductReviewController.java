@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -30,6 +32,8 @@ public class ProductReviewController  {
     public void setAloneAlong(AloneAlongFacade aloneAlong) {
         this.aloneAlong = aloneAlong;
     }
+
+    RestTemplate restTemplate = new RestTemplate();
 
     @RequestMapping("/shop/{productId}/review")
     public String viewReview(HttpServletRequest request,
@@ -52,15 +56,17 @@ public class ProductReviewController  {
             case "highRating" : sortTypeName = "높은 평점순"; break;
         }
 
-        Product product = this.aloneAlong.getProduct(productId);
-        List<ProductReview> reviewList = this.aloneAlong.getProductReviewList(productId, sortType, userId);
+        Product product = restTemplate.getForObject("http://localhost:8080/products/" + productId, Product.class);
+        ProductReview[] reviewObject = restTemplate.getForObject("http://localhost:8080/products/"
+                + productId + "/reviews?sort=" + sortType + "&userId=" + userId, ProductReview[].class);
+        List<ProductReview> reviewList = Arrays.asList(reviewObject);
         double avg = 0;
         for (ProductReview review : reviewList){
             avg += review.getRating();
         }
         model.put("numOfReviews", reviewList.size());
         model.put("averageOfReviews", reviewList.size() == 0 ? 0 : avg / reviewList.size());
-        model.put("mostRatingOfReviews", aloneAlong.mostRatingOfReviews(productId));
+        model.put("mostRatingOfReviews", reviewList.size() == 0 ? 0 : aloneAlong.mostRatingOfReviews(productId));
 
         PagedListHolder<ProductReview> pagedReviewList = new PagedListHolder<ProductReview>(reviewList);
         pagedReviewList.setPageSize(PAGE_SIZE);
@@ -81,99 +87,5 @@ public class ProductReviewController  {
 
         model.put("userId", userId);
         return "productReview";
-    }
-
-    @RequestMapping("/shop/review/insert")
-    public String insertReview(HttpServletRequest request,
-                               @RequestParam(value="productId") String productId,
-                               @RequestParam(value="rating") int rating,
-                               @RequestParam(value="contents") String contents)
-                                throws Exception {
-        String userId = UserSession.getUserId(request);
-
-        if(!aloneAlong.checkUsersOrder(userId, productId)){
-            throw new UserNotMatchException();
-        }
-        if (contents.length() > ProductReview.MAX_CONTENT_SIZE) {
-            throw new ContentSizeException();
-        }
-
-        ProductReview productReview = new ProductReview();
-        productReview.setUserId(userId);
-        productReview.setProductId(productId);
-        productReview.setRating(rating);
-        productReview.setReviewContents(contents);
-
-        this.aloneAlong.insertProductReview(productReview);
-        return "redirect:/shop/" + productId + "/review";
-    }
-
-    @RequestMapping("/shop/review/update")
-    public String updateReview(HttpServletRequest request,
-                               @RequestParam(value="productId") String productId,
-                               @RequestParam(value="reviewId") long reviewId,
-                               @RequestParam(value="rating") int rating,
-                               @RequestParam(value="contents") String contents)
-                               throws Exception {
-        String userId = UserSession.getUserId(request);
-
-        //product를 구매한 user인지 검사, 리뷰 내용 검사
-        ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
-        if(!aloneAlong.checkUsersOrder(userId, productId)){
-            throw new UserNotMatchException();
-        }
-        if (contents.length() > ProductReview.MAX_CONTENT_SIZE) {
-            throw new ContentSizeException();
-        }
-        productReview.setRating(rating);
-        productReview.setReviewContents(contents);
-        aloneAlong.updateProductReview(productReview);
-
-        return "redirect:/shop/" + productId + "/review";
-    }
-
-    @RequestMapping("/shop/review/delete")
-    public String deleteReview(HttpServletRequest request,
-                               @RequestParam(value="productId") String productId,
-                               @RequestParam(value="reviewId") long reviewId)
-                               throws Exception {
-        String userId = UserSession.getUserId(request);
-
-        ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
-        if (!productReview.getUserId().equals(userId)) {
-            throw new UserNotMatchException();
-        }
-        this.aloneAlong.deleteProductReview(reviewId);
-
-        return "redirect:/shop/" + productId + "/review";
-    }
-
-    @RequestMapping("/shop/{productId}/review/recommend/{reviewId}")
-    public String recommendReview(HttpServletRequest request,
-                                @PathVariable("reviewId") long reviewId,
-                                @RequestParam(value="page", defaultValue="1") int page,
-                                @RequestParam(value="sortType", defaultValue="new") String sortType,
-                                @RequestParam(value="quantity", defaultValue="1") int quantity)
-                                throws Exception {
-        String userId = UserSession.getUserId(request);
-
-        //자신의 리뷰 추천 여부 검사
-        ProductReview productReview = aloneAlong.getProductReview(reviewId, userId);
-        if (productReview.getUserId().equals(userId)) {
-            return "redirect:/shop/{productId}/review?quantity=" + quantity + "&page=" + page + "&sortType=" + sortType + "&recommendError=true";
-        }
-        else {
-            if(productReview.getCheckRecommend() == false) {
-                productReview.increaseRecommend();
-                aloneAlong.updateProductReview(productReview);
-                aloneAlong.insertProductReviewRecommend(productReview.getReviewId(), userId);
-            }
-            else {
-                productReview.decreaseRecommend();
-                aloneAlong.updateProductReview(productReview);
-                aloneAlong.deleteProductReviewRecommend(productReview.getReviewId(), userId);
-            }
-        }
-        return "redirect:/shop/{productId}/review";
     }
 }

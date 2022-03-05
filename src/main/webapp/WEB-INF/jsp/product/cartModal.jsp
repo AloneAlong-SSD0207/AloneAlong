@@ -1,13 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<script languae="javaScript">
-$(document).ready(function() {
-	<c:if test="${param.insertCart == true}">
-		$("#cartModal").modal("show");
-	</c:if>
-});
-</script>
 
 <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered" role="document">
