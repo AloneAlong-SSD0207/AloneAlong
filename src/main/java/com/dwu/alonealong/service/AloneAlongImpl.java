@@ -223,7 +223,7 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		}
 	}
 	public boolean checkUsersOrder(String userId, String productId){
-		return orderRepository.existsByOrderIdAndUserId(userId, productId);
+		return productLineItemRepository.existsByProductOrder_Order_UserIdAndProductId(userId, productId);
 	}
 
 	//cart
