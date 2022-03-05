@@ -32,13 +32,28 @@
 
 [팀프로젝트 최종 보고서 (2021.06.22 작성)](https://drive.google.com/file/d/1Jk8T37c7n_V_fmBgnRUGqG7jNKbz6_Sj/view?usp=sharing)
 
+&nbsp;  
+
+# 4. 프로젝트 환경
+
+| 분류 | 환경 |
+| --- | --- |
+| OS | Windows |
+| IDE | Eclipse, IntelliJ |
+| FrontEnd | HTML, CSS, JSP, JavaScript, JQuery, Ajax, BootStrap, Thymeleaf |
+| BackEnd | Language : JAVA |
+|  | Framework : Spring Boot (2.4.5) |
+|  | DataBase : Oracle  |
+|  | Server : Apache Tomcat |
+
 &nbsp;   
 
-# 4. 프로젝트 구조
+# 5. 프로젝트 구조
 
 &nbsp;   
 
-# 5. 시연 영상
+
+# 6. 시연 영상
 
 - ...-
 
