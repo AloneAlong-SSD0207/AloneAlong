@@ -11,16 +11,32 @@ b {color:#29A65F;}
 .card-body>div>a{ z-index:1;}
 .sold-out { background-color:gray; color:#FFFFFF; width:50px; padding: 2px 15px 2px 15px;}
 </style>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
 function insertCart(stock, product, id){
 	const nowQuantity = $("#quantity").val();
 	if(nowQuantity > stock){
 		$("#pStock").text(stock);
 		$("#pName").text(product);
+		jQuery.noConflict();
 		$("#stockModal").modal("show");
 	}
 	else{
-		location.href="/cart/insert/" + id + "/list?pcId=${pcId}&page=${page}&sortType=${param.sortType}";
+		let cartItem = { productId : id, quantity : nowQuantity };
+		$.ajax({
+			url:"http://localhost:8080/cart/${userSession.user.user_id}/items",
+			type:"POST",
+			contentType:"application/json",
+			data:JSON.stringify(cartItem),
+			success: function(){
+				jQuery.noConflict();
+				$("#cartModal").modal("show");
+			},
+			error:function(){
+				alert("오류가 발생했습니다.");
+			},
+		})
+		<%--location.href="/cart/insert/" + id + "/list?pcId=${pcId}&page=${page}&sortType=${param.sortType}";--%>
 	}
 };
 </script>

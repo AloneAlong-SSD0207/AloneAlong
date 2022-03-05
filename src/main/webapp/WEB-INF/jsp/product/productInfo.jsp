@@ -2,6 +2,7 @@
     pageEncoding="EUC-KR"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
 function changeQuantity(){
 	var nowQuantity = $("#quantity").val();
@@ -17,20 +18,118 @@ function insertCart(){
 	if(nowQuantity > ${product.productStock}){
 		$("#pStock").text('${product.productStock}');
 		$("#pName").text('${product.productName}');
-		$("#stockModal").modal("show");
+		jQuery.noConflict();
+		$('#stockModal').modal('show');
 	}
 	else{
-		location.href="/cart/insert/" + ${productId} + "/product?quantity=" + nowQuantity;
+		let cartItem = { productId : ${productId}, quantity : nowQuantity };
+		$.ajax({
+			url:"http://localhost:8080/cart/${userSession.user.user_id}/items",
+			type:"POST",
+			contentType:"application/json",
+			data:JSON.stringify(cartItem),
+			success: function(){
+				jQuery.noConflict();
+				$("#cartModal").modal("show");
+			},
+			error:function(){
+				alert("오류가 발생했습니다.");
+			},
+		})
+		<%--location.href="/cart/insert/" + ${productId} + "/product?quantity=" + nowQuantity;--%>
 	}
 };
-function order(){
-	const nowQuantity = $("#quantity").val();
-	if(nowQuantity > ${product.productStock}){
-		$("#stockModal").modal("show");
+function insertProductReviewRecommend(rId){
+	const reviewId = Number(rId);
+	let user = { user_id : ${userSession.user.user_id} };
+	$.ajax({
+		url:"http://localhost:8080/products/${productId}/reviews/" + reviewId + "/recommends",
+		type:"POST",
+		contentType:"application/json",
+		data:JSON.stringify(user),
+		success: function(){
+			alert("리뷰를 추천했습니다.");
+			location.reload();
+		},
+		error:function(){
+			jQuery.noConflict();
+			$("#recommendReviewModal").modal("show");
+		},
+	})
+}
+function deleteProductReviewRecommend(rId){
+	const reviewId = Number(rId);
+	$.ajax({
+		url:"http://localhost:8080/products/${productId}/reviews/" + reviewId + "/recommends/${userSession.user.user_id}",
+		type:"DELETE",
+		contentType:"application/json",
+		success: function(){
+			alert("추천을 취소했습니다.");
+			location.reload();
+		},
+		error:function(){
+			alert("오류가 발생했습니다.");
+		},
+	})
+};
+function insertProductReview(){
+	const review = $("#insertForm").serializeArray();
+	let productReview = {
+		rating : review[0].value,
+		reviewContents : review[1].value,
+		productId : ${productId},
+		userId : ${userSession.user.user_id},
 	}
-	else{
-		location.href="/shop/order?type=product&productId=${productId}&quantity=" + nowQuantity;
+	$.ajax({
+		url:"http://localhost:8080/products/${productId}/reviews",
+		type:"POST",
+		contentType:"application/json",
+		data:JSON.stringify(productReview),
+		success: function(){
+			alert("리뷰가 작성되었습니다.");
+			location.reload();
+		},
+		error:function(){
+			alert("오류가 발생했습니다.");
+		},
+	})
+};
+function updateProductReview(){
+	const review = $("#updateForm").serializeArray();
+	let productReview = {
+		rating : review[0].value,
+		reviewContents : review[1].value,
+		reviewId : review[3].value,
+		userId : ${userSession.user.user_id},
 	}
+	$.ajax({
+		url:"http://localhost:8080/products/${productId}/reviews/" + review[3].value,
+		type:"PUT",
+		contentType:"application/json",
+		data:JSON.stringify(productReview),
+		success: function(){
+			alert("리뷰가 수정되었습니다.");
+			location.reload();
+		},
+		error:function(){
+			alert("오류가 발생했습니다.");
+		},
+	})
+};
+function deleteProductReview(){
+	const reviewId = $(".modal-body #reviewId").val();
+	alert(reviewId)
+	$.ajax({
+		url:"http://localhost:8080/products/${productId}/reviews/" + reviewId + "/${userSession.user.user_id}",
+		type:"DELETE",
+		contentType:"application/json",
+		success: function(){
+			location.reload();
+		},
+		error:function(){
+			alert("오류가 발생했습니다.");
+		},
+	})
 };
 </script>
 <div class="row mx-5 mb-5">
