@@ -117,7 +117,9 @@ public class ViewFoodController {
 		if(userSession == null){
 			System.out.println("null에러............");
 		}
-		model.put("userId", userSession.getUser().getId());
+		if(userSession != null) {
+			model.put("userId", userSession.getUser().getId());
+		}else{model.put("userId", "");}
         
         FoodFunction.pagingReviewList(reviewList, model, page);
         
