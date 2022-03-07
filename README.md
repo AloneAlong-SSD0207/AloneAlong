@@ -1,5 +1,8 @@
 
-![https://user-images.githubusercontent.com/71439771/156882133-6f7d87b3-63d7-4ab8-b532-3ba5bdf921de.png](https://user-images.githubusercontent.com/71439771/156882133-6f7d87b3-63d7-4ab8-b532-3ba5bdf921de.png)
+![main](https://user-images.githubusercontent.com/71439771/156991487-0ee08058-1e38-4979-8575-823e6ed6252e.png)  
+
+![소개2](https://user-images.githubusercontent.com/71439771/156992754-49115883-ca01-495f-89ae-63d1fc269525.png)  
+  
 
 # 1. 프로젝트 인원
 
@@ -26,9 +29,9 @@
 
 # 3. 프로젝트 소개
 
--간단한 설명-
+-간단한 설명-  
 
-![https://user-images.githubusercontent.com/71439771/156882143-ea50a28b-4c3f-4896-abda-3b0153e001dd.png](https://user-images.githubusercontent.com/71439771/156882143-ea50a28b-4c3f-4896-abda-3b0153e001dd.png)
+![소개1](https://user-images.githubusercontent.com/71439771/156991491-f2475ca0-5be2-4596-9fa7-9a5f6b6fedde.png)  
 
 [팀프로젝트 최종 보고서 (2021.06.22 작성)](https://drive.google.com/file/d/1Jk8T37c7n_V_fmBgnRUGqG7jNKbz6_Sj/view?usp=sharing)
 
