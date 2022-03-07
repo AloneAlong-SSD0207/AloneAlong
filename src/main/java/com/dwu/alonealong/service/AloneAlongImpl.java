@@ -341,12 +341,11 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	}
 	@Override
 	public List<FoodOrder> getFoodOrdersByUserId(String userId) {
-		List<Order> orderList = foodOrderInfoRepository.findByUserIdOrderByOrderDateDesc(userId);
+		List<Order> orderList = foodOrderInfoRepository.findByUserIdAndOrderIdStartingWithOrderByOrderDateDesc(userId, "fo");
 		List<FoodOrder> foodOrderList = new ArrayList<>();
 		for(Order order : orderList){
 			String orderId = order.getOrderId();
-			if(orderId.startsWith("fo")){
-				System.out.println("foodOrder 아이디 : " + orderId);
+				//System.out.println("foodOrder 아이디 : " + orderId);
 				List<FoodLineItem> lineItemList = foodLineItemRepository.findByOrderId(orderId);
 				FoodOrder foodOrder = order.getFoodOrder();
 				foodOrder.setOrderedList(lineItemList);
@@ -362,7 +361,6 @@ public class AloneAlongImpl implements AloneAlongFacade{
 					foodLineItem.setFoodName(foodName);
 				}
 				foodOrderList.add(foodOrder);
-			}
 
 		}
 
