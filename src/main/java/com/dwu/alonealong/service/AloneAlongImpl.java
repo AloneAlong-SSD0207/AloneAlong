@@ -263,11 +263,11 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		if(category1.equals("지역")) category1 = "";
 		if(category2.equals("분류")) category2 = "";
 		if(sortType.equals("RES_DATE")) {
-			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByResDateDesc(category1, category2);
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingAndOpenIsNotNullOrderByResDateDesc(category1, category2);
 		}else if(sortType.equals("REV_COUNT")) {
-			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByRevCountDesc(category1, category2);
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingAndOpenIsNotNullOrderByRevCountDesc(category1, category2);
 		}else if(sortType.equals("AVG_RATING")) {
-			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByAvgRatingDesc(category1, category2);
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingAndOpenIsNotNullOrderByAvgRatingDesc(category1, category2);
 		}
 		return null;
 	}

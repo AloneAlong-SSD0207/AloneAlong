@@ -80,6 +80,11 @@ public class RestaurantController {
 		res.setTogetherOk(resForm.isTogetherOk());
 		res.setArea(resForm.getResArea());
 		res.setImgFile(FoodFunction.getImgFile(resForm));
+		if(resForm.isOpen()){
+			res.setOpen("open");
+		}else{
+			res.setOpen(null);
+		}
 
 		if(request.getParameter("status").equals("insert")) {
 			res.setRevCount(0);

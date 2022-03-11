@@ -19,6 +19,7 @@ public class RestaurantForm {
 	private String resArea;
 	private MultipartFile imgFile;
 	private boolean togetherOk;
+	private boolean open;
 	
 	private String img64;
 
