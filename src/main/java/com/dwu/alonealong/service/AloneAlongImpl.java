@@ -350,8 +350,9 @@ public class AloneAlongImpl implements AloneAlongFacade{
 				FoodOrder foodOrder = order.getFoodOrder();
 				foodOrder.setOrderedList(lineItemList);
 				foodOrder.setTotalPrice(order.getTotalPrice());
+				foodOrder.setReviewed(foodReviewRepository.existsByOrderId(orderId));
 
-				SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				//SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				Date date = order.getOrderDate();
 				String newstring = new SimpleDateFormat("yy-MM-dd").format(date);
 

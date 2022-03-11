@@ -3,8 +3,10 @@ package com.dwu.alonealong.domain;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import javax.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @SuppressWarnings("serial")
 @Entity
@@ -31,7 +33,7 @@ public class FoodReview implements Serializable{
 	@Column(name="user_id")
 	String userId;
 	@Column(name="review_date")
-	LocalDateTime reviewDate = LocalDateTime.now();
+	Date reviewDate = new Date();
 	@Column(name="review_rating")
 	int rating;
 	@Column(name="review_contents")
