@@ -51,37 +51,37 @@ public class ProductOrderFormValidator implements Validator {
 			ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.shipAddress", "SHIPADDRESS_REQUIRED", "배송받을 주소를 입력해주세요.");
 		}
 
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.cardNum", "CARDNUM_REQUIRED", "카드번호를 입력해주세요.");
-		if(productOrder.getCardNum().length() != 0) {
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.order.cardNum", "CARDNUM_REQUIRED", "카드번호를 입력해주세요.");
+		if(productOrder.getOrder().getCardNum().length() != 0) {
 			String ds = "\\d{10,20}";
-			boolean regex4 = Pattern.matches(ds, productOrder.getCardNum());
+			boolean regex4 = Pattern.matches(ds, productOrder.getOrder().getCardNum());
 			if (!regex4) {
-				errors.rejectValue("order.cardNum", "regex4", "올바른 카드번호를 입력하세요.");
+				errors.rejectValue("order.order.cardNum", "regex4", "올바른 카드번호를 입력하세요.");
 			}
 		}
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.cardMonth", "CARDMONTH_REQUIRED", "카드 날짜를 입력해주세요.");
-		if(productOrder.getCardMonth().length() != 0) {
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.order.cardMonth", "CARDMONTH_REQUIRED", "카드 날짜를 입력해주세요.");
+		if(productOrder.getOrder().getCardMonth().length() != 0) {
 			String ds = "\\d{2}";
-			boolean regex5 = Pattern.matches(ds, productOrder.getCardMonth());
+			boolean regex5 = Pattern.matches(ds, productOrder.getOrder().getCardMonth());
 			if (!regex5) {
-				errors.rejectValue("order.cardMonth", "regex5", "올바른 카드 날짜를 입력하세요.");
+				errors.rejectValue("order.order.cardMonth", "regex5", "올바른 카드 날짜를 입력하세요.");
 			}
 			else {
-				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.cardYear", "CARDYEAR_REQUIRED", "카드 날짜를 입력해주세요.");
-				if(productOrder.getCardYear().length() != 0) {
-					boolean regex6 = Pattern.matches(ds, productOrder.getCardYear());
+				ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.order.cardYear", "CARDYEAR_REQUIRED", "카드 날짜를 입력해주세요.");
+				if(productOrder.getOrder().getCardYear().length() != 0) {
+					boolean regex6 = Pattern.matches(ds, productOrder.getOrder().getCardYear());
 					if (!regex6) {
-						errors.rejectValue("order.cardYear", "regex6", "올바른 카드 날짜를 입력하세요.");
+						errors.rejectValue("order.order.cardYear", "regex6", "올바른 카드 날짜를 입력하세요.");
 					}
 				}
 			}
 		}
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.cardCVC", "CARDCVC_REQUIRED", "CVC번호를 입력해주세요.");
-		if(productOrder.getCardCVC().length() != 0) {
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "order.order.cardCVC", "CARDCVC_REQUIRED", "CVC번호를 입력해주세요.");
+		if(productOrder.getOrder().getCardCVC().length() != 0) {
 			String ds = "\\d{3}";
-			boolean regex7 = Pattern.matches(ds, productOrder.getCardCVC());
+			boolean regex7 = Pattern.matches(ds, productOrder.getOrder().getCardCVC());
 			if (!regex7) {
-				errors.rejectValue("order.cardCVC", "regex7", "세자리 숫자의 CVC번호를 입력하세요.");
+				errors.rejectValue("order.order.cardCVC", "regex7", "세자리 숫자의 CVC번호를 입력하세요.");
 			}
 		}
 		

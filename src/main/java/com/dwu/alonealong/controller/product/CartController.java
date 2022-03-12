@@ -47,6 +47,7 @@ public class CartController {
 		model.put("productsPrice", totalPrice);
 		if (totalPrice != 0 && totalPrice <  Product.FREE_SHIPPING_PRICE) {
 			totalPrice += Product.SHIPPING_FEE;
+			shippingFee = Product.SHIPPING_FEE;
 		}
 		model.put("shippingFee", shippingFee);
 		model.put("totalPrice", totalPrice);
@@ -60,7 +61,7 @@ public class CartController {
 
 	@RequestMapping("/cart/delete")
 	public String deleteCartItem(HttpServletRequest request,
-			@RequestParam(value="cartItemId") String cartItemId,
+			@RequestParam(value="cartItemId") long cartItemId,
 			ModelMap model) throws Exception {
 		String userId = UserSession.getUserId(request);
 
@@ -78,7 +79,7 @@ public class CartController {
 
 	@RequestMapping("/cart/update/{cartItemId}")
 	public String updateCartItem(HttpServletRequest request,
-			@PathVariable("cartItemId") String cartItemId,
+			@PathVariable("cartItemId") long cartItemId,
 			@RequestParam(value="quantity") int quantity,
 			ModelMap model) throws Exception {
 		String userId = UserSession.getUserId(request);

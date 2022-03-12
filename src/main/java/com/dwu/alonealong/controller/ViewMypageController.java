@@ -1,8 +1,11 @@
 package com.dwu.alonealong.controller;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.List;
+
+import com.dwu.alonealong.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -21,19 +24,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 
-import com.dwu.alonealong.domain.TogetherOrder;
-import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
 
 
-import com.dwu.alonealong.domain.Food;
-import com.dwu.alonealong.domain.FoodCart;
-import com.dwu.alonealong.domain.FoodLineItem;
-import com.dwu.alonealong.domain.FoodOrder;
-import com.dwu.alonealong.domain.ProductLineItem;
-import com.dwu.alonealong.domain.ProductOrder;
-import com.dwu.alonealong.domain.Restaurant;
-import com.dwu.alonealong.domain.Together;
 import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
 
@@ -57,7 +50,7 @@ public class ViewMypageController {
 		}
 		String userId = userSession.getUser().getId();
 		User user = aloneAlong.getUserByUserId(userId);
-		List<ProductOrder> productOrderList = aloneAlong.getOrdersByUserId(userId);
+		List<Order> productOrderList = aloneAlong.getOrdersByUserId(userId);
 		
 		model.addAttribute("productOrderList", productOrderList);
 		return "myOrder";
@@ -70,21 +63,43 @@ public class ViewMypageController {
 		UserSession userSession = (UserSession)request.getSession().getAttribute("userSession");
 		User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
 		String userId = user.getId();
-		
+
+//		List<Order> orderList = aloneAlong.getFoodOrdersByUserId(userId);
+//		List<FoodOrder> foodOrderList = new ArrayList<>();
+//		for(Order order : orderList){
+//			if(order.getFoodOrder() != null) {
+//				foodOrderList.add(order.getFoodOrder());
+//			}
+//		}
+//		Encoder encoder = Base64.getEncoder();
+//		for(FoodOrder order : foodOrderList) {
+//			Restaurant res = aloneAlong.getRestaurantByResId(order.getResId());
+//			order.setResName(res.getResName());
+//			byte[] imagefile = res.getImgFile();
+//			String encodedString = encoder.encodeToString(imagefile);
+//			order.setImg64(encodedString);
+//			System.out.println("FoodOrder현황 : " + order.toString());
+////			for(FoodLineItem item : order.getOrderedList()) {
+////				Food food = aloneAlong.getFood(item.getFoodId());
+////				item.setFoodName(food.getName());
+////			}
+//		}
+
 		List<FoodOrder> foodOrderList = aloneAlong.getFoodOrdersByUserId(userId);
-		
+
 		Encoder encoder = Base64.getEncoder();
 		for(FoodOrder order : foodOrderList) {
 			Restaurant res = aloneAlong.getRestaurantByResId(order.getResId());
+			if(res == null){ System.out.println(order.getOrderId() + "에서 res == null이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");}
 			order.setResName(res.getResName());
 			byte[] imagefile = res.getImgFile();
 			String encodedString = encoder.encodeToString(imagefile);
 			order.setImg64(encodedString);
-			
-			for(FoodLineItem item : order.getOrderedList()) {
-				Food food = aloneAlong.getFood(item.getFoodId());
-				item.setFoodName(food.getName());
-			}
+
+//			for(FoodLineItem item : order.getOrderedList()) {
+//				Food food = aloneAlong.getFood(item.getFoodId());
+//				item.setFoodName(food.getName());
+//			}
 		}
 		model.addAttribute("sessionFoodCart", new FoodCart());
 		model.addAttribute("foodOrderList", foodOrderList);

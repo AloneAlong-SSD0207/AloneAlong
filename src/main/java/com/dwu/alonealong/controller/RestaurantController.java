@@ -71,23 +71,38 @@ public class RestaurantController {
 			} 
 			return RES_INSERT_FORM; 
 		}
-		
-		Restaurant res;
-		
+
+		Restaurant res = new Restaurant();
+		res.setResName(resForm.getResName());
+		res.setResAddress(resForm.getResAddress());
+		res.setResPhone(resForm.getResPhone());
+		res.setOwnerId(userId);
+		res.setResDescription(resForm.getResDescription());
+		res.setCategoryId(resForm.getCategoryId());
+		res.setTogetherOk(resForm.isTogetherOk());
+		res.setArea(resForm.getResArea());
+		res.setImgFile(FoodFunction.getImgFile(resForm));
+
 		if(request.getParameter("status").equals("insert")) {
-			res = new Restaurant("RES_ID.NEXTVAL", resForm.getResName(), resForm.getResAddress(), resForm.getResPhone(), userId,
-					resForm.getResDescription(), FoodFunction.defaultDouble, resForm.getCategoryId(), FoodFunction.getImgFile(resForm), resForm.getIsTogetherOk(), resForm.getResArea());
+			res.setRevCount(0);
+			res.setAvgRating(FoodFunction.defaultDouble);
 			alonealong.insertRestaurant(res);
 		}
 		else if(request.getParameter("status").equals("update")) {
-			String resId = request.getParameter("resId");
-			res = new Restaurant(resId, resForm.getResName(), resForm.getResAddress(), resForm.getResPhone(),
-					resForm.getResDescription(), resForm.getCategoryId(), FoodFunction.getImgFile(resForm), resForm.getIsTogetherOk(), resForm.getResArea());
+			long resId = Long.parseLong(request.getParameter("resId"));
+			Restaurant orgin = alonealong.getRestaurantByResId(resId);
+			res.setResId(resId);
+			res.setAvgRating(orgin.getAvgRating());
+			res.setRevCount(orgin.getRevCount());
+			res.setResDate(orgin.getResDate());
+			if(res.getImgFile().length == 0){
+				res.setImgFile(orgin.getImgFile());
+			}
 			alonealong.updateRestaurant(res);	
 		}
 		
-		List<Restaurant> restaurantList = alonealong.getRestaurantList();
-		model.addAttribute("restaurantList", restaurantList);
+//		List<Restaurant> restaurantList = alonealong.getRestaurantList();
+//		model.addAttribute("restaurantList", restaurantList);
 
 		return "redirect:/eating";
 

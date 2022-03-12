@@ -43,7 +43,7 @@ public class FoodController {
 	private String insertFood(
 			@ModelAttribute("food") FoodForm foodForm,
 			BindingResult result,
-			@PathVariable("resId") String resId,
+			@PathVariable("resId") long resId,
 			Model model) {
 		
 		new FoodFormValidator().validate(foodForm, result);
@@ -51,7 +51,14 @@ public class FoodController {
 			return "foodForm"; 
 		}
 		
-		Food food = new Food(resId, "FOOD_ID.NEXTVAL", foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), FoodFunction.getImgFile(foodForm), foodForm.getMaxPeopleNum());
+		Food food = new Food();
+		food.setResId(foodForm.getResId());
+		food.setPrice(foodForm.getPrice());
+		food.setName(foodForm.getName());
+		food.setDescription(foodForm.getDescription());
+		food.setImgFile(FoodFunction.getImgFile(foodForm));
+		food.setMaxPeopleNum(food.getMaxPeopleNum());
+		//(resId, foodForm.getPrice(), foodForm.getName(),  foodForm.getDescription(), FoodFunction.getImgFile(foodForm), foodForm.getMaxPeopleNum());
 		alonealong.insertFood(food);
 		
 		List<Food> foodList = alonealong.getFoodListByRestaurant(resId);
@@ -62,7 +69,7 @@ public class FoodController {
 	
 	@RequestMapping(value = "/update", method = RequestMethod.GET) 
 	private String updateFoodForm(
-			@RequestParam("foodId") String foodId,
+			@RequestParam("foodId") long foodId,
 			@ModelAttribute("food") FoodForm foodForm, 
 			@PathVariable("resId") String resId,
 			Model model) {
@@ -76,9 +83,9 @@ public class FoodController {
 	}
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	private String updateFood(
-			@RequestParam("foodId") String foodId,
+			@RequestParam("foodId") long foodId,
 			@ModelAttribute("food") FoodForm foodForm,
-			@PathVariable("resId") String resId,
+			@PathVariable("resId") long resId,
 			BindingResult result,
 			Model model) {
 		
@@ -87,13 +94,18 @@ public class FoodController {
 			return "foodForm"; 
 		}
 		
-		Food food;
-		if(foodForm.getImgFile() == null)
-			food = new Food(resId, foodId, foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), null, foodForm.getMaxPeopleNum());
-		else {
-			food = new Food(resId, foodId, foodForm.getName(), foodForm.getPrice(), foodForm.getDescription(), FoodFunction.getImgFile(foodForm), foodForm.getMaxPeopleNum());
+		Food food = new Food();
+		food.setFoodId(foodId);
+		food.setResId(resId);
+		food.setName(foodForm.getName());
+		food.setPrice(foodForm.getPrice());
+		food.setDescription(foodForm.getDescription());
+		food.setMaxPeopleNum(foodForm.getMaxPeopleNum());
+		food.setImgFile(FoodFunction.getImgFile(foodForm));
+		if(food.getImgFile().length == 0){
+			Food origin = alonealong.getFood(foodId);
+			food.setImgFile(origin.getImgFile());
 		}
-			
 		alonealong.updateFood(food);
 		
 		List<Food> foodList = alonealong.getFoodListByRestaurant(resId);
@@ -102,8 +114,8 @@ public class FoodController {
 	}
 	@RequestMapping(value = "/delete")
 	private String deleteFood(
-			@RequestParam("foodId") String foodId,
-			@PathVariable("resId") String resId,
+			@RequestParam("foodId") long foodId,
+			@PathVariable("resId") long resId,
 			Model model) {
 		
 		alonealong.deleteFood(foodId);
