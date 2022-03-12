@@ -9,8 +9,8 @@ import org.springframework.beans.support.PagedListHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.dwu.alonealong.controller.FoodForm;
-import com.dwu.alonealong.controller.RestaurantForm;
+import com.dwu.alonealong.controller.food.FoodForm;
+import com.dwu.alonealong.controller.food.RestaurantForm;
 
 public class FoodFunction {
 

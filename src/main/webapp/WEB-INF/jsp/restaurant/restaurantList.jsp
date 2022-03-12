@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <style>
 b {color:#29A65F;}
 .card:hover, .card:focus {  filter: brightness(90%); }
@@ -51,7 +53,7 @@ b {color:#29A65F;}
 					<div class="d-flex justify-content-between align-items-start">
 						<h6 class="card-text text-left mb-3">${res.resName}</h6>
 						</div>
-					<p class="mb-1">별점 : ${res.avgRating}</p>
+					<p class="mb-1">별점 : <fmt:formatNumber value="${res.avgRating}" pattern="#.#"/></p>
 					<p>주소 : ${res.resAddress} </p>
 				</div>
 			</div>

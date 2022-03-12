@@ -2,7 +2,20 @@
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<script>
+function insertReview(resId){
+$.ajax({
+                  type:"post",
+                  url:"foodreview",
+                  async:false,
+                  data:$("#reviewOrder").serialize(),
+                  success: function(){
+                      window.location.href = "/eating/" + resId + "/RestaurantReview";
+                  }
+                });
+}
 
+</script>
 
 <c:forEach var="foodOrder" items="${foodOrderList}">
 <script>
@@ -37,7 +50,14 @@ $(document).ready(function() {
 	if(visitDate <= today){
 		$("#cancel${foodOrder.orderId}").css("visibility", "hidden");
 	}
+
+	if(${foodOrder.reviewed} == true){
+	    $("#review${foodOrder.orderId}").css("visibility", "hidden");
+	    $("#cancel${foodOrder.orderId}").css("visibility", "hidden");
+	}
+
 });
+
 </script>
 <!-- modal -->
 <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -84,13 +104,17 @@ $(document).ready(function() {
 						</div>
 					</div>
 					<div class="form-group">
-						<textarea rows="4" name="review" id="review" maxlength=80
-							placeholder="수정이 불가하오니 신중히 리뷰를 작성하세요.(80자)" required="" class="form-control"></textarea>
+						<textarea rows="4" name="contents" id="contents" maxlength=80
+							placeholder="신중히 리뷰를 작성해주세요. 리뷰 작성 후에는 예약취소가 불가능합니다.(80자)" required="" class="form-control"></textarea>
 					</div>
+					<input type="hidden" name="orderId" value="${foodOrder.orderId}">
 				
 			</div>
 			<div class="text-center">
-				<button type="submit" class="btn btn-orange rounded-pill w-25 pb-2" >작성하기</button>
+			    <input id="insertBtn" type="button" onClick="insertReview(${foodOrder.resId});"
+			    class="btn btn-orange rounded-pill w-25 pb-2" value="작성하기" >
+
+				<!--<button type="submit" class="btn btn-orange rounded-pill w-25 pb-2" >작성하기</button>-->
 			</div>
 		</div>
 	</div>

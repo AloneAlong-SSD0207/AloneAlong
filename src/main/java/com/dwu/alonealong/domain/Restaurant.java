@@ -5,6 +5,7 @@ package com.dwu.alonealong.domain;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.persistence.*;
 
@@ -50,9 +51,15 @@ public class Restaurant implements Serializable{
 	@Column(name="area")
 	private String area;
 	@Column(name="res_date")
-	private LocalDateTime resDate = LocalDateTime.now();
+	private Date resDate = new Date();
 	@Column(name="rev_count")
 	private int revCount;
+	@Column(name="open")
+	private String open;
+	@Column(name="open_time")
+	private String openTime;
+	@Column(name="close_time")
+	private String closeTime;
 
 	@Transient
 	private String img64;

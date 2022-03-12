@@ -2,6 +2,16 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <script>
+$(document).ready(function() {
+
+        if("${restaurant.open}" == ""){
+            console.log("${restaurant.open}");
+            $("button[id^='foodBtn']").attr('onClick', null)
+            .click(function() {$("#infoModal").modal("show");
+            });
+
+        }
+});
 
 </script>
 <div class="row my-5 mx-5">
@@ -17,7 +27,7 @@
 				        <div class="tab-content px-lg-3 py-5">
 				        <div class="info-content px-4 pt-lg-3 pb-3 mb-5 border">
 				        <c:if test="${restaurant.ownerId eq userId}">
-				        	<button type = "button" class="btn btn-sm btn-warning" onClick="location.href='<c:url value='/eating/${restaurant.resId}/adminFood' />'">메뉴 추가</button> <!-- 여기 r2라고 해놨으니 바꿔야해 -->
+				        	<button type = "button" class="btn btn-sm btn-warning" onClick="location.href='<c:url value='/eating/${restaurant.resId}/adminFood' />'">메뉴 추가</button>
 				        </c:if>
 				        <c:forEach var="food" items="${foodList}">     
 							<div class="shadow-sm m-2">
@@ -39,7 +49,7 @@
 				              <div class="card-footer" style="width:120px; text-align: center;">
 				              	<div class="mt-5">
 				              		
-					              <button type = "button" class="btn btn-md btn-success" 
+					              <button type = "button" class="btn btn-md btn-success" id="foodBtn${food.foodId}"
 					              onClick="location.href='<c:url value='/eating/${restaurant.resId}/addFoodToCart'>
 					              <c:param name="foodId" value="${food.foodId}"/></c:url>'">담기</button></br> 	       		  
 				             	  </div>
@@ -57,3 +67,18 @@
 				       </div>
 				   </div>
 				</div>
+
+<!-- modal -->
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content py-5">
+			<div class="modal-body text-center pb-4">
+				<h6>영업중인 식당이 아닙니다.</h6>
+			</div>
+			<div class="row mx-5 mb-2 justify-content-center">
+			<a type="button" class="btn btn-green rounded-pill mx-2 py-2 px-3" data-dismiss="modal">돌아가기</a>
+
+			</div>
+		</div>
+	</div>
+</div>

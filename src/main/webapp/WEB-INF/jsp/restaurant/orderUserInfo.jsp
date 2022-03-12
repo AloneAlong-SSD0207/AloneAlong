@@ -20,7 +20,8 @@ $(document).ready(function() {
     var year = date.getFullYear();
     if (month < 10) month = "0" + month;
     if (day < 10) day = "0" + day;
-    var today = year + "-" + month + "-" + day;     
+    var today = year + "-" + month + "-" + day;
+
     $("#visitDate").attr("min", today);
 
 });
@@ -55,7 +56,7 @@ function getData() {
 	        <div class="row w-50 mx-2 mb-3">
 	          <label for="visitDate">예약 날짜</label>
 	          <input type="date" class="form-control" id="visitDate" name = "visitDate" required>
-	          <input type="time" class="form-control" id="visitDate" name = "visitDate" required>
+	          <input type="time" class="form-control" id="visitDate" name = "visitDate" required min="${openTime}" max="${closeTime}" step="300">
 	        </div> 
 	           
 			<div class="row w-50 mx-2 ">

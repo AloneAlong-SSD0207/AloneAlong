@@ -1,4 +1,4 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.food;
 
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class FoodCartController {
 			ModelMap model
 			) throws Exception {
 		
-		cart.removeFoodById((request.getParameter("foodId")));
+		cart.removeFoodById(Long.parseLong(request.getParameter("foodId")));
 				
 		putCartSessionData(model, cart, resId);
 		return "redirect:/eating/{resId}";

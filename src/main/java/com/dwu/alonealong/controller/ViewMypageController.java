@@ -64,42 +64,16 @@ public class ViewMypageController {
 		User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
 		String userId = user.getId();
 
-//		List<Order> orderList = aloneAlong.getFoodOrdersByUserId(userId);
-//		List<FoodOrder> foodOrderList = new ArrayList<>();
-//		for(Order order : orderList){
-//			if(order.getFoodOrder() != null) {
-//				foodOrderList.add(order.getFoodOrder());
-//			}
-//		}
-//		Encoder encoder = Base64.getEncoder();
-//		for(FoodOrder order : foodOrderList) {
-//			Restaurant res = aloneAlong.getRestaurantByResId(order.getResId());
-//			order.setResName(res.getResName());
-//			byte[] imagefile = res.getImgFile();
-//			String encodedString = encoder.encodeToString(imagefile);
-//			order.setImg64(encodedString);
-//			System.out.println("FoodOrder현황 : " + order.toString());
-////			for(FoodLineItem item : order.getOrderedList()) {
-////				Food food = aloneAlong.getFood(item.getFoodId());
-////				item.setFoodName(food.getName());
-////			}
-//		}
-
 		List<FoodOrder> foodOrderList = aloneAlong.getFoodOrdersByUserId(userId);
 
 		Encoder encoder = Base64.getEncoder();
 		for(FoodOrder order : foodOrderList) {
 			Restaurant res = aloneAlong.getRestaurantByResId(order.getResId());
-			if(res == null){ System.out.println(order.getOrderId() + "에서 res == null이다!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");}
 			order.setResName(res.getResName());
 			byte[] imagefile = res.getImgFile();
 			String encodedString = encoder.encodeToString(imagefile);
 			order.setImg64(encodedString);
 
-//			for(FoodLineItem item : order.getOrderedList()) {
-//				Food food = aloneAlong.getFood(item.getFoodId());
-//				item.setFoodName(food.getName());
-//			}
 		}
 		model.addAttribute("sessionFoodCart", new FoodCart());
 		model.addAttribute("foodOrderList", foodOrderList);

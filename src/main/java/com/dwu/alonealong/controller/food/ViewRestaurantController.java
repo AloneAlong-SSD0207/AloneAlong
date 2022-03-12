@@ -1,4 +1,4 @@
-package com.dwu.alonealong.controller;
+package com.dwu.alonealong.controller.food;
 
 import java.util.Base64;
 import java.util.List;
