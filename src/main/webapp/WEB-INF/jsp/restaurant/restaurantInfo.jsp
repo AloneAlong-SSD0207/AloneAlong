@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <style>
 b {color:#29A65F;}
 .card:hover, .card:focus {  filter: brightness(90%); }
@@ -17,7 +18,9 @@ $(document).ready(function() {
 			$("#orderBtn").bind('click', false)
 			.attr('class', "btn btn-gray rounded-pill");
 		</c:if>
+
 });
+
 </script>
 
 <div class="row mx-5 mb-5" name="FoodInfoWithCart">
@@ -34,7 +37,7 @@ $(document).ready(function() {
 		</div>
 		<div class="mx-2 my-2 priceInfo" style="height:110px;">
 			<p class="mb-2"><span class="border-right pr-4 mr-4">번호 </span> ${restaurant.resPhone} </p><nbsp>
-			<p class="mb-2"><span class="border-right pr-4 mr-4">별점 </span> ${restaurant.avgRating} 점</p><nbsp>
+			<p class="mb-2"><span class="border-right pr-4 mr-4">별점 </span> <fmt:formatNumber value="${restaurant.avgRating}" pattern="#.#"/> 점</p><nbsp>
 			<p class="mb-2">${restaurant.resDescription}</p>
 			<small class="text-muted"></small>
 		</div>
@@ -80,3 +83,4 @@ $(document).ready(function() {
 		</div>
 	</div>
 </div>
+

@@ -1,6 +1,7 @@
 package com.dwu.alonealong.controller.food;
 
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -69,7 +70,6 @@ public class RestaurantController {
 			} 
 			return RES_INSERT_FORM; 
 		}
-
 		Restaurant res = new Restaurant();
 		res.setResName(resForm.getResName());
 		res.setResAddress(resForm.getResAddress());
@@ -85,6 +85,8 @@ public class RestaurantController {
 		}else{
 			res.setOpen(null);
 		}
+		res.setOpenTime(resForm.getOpenTime());
+		res.setCloseTime(resForm.getCloseTime());
 
 		if(request.getParameter("status").equals("insert")) {
 			res.setRevCount(0);

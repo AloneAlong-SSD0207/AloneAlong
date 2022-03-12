@@ -1,6 +1,7 @@
 package com.dwu.alonealong.controller.food;
 
 import java.net.URL;
+import java.util.Date;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,8 @@ public class RestaurantForm {
 	private MultipartFile imgFile;
 	private boolean togetherOk;
 	private boolean open;
+	private String openTime;
+	private String closeTime;
 	
 	private String img64;
 

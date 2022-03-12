@@ -56,6 +56,10 @@ public class Restaurant implements Serializable{
 	private int revCount;
 	@Column(name="open")
 	private String open;
+	@Column(name="open_time")
+	private String openTime;
+	@Column(name="close_time")
+	private String closeTime;
 
 	@Transient
 	private String img64;
