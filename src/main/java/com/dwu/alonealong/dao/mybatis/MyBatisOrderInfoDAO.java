@@ -6,13 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 
-import com.dwu.alonealong.dao.FoodDAO;
-import com.dwu.alonealong.dao.FoodOrderDAO;
 import com.dwu.alonealong.dao.OrderInfoDAO;
-import com.dwu.alonealong.dao.mybatis.mapper.FoodMapper;
-import com.dwu.alonealong.dao.mybatis.mapper.FoodOrderMapper;
 import com.dwu.alonealong.dao.mybatis.mapper.OrderInfoMapper;
-import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodOrder;
 import com.dwu.alonealong.domain.Order;
 
