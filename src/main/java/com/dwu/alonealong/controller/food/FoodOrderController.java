@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dwu.alonealong.controller.UserSession;
+import com.dwu.alonealong.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,13 +18,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.dwu.alonealong.domain.FoodCart;
-import com.dwu.alonealong.domain.FoodCartItem;
-import com.dwu.alonealong.domain.FoodFunction;
-import com.dwu.alonealong.domain.Payment;
-import com.dwu.alonealong.domain.User;
 import com.dwu.alonealong.service.AloneAlongFacade;
-import com.dwu.alonealong.domain.FoodOrder;
 
 @Controller
 @SessionAttributes({"sessionFoodCart"})
@@ -37,7 +32,7 @@ public class FoodOrderController {
 	
 	@RequestMapping("/eating/order")
 	private String initNewOrder(HttpServletRequest request,
-		@RequestParam(value="resId", required=false) String resId, 
+		@RequestParam(value="resId", required=false) long resId,
 		@ModelAttribute("sessionFoodCart") FoodCart cart,
 		ModelMap model) throws Exception {
 		
@@ -49,6 +44,7 @@ public class FoodOrderController {
 			//forward로 login의 get 가서 login후 post한 다음 refererURL통해서 order폼으로.
 			return "forward:/login";
 		}
+
 		User user = aloneAlong.getUserByUserId(userSession.getUser().getId());
 		Payment paymentMethod = aloneAlong.getCard(userSession.getUser().getId());
 
@@ -60,8 +56,11 @@ public class FoodOrderController {
 		model.put("resId", resId);
 		model.put("user", user);
 		model.put("payment", paymentMethod);
+		Restaurant res = aloneAlong.getRestaurantByResId(resId);
+		model.put("openTime", res.getOpenTime());
+		model.put("closeTime", res.getCloseTime());
 
-		return "foodOrderForm";
+		return "foodOrder";
 	}
 	
 	@RequestMapping("/eating/order/confirm")

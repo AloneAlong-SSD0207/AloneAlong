@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <script>
 function updateReviewModal(reviewId, resId, orderId) {
@@ -69,7 +70,8 @@ $(document).ready(function() {
 	          		<div class="col-md-4 text-center align-items-center">
 	          			<h4><i class="far green fa-star"></i></h4>
 	          			<h4 class="green pb-1">평균 평점</h4>
-	          			<h4><b class="orange">${restaurant.avgRating}</b><small> 점</small></h4>
+
+	          			<h4><b class="orange"><fmt:formatNumber value="${restaurant.avgRating}" pattern="#.#"/></b><small> 점</small></h4>
 	          		</div>
 	          		
 	          		<div class="col-md-1"></div>
@@ -118,7 +120,8 @@ $(document).ready(function() {
 						</div>
 					</div>
 					<div class="text-muted ml-2">
-						<small>${rev.userNickName} | ${rev.reviewDate}</small>
+					    <fmt:formatDate var="fmtReviewDate" value="${rev.reviewDate}" pattern="yyyy-MM-dd hh/mm"/>
+						<small>${rev.userNickName} | ${fmtReviewDate}</small>
 					</div>
 					<div class="mx-4 my-2">
 						<div class="my-3">
@@ -201,7 +204,7 @@ $(document).ready(function() {
     					</div>
     					<div class="form-group">
     						<textarea rows="4" name="contents" id="contents" maxlength=80
-    							placeholder="신중히 리뷰를 작성해주세요.(80자)" required="" class="form-control"></textarea>
+    							placeholder="신중히 리뷰를 작성해주세요. 리뷰 작성 후에는 예약취소가 불가능합니다.(80자)" required="" class="form-control"></textarea>
     					</div>
     			</div>
     			<div class="text-center">

@@ -47,6 +47,8 @@ public class FoodOrder implements Serializable{
 	int totalPrice;
 	@Transient
 	String orderDate;
+	@Transient
+	boolean reviewed;
 
 	
 	//주문용 생성자

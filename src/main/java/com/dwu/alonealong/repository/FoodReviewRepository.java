@@ -12,5 +12,6 @@ public interface FoodReviewRepository extends CrudRepository<FoodReview, Long> {
 	List<FoodReview> findByResIdOrderByRatingAsc(long resId) throws DataAccessException;
 
 	FoodReview findByReviewId(long reviewId) throws DataAccessException;
+	boolean existsByOrderId(String orderId) throws DataAccessException;
 
 }

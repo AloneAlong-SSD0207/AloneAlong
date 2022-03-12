@@ -51,6 +51,11 @@ $(document).ready(function() {
 		$("#cancel${foodOrder.orderId}").css("visibility", "hidden");
 	}
 
+	if(${foodOrder.reviewed} == true){
+	    $("#review${foodOrder.orderId}").css("visibility", "hidden");
+	    $("#cancel${foodOrder.orderId}").css("visibility", "hidden");
+	}
+
 });
 
 </script>
@@ -100,7 +105,7 @@ $(document).ready(function() {
 					</div>
 					<div class="form-group">
 						<textarea rows="4" name="contents" id="contents" maxlength=80
-							placeholder="신중히 리뷰를 작성해주세요.(80자)" required="" class="form-control"></textarea>
+							placeholder="신중히 리뷰를 작성해주세요. 리뷰 작성 후에는 예약취소가 불가능합니다.(80자)" required="" class="form-control"></textarea>
 					</div>
 					<input type="hidden" name="orderId" value="${foodOrder.orderId}">
 				

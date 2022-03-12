@@ -263,11 +263,11 @@ public class AloneAlongImpl implements AloneAlongFacade{
 		if(category1.equals("지역")) category1 = "";
 		if(category2.equals("분류")) category2 = "";
 		if(sortType.equals("RES_DATE")) {
-			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByResDateDesc(category1, category2);
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingAndOpenIsNotNullOrderByResDateDesc(category1, category2);
 		}else if(sortType.equals("REV_COUNT")) {
-			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByRevCountDesc(category1, category2);
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingAndOpenIsNotNullOrderByRevCountDesc(category1, category2);
 		}else if(sortType.equals("AVG_RATING")) {
-			return restaurantRepository.findByAreaContainingAndCategoryIdContainingOrderByAvgRatingDesc(category1, category2);
+			return restaurantRepository.findByAreaContainingAndCategoryIdContainingAndOpenIsNotNullOrderByAvgRatingDesc(category1, category2);
 		}
 		return null;
 	}
@@ -341,18 +341,18 @@ public class AloneAlongImpl implements AloneAlongFacade{
 	}
 	@Override
 	public List<FoodOrder> getFoodOrdersByUserId(String userId) {
-		List<Order> orderList = foodOrderInfoRepository.findByUserIdOrderByOrderDateDesc(userId);
+		List<Order> orderList = foodOrderInfoRepository.findByUserIdAndOrderIdStartingWithOrderByOrderDateDesc(userId, "fo");
 		List<FoodOrder> foodOrderList = new ArrayList<>();
 		for(Order order : orderList){
 			String orderId = order.getOrderId();
-			if(orderId.startsWith("fo")){
-				System.out.println("foodOrder 아이디 : " + orderId);
+				//System.out.println("foodOrder 아이디 : " + orderId);
 				List<FoodLineItem> lineItemList = foodLineItemRepository.findByOrderId(orderId);
 				FoodOrder foodOrder = order.getFoodOrder();
 				foodOrder.setOrderedList(lineItemList);
 				foodOrder.setTotalPrice(order.getTotalPrice());
+				foodOrder.setReviewed(foodReviewRepository.existsByOrderId(orderId));
 
-				SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+				//SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				Date date = order.getOrderDate();
 				String newstring = new SimpleDateFormat("yy-MM-dd").format(date);
 
@@ -362,7 +362,6 @@ public class AloneAlongImpl implements AloneAlongFacade{
 					foodLineItem.setFoodName(foodName);
 				}
 				foodOrderList.add(foodOrder);
-			}
 
 		}
 

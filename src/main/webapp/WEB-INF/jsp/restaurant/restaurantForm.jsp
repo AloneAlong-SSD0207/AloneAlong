@@ -88,6 +88,15 @@ $(document).ready(function() {
         $(this).attr('checked', check);
       });
     console.log('check', check);
+
+    var check2 = "${res.open}";
+    if(check2 == "open") check = true;
+    else check2 = false;
+    $('input:checkbox[name="open"]').each(function(index, element){
+        $(this).next('label').addClass("ui-state-active");
+        $(this).next('label').attr('aria-pressed', true);
+        $(this).attr('checked', check2);
+    });
 });
 
 $(function () {
@@ -188,6 +197,26 @@ $(function () {
 			<div class="m-3 custom-control custom-checkbox">
 				<form:checkbox path="togetherOk" class="custom-control-input" id="togetherOk"/>
 			<label class="custom-control-label" for="togetherOk">허용</label>
+			</div>
+		</div>
+		<div class="form-group d-flex align-items-center row">
+        	<div class="col-4">
+        	<form:label path="open">영업 여부</form:label></div>
+        	<div class="m-3 custom-control custom-checkbox">
+        		<form:checkbox path="open" class="custom-control-input" id="open"/>
+        	<label class="custom-control-label" for="open">영업</label>
+        	</div>
+        </div>
+        <div class="form-group d-flex align-items-center row">
+			<div class="col-4">영업 시간</div>
+			<div class="col-8">
+			<form:label path="openTime">open 시간</form:label>
+			<form:input class="form-control w-100" path="openTime" value="${res.openTime}" maxlength="5"/>
+			<form:errors path="openTime"/>
+			~
+			<form:label path="closeTime">close 시간</form:label>
+			<form:input class="form-control w-100" path="closeTime" value="${res.closeTime}" maxlength="5"/>
+			<form:errors path="closeTime"/>
 			</div>
 		</div>
 

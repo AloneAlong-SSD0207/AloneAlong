@@ -38,7 +38,19 @@ public class RestaurantFormValidator implements Validator{
 			boolean regex = Pattern.matches(ds, phone);
 			if (!regex)
 				errors.rejectValue("resPhone", "regex", "00(0)-000(0)-0000"); 
-		}	
+		}
+
+		String openTime = resForm.getOpenTime();
+		String closeTime = resForm.getCloseTime();
+		String timePattern = "^([01][0-9]|2[0-3]):([0-5][0-9])$";
+		System.out.println(openTime + closeTime);
+		if(!Pattern.matches(timePattern, openTime)){
+			errors.rejectValue("openTime", "regex", "00:00");
+		}
+		if(!Pattern.matches(timePattern, closeTime)){
+			errors.rejectValue("closeTime", "regex", "23:59");
+		}
+
 	}
 
 }
