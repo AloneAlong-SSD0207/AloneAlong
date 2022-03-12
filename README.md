@@ -69,7 +69,7 @@
 | --- | --- |
 | OS | Windows |
 | IDE | Eclipse, IntelliJ |
-| FrontEnd | HTML, CSS, JSP, JavaScript, JQuery, Ajax, BootStrap, Thymeleaf |
+| FrontEnd | HTML, CSS, JSP, JavaScript, JQuery, Ajax, BootStrap, Tiles, Thymeleaf |
 | BackEnd | Language : JAVA |
 |  | Framework : Spring Boot (2.4.5) |
 |  | DataBase : Oracle  |
