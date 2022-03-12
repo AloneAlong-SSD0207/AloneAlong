@@ -1,8 +1,20 @@
+![메인](https://user-images.githubusercontent.com/71439771/158016573-3850c186-9b09-43f8-b3ce-43d014567c6d.png)
 
-![main](https://user-images.githubusercontent.com/71439771/156991487-0ee08058-1e38-4979-8575-823e6ed6252e.png)  
+# 목차  
+
+1. [프로젝트 인원](#1-프로젝트-인원)
+2. [작업 기간](#2-작업-기간)
+3. [프로젝트 소개](#3-프로젝트-소개)
+4. [프로젝트 환경](#4-프로젝트-환경)
+5. [프로젝트 구조](#5-프로젝트-구조)
+6. [시연 영상](#6-시연-영상)
+7. [수상 내역](#7-수상-내역)  
+
+&nbsp;   
 
 ![소개2](https://user-images.githubusercontent.com/71439771/156992754-49115883-ca01-495f-89ae-63d1fc269525.png)  
   
+&nbsp;   
 
 # 1. 프로젝트 인원
 
@@ -84,11 +96,20 @@
 
 # 6. 시연 영상
 
-- ...-
+[팀프로젝트 발표 영상 (2021.06.22 작성)](https://drive.google.com/file/d/1h3O4Xvq12XFcQDtThrnJJLTRAVrlumPX/view?usp=sharing)
+
+![0207_1](https://user-images.githubusercontent.com/71439771/158016182-631bc249-7e07-4901-8ffd-eb3087508607.gif)  
+![0207_2](https://user-images.githubusercontent.com/71439771/158016208-b3a340e7-8870-478f-a6c9-f7effbe17cb5.gif)  
+![0207_3](https://user-images.githubusercontent.com/71439771/158016244-53aa08b0-3ad7-4e52-9d12-215d358e20f3.gif)  
+![0207_4](https://user-images.githubusercontent.com/71439771/158016246-7e8bc767-0a9b-48ab-ba56-94388b210fa8.gif)  
+![0207_5](https://user-images.githubusercontent.com/71439771/158016251-009a57c2-ec31-4d36-9459-d4c5eb0551e6.gif)  
+![0207_6](https://user-images.githubusercontent.com/71439771/158016253-91e39503-f642-4e4d-8be5-ca2f6e82e578.gif)  
+![0207_7](https://user-images.githubusercontent.com/71439771/158016254-74081a0d-a58d-4d8f-8c94-0863b0dab9dc.gif)  
 
 &nbsp;   
 
----
+
+# 7. 수상 내역
 
 ### 🏆 동덕여자대학교 2021-1학기 협동학습·캡스톤디자인 경진대회 금상 수상
 
