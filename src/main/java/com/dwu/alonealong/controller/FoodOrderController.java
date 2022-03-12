@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.dwu.alonealong.domain.Food;
 import com.dwu.alonealong.domain.FoodCart;
 import com.dwu.alonealong.domain.FoodCartItem;
 import com.dwu.alonealong.domain.FoodFunction;
@@ -68,7 +67,7 @@ public class FoodOrderController {
 	
 	@RequestMapping("/eating/order/confirm")
 	private String confirmOrder(
-			@RequestParam(value="resId", required=false) long resId,
+			@RequestParam(value="resId", required=false) String resId, 
 			@SessionAttribute("sessionFoodCart") FoodCart cart,
 			@ModelAttribute("foodOrderForm") FoodOrderForm form, 
 			HttpServletRequest request, ModelMap model,
@@ -87,7 +86,6 @@ public class FoodOrderController {
 		
 		FoodOrder order = new FoodOrder(resId, userId, foodList, reserveType, visitDate, payment);
 		order.setTotalPrice(order.calcTotalPrice());
-		order.setFoodId(foodList.get(0).getFood().getFoodId());
 		
 		aloneAlong.insertFoodOrder(order);
 

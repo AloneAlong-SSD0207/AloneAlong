@@ -24,7 +24,8 @@
 	TO_CHAR(order_date, 'yy-mm-dd') as orderDate, 
 	total_price as totalPrice, 
 	reserve_type as reserveType, 
-	visit_date as visitDate,
+	visit_date as visitDate, 
+	food_id as firstFoodId, 
 	res_id as resId,
 	card_name as cardName
 	FROM ORDERINFO o JOIN FOOD_ORDER f ON o.order_id = f.order_id

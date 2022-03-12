@@ -98,7 +98,7 @@ $(document).on("click", ".open-deleteModal", function () {
 				</div>
 				<div class="text-muted mx-2 row">
 					<div class="col-md-6">
-						<small>${review.getUser().getNickname()} | <fmt:formatDate value="${review.reviewDate}" pattern="yyyy.MM.dd"/></small>
+						<small>${review.nickname} | <fmt:formatDate value="${review.reviewDate}" pattern="yyyy.MM.dd"/></small>
 					</div>
 					<c:if test="${review.userId eq userId}">
 					<div class="col-md-6 text-right">

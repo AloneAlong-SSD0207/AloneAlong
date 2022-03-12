@@ -33,9 +33,9 @@ public class TogetherFoodCartForRegisterController {
 	
 	@RequestMapping("/togetherRegister/{resId}/addFoodToCart")
 	public String addFoodCart(
-			@RequestParam("foodId") long foodId,
+			@RequestParam("foodId") String foodId,
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") long resId,
+			@PathVariable("resId") String resId,
 			ModelMap model
 			) throws Exception {
 
@@ -65,11 +65,11 @@ public class TogetherFoodCartForRegisterController {
 	public String updateFoodCart(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") long resId,
+			@PathVariable("resId") String resId,
 			ModelMap model
 			) throws Exception {
 		
-		cart.setQuantityByFoodId(Long.parseLong(request.getParameter("foodId")), Integer.parseInt(request.getParameter("quantity")));
+		cart.setQuantityByFoodId(request.getParameter("foodId"), Integer.parseInt(request.getParameter("quantity")));
 				
 		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
 		getFoodsImage(foodList);
@@ -89,7 +89,7 @@ public class TogetherFoodCartForRegisterController {
 	public String deleteFoodCart(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") long resId,
+			@PathVariable("resId") String resId,
 			ModelMap model
 			) throws Exception {
 		

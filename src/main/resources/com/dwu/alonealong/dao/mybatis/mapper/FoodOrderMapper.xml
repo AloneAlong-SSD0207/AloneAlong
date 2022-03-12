@@ -19,7 +19,7 @@
 
   <insert id="insertFoodOrder">
     INSERT INTO FOOD_ORDER (ORDER_ID, RESERVE_TYPE, VISIT_DATE, FOOD_ID, RES_ID)
-    VALUES (#{orderId}, #{foodOrder.reserveType}, #{foodOrder.visitDate}, #{foodOrder.foodId}, #{foodOrder.resId})
+    VALUES (#{orderId}, #{foodOrder.reserveType}, #{foodOrder.visitDate}, #{foodOrder.firstFoodId}, #{foodOrder.resId})
   </insert>
   
 	

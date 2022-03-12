@@ -32,9 +32,9 @@ public class FoodCartController {
 	
 	@RequestMapping("/eating/{resId}/addFoodToCart")
 	private String addFoodToCart(
-			@RequestParam("foodId") long foodId,
+			@RequestParam("foodId") String foodId,
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") long resId,
+			@PathVariable("resId") String resId,
 			ModelMap model
 			) throws Exception {
 		
@@ -53,11 +53,11 @@ public class FoodCartController {
 	private String updateFoodCartItem(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") long resId,
+			@PathVariable("resId") String resId,
 			ModelMap model
 			) throws Exception {
 		
-		cart.setQuantityByFoodId(Long.parseLong(request.getParameter("foodId")), Integer.parseInt(request.getParameter("quantity")));
+		cart.setQuantityByFoodId(request.getParameter("foodId"), Integer.parseInt(request.getParameter("quantity")));
 				
 		putCartSessionData(model, cart, resId);
 		return "redirect:/eating/{resId}";
@@ -66,7 +66,7 @@ public class FoodCartController {
 	private String deleteFoodCartItem(
 			HttpServletRequest request,	
 			@ModelAttribute("sessionFoodCart") FoodCart cart,
-			@PathVariable("resId") long resId,
+			@PathVariable("resId") String resId,
 			ModelMap model
 			) throws Exception {
 		
@@ -75,7 +75,7 @@ public class FoodCartController {
 		putCartSessionData(model, cart, resId);
 		return "redirect:/eating/{resId}";
 	}
-	private void putCartSessionData(ModelMap model, FoodCart cart, long resId) {
+	private void putCartSessionData(ModelMap model, FoodCart cart, String resId) {
 		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId); 
 		model.put("foodList", foodList);
 		model.put("foodCart", cart.getAllFoodCartItems());

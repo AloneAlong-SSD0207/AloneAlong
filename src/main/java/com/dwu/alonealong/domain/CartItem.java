@@ -1,50 +1,69 @@
 package com.dwu.alonealong.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.*;
 import java.io.Serializable;
 
-@Getter
-@Setter
-@Entity
-@Table(name="cartitem")
-@NoArgsConstructor
-@AllArgsConstructor
-@SequenceGenerator(
-        name = "CARTITEM_SEQ_GEN"
-        , sequenceName = "CARTITEM_SEQ"
-        , initialValue = 1
-        , allocationSize = 1
-)
+@SuppressWarnings("serial")
 public class CartItem implements Serializable {
-  /* Private Fields */
-  @Id
-  @Column(name="cartitem_id")
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CARTITEM_SEQ_GEN")
-  private long cartItemId;
-  @Column(name="user_id")
-  private String userId;
-  @Column(name="product_id")
-  private String productId;
-  @Column(name="quantity")
-  private int quantity;
-  @OneToOne
-  @JoinColumn(name="product_id", insertable = false, updatable = false)
-  private Product product;
 
+  /* Private Fields */
+  private String cartItemId;
+  private String userId;
+  private String pcId;
+  private String productId;
+  private String productName;
+  private int quantity;
+  private int price;
+  private int unitPrice;
+  private byte[] img;
+  private String img64;
+
+  /* JavaBeans Properties */
+
+  public String getCartItemId() { return cartItemId; }
+  public void setCartItemId(String cartItemId) { this.cartItemId = cartItemId.trim(); }
+  
+  public String getUserId() { return userId; }
+  public void setUserId(String userId) { this.userId = userId; }
+
+  public String getPcId() { return pcId; }
+  public void setPcId(String pcId) { this.pcId = pcId; }
+
+  public String getProductId() { return productId; }
+  public void setProductId(String productId) { this.productId = productId; }
+
+  public String getProductName() { return productName; }
+  public void setProductName(String productName) { this.productName = productName; }
+  
+  public int getQuantity() { return quantity; }
+  public void setQuantity(int quantity) { this.quantity = quantity; }
+
+  public int getPrice() { return price; }
+  public void setPrice(int price) { this.price = price; }
+
+  public byte[] getImg() { return img; }
+  public void setImg(byte[] img) { this.img = img; }
+
+  public String getImg64() { return img64; }
+  public void setImg64(String img64) { this.img64 = img64; }
+  
   /* Public methods */
   public int getUnitPrice() {
 	  int totalPrice = 0;
-	  totalPrice += quantity * product.getProductPrice();
-	  return totalPrice;
+	  totalPrice += quantity * price;
+	  this.unitPrice = totalPrice;
+	  return unitPrice;
   }
-  public CartItem(String userId, String productId, int quantity){
-    this.userId = userId;
-    this.productId = productId;
-    this.quantity = quantity;
+
+  public void incrementQuantity() {
+    quantity++;
   }
+  
+  public void decrementQuantity() {
+	if(quantity > 0) quantity--;
+  }
+@Override
+public String toString() {
+	return "CartItem [cartItemId=" + cartItemId + ", userId=" + userId + ", productId=" + productId + ", quantity="
+			+ quantity + ", price=" + price + "]";
+}
 }

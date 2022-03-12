@@ -15,7 +15,7 @@ public interface RestaurantMapper {
 	
 	List<Restaurant> searchRestaurantList(String keywords) throws DataAccessException;
 
-	Restaurant getRestaurant(long resId) throws DataAccessException;
+	Restaurant getRestaurant(String resId) throws DataAccessException;
 	Restaurant getRestaurantByOwnerId(String ownerId) throws DataAccessException;
 	
 	
@@ -24,6 +24,6 @@ public interface RestaurantMapper {
 	void updateRestaurantWithoutImg(Restaurant res) throws DataAccessException;
 	void deleteRestaurant(String ownerId) throws DataAccessException;
 	
-	void updateAvgRating(int rating, long resId) throws DataAccessException;
+	void updateAvgRating(int rating, String resId) throws DataAccessException;
 	 
 }

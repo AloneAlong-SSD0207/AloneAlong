@@ -54,12 +54,9 @@ public class ProductReviewController  {
 
         Product product = this.aloneAlong.getProduct(productId);
         List<ProductReview> reviewList = this.aloneAlong.getProductReviewList(productId, sortType, userId);
-        double avg = 0;
-        for (ProductReview review : reviewList){
-            avg += review.getRating();
-        }
-        model.put("numOfReviews", reviewList.size());
-        model.put("averageOfReviews", reviewList.size() == 0 ? 0 : avg / reviewList.size());
+
+        model.put("numOfReviews", aloneAlong.numOfReviews(productId));
+        model.put("averageOfReviews", aloneAlong.averageOfReviews(productId));
         model.put("mostRatingOfReviews", aloneAlong.mostRatingOfReviews(productId));
 
         PagedListHolder<ProductReview> pagedReviewList = new PagedListHolder<ProductReview>(reviewList);
@@ -111,7 +108,7 @@ public class ProductReviewController  {
     @RequestMapping("/shop/review/update")
     public String updateReview(HttpServletRequest request,
                                @RequestParam(value="productId") String productId,
-                               @RequestParam(value="reviewId") long reviewId,
+                               @RequestParam(value="reviewId") String reviewId,
                                @RequestParam(value="rating") int rating,
                                @RequestParam(value="contents") String contents)
                                throws Exception {
@@ -135,7 +132,7 @@ public class ProductReviewController  {
     @RequestMapping("/shop/review/delete")
     public String deleteReview(HttpServletRequest request,
                                @RequestParam(value="productId") String productId,
-                               @RequestParam(value="reviewId") long reviewId)
+                               @RequestParam(value="reviewId") String reviewId)
                                throws Exception {
         String userId = UserSession.getUserId(request);
 
@@ -150,7 +147,7 @@ public class ProductReviewController  {
 
     @RequestMapping("/shop/{productId}/review/recommend/{reviewId}")
     public String recommendReview(HttpServletRequest request,
-                                @PathVariable("reviewId") long reviewId,
+                                @PathVariable("reviewId") String reviewId,
                                 @RequestParam(value="page", defaultValue="1") int page,
                                 @RequestParam(value="sortType", defaultValue="new") String sortType,
                                 @RequestParam(value="quantity", defaultValue="1") int quantity)

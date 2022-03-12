@@ -1,58 +1,104 @@
 package com.dwu.alonealong.domain;
 
-import lombok.*;
-import org.hibernate.annotations.GenerationTime;
-
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("serial")
-@Getter
-@Setter
-@Entity
-@ToString
-@Table(name="product_order")
-@NoArgsConstructor
-@AllArgsConstructor
-@SequenceGenerator(
-        name = "PRODUCTORDERID_SEQ_GEN"
-        , sequenceName = "PRODUCTORDERID_SEQ"
-        , initialValue = 1
-        , allocationSize = 1
-)
 public class ProductOrder implements Serializable {
-  @Id
-  @Column(name="order_id")
-  private String orderId;
-  @Column(name="ship_name")
-  private String shipName;
-  @Column(name="ship_phone")
-  private String shipPhone;
-  @Column(name="ship_email")
-  private String shipEmail;
-  @Column(name="SHIP_ZIP")
-  private String shipZip;
-  @Column(name="ship_address")
-  private String shipAddress;
-  @Column(name="ship_address2")
-  private String shipAddress2;
-  @Transient
-  private String shipPhone1;
-  @Transient
-  private String shipPhone2;
-  @Transient
-  private String shipPhone3;
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name="order_id", insertable = true, updatable = true)
-  Order order;
-//  @OneToMany
-//  @JoinColumn(name="order_id", insertable = false, updatable = false)
-//  ProductLineItem productOrder;
-  @Transient
-  private List<ProductLineItem> lineItems;
 
-  public void setShipPhoneByForm(){
-    this.shipPhone = this.shipPhone1 + '-' + this.shipPhone2 + '-' + this.shipPhone3;
+  /* Private Fields */
+  private String orderId;
+  private String orderDate;
+  private int totalPrice;
+  private String status; //현재 DB에는 존재하지만 이용X
+  private String userId;
+  private String cardNum;
+  private String cardMonth;
+  private String cardYear;
+  private String cardCVC;
+  private String cardName;
+  private String shipName;
+  private String shipPhone1;
+  private String shipPhone2;
+  private String shipPhone3;
+  private String shipEmail;
+  private String shipZip;
+  private String shipAddress; 
+  private String shipAddress2;
+  
+  private List<ProductLineItem> lineItems = new ArrayList<ProductLineItem>();
+
+  /* JavaBeans Properties */
+
+  public String getOrderId() { return orderId;  }
+  public void setOrderId(String orderId) { this.orderId = orderId; }
+  
+  public String getOrderDate() { return orderDate; }
+  public void setOrderDate(String orderDate) { this.orderDate = orderDate; }
+  
+  public int getTotalPrice() { return totalPrice; }
+  public void setTotalPrice(int totalPrice) { this.totalPrice = totalPrice; }
+  
+  public String getStatus() { return status; }
+  public void setStatus(String status) { this.status = status; }
+  
+  public String getUserId() { return userId; }
+  public void setUserId(String userId) { this.userId = userId; }
+  
+  public String getCardNum() { return cardNum; }
+  public void setCardNum(String cardNum) { this.cardNum = cardNum; }
+  
+  public String getCardMonth() { return cardMonth; }
+  public void setCardMonth(String cardMonth) { this.cardMonth = cardMonth; }
+  public String getCardYear() { return cardYear; }
+  public void setCardYear(String cardYear) { this.cardYear = cardYear; }
+  
+  public String getCardName() { return cardName; }
+  public void setcardName(String cardName) { this.cardName = cardName; }
+
+  public String getCardCVC() { return cardCVC; }
+  public void setCardCVC(String cardCVC) { this.cardCVC = cardCVC; }
+  
+  public List<ProductLineItem> getLineItems() { return lineItems; }
+  public void setLineItems(List<ProductLineItem> lineItems) { this.lineItems = lineItems; }
+    
+  public String getShipName() { return shipName; }
+  public void setShipName(String shipName) { this.shipName = shipName; }
+  
+  public String getShipZip() { return shipZip; }
+  public void setShipZip(String shipZip) { this.shipZip = shipZip; }
+  
+  public String getShipAddress() { return shipAddress; }
+  public void setShipAddress(String shipAddress) { this.shipAddress = shipAddress; }
+  public String getShipAddress2() { return shipAddress2; }
+  public void setShipAddress2(String shipAddress2) { this.shipAddress2 = shipAddress2; }
+  
+  public String getShipPhone1() { return shipPhone1; }
+  public void setShipPhone1(String shipPhone1) { this.shipPhone1 = shipPhone1; }
+  public String getShipPhone2() { return shipPhone2; }
+  public void setShipPhone2(String shipPhone2) { this.shipPhone2 = shipPhone2; }
+  public String getShipPhone3() { return shipPhone3; }
+  public void setShipPhone3(String shipPhone3) { this.shipPhone3 = shipPhone3; }
+
+  public String getShipEmail() { return shipEmail; }
+  public void setShipEmail(String shipEmail) { this.shipEmail = shipEmail; }
+
+  public int getShippingFee() {
+    if (getTotalPrice() < Product.FREE_SHIPPING_PRICE){
+      return Product.SHIPPING_FEE;
+    }
+    else{
+      return 0;
+    }
+  }
+  
+  @Override
+  public String toString() {
+	return "ProductOrder [orderId=" + orderId + ", orderDate=" + orderDate + ", totalPrice=" + totalPrice + ", status="
+			+ status + ", userId=" + userId + ", cardNum=" + cardNum + ", cardMonth=" + cardMonth + ", cardYear="
+			+ cardYear + ", cardName=" + cardName + ", shipName=" + shipName + ", shipPhone1=" + shipPhone1
+			+ ", shipPhone2=" + shipPhone2 + ", shipPhone3=" + shipPhone3 + ", shipEmail=" + shipEmail + ", shipZip="
+			+ shipZip + ", shipAddress=" + shipAddress + "]";
   }
 }

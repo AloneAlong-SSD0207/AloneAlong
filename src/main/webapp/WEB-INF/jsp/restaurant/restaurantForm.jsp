@@ -80,9 +80,9 @@ $(document).ready(function() {
     $('textarea[id="resDescription"]').text("${res.resDescription}");
 
     
-    var check = ${res.togetherOk};
+    var check = ${res.isTogetherOk};
     console.log('check', check);
-    $('input:checkbox[name="togetherOk"]').each(function(index, element){
+    $('input:checkbox[name="isTogetherOk"]').each(function(index, element){
         $(this).next('label').addClass("ui-state-active");
         $(this).next('label').attr('aria-pressed', true);
         $(this).attr('checked', check);
@@ -181,16 +181,15 @@ $(function () {
 			<form:textarea class="form-control w-100" path="resDescription" maxlength="80"></form:textarea>
 			</div>
 		</div>
-
+		
 		<div class="form-group d-flex align-items-center row">
-			<div class="col-4">
-			<form:label path="togetherOk">같밥모집 허용여부</form:label></div>
+			<div class="col-4"> 
+			<form:label path="isTogetherOk" >같밥모집 허용여부</form:label></div>
 			<div class="m-3 custom-control custom-checkbox">
-				<form:checkbox path="togetherOk" class="custom-control-input" id="togetherOk"/>
-			<label class="custom-control-label" for="togetherOk">허용</label>
+				<form:checkbox path="isTogetherOk" class="custom-control-input" id="isTogetherOk"/>
+			<label class="custom-control-label" for="isTogetherOk">허용</label>
 			</div>
 		</div>
-
 		<p>
 			<form:hidden path="img64" value="${res.imgFile}"/>
 		</p>

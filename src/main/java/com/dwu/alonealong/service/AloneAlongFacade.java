@@ -36,24 +36,26 @@ public interface AloneAlongFacade {
 	void insertContact(String contents);
 	  
 	//PRODUCT
-	List<Product> getProductList(int pcId, String sortType);
+	List<Product> getProductList(int pcId, String sortType);	
 	List<Product> searchProductList(String keywords);
 	Product getProduct(String productId);
+	void updateProduct(Product product);
 	
 	//PRODUCT Review
-	ProductReview getProductReview(long reviewId, String userId);
+	ProductReview getProductReview(String reviewId, String userId);
 	List<ProductReview> getProductReviewList(String productId, String sortType, String userId);
+	List<ProductReview> getProductReviewListByUserId(String userId);
 	void insertProductReview(ProductReview productReview);
 	void updateProductReview(ProductReview productReview);
-	void deleteProductReview(long reviewId);
-//	int numOfReviews(String productId);
-//	double averageOfReviews(String productId);
+	void deleteProductReview(String reviewId);
+	int numOfReviews(String productId);
+	double averageOfReviews(String productId);
 	int mostRatingOfReviews(String productId);
-	void insertProductReviewRecommend(long reviewId, String userId);
-	void deleteProductReviewRecommend(long reviewId, String userId);
+	void insertProductReviewRecommend(String reviewId, String userId);
+	void deleteProductReviewRecommend(String reviewId, String userId);
 	
 	//PRODUCT Order
-	List<Order> getOrdersByUserId(String userId);
+	List<ProductOrder> getOrdersByUserId(String userId);
 //	List<ProductOrder> getOrdersByProductId(String productId);
   	ProductOrder getProductOrder(String orderId);
 	void insertProductOrder(ProductOrder order);
@@ -61,10 +63,10 @@ public interface AloneAlongFacade {
 	
 	//CART
 	List<CartItem> getAllCartItem(String userId) throws DataAccessException;
-	CartItem getCartItem(long cartItemId) throws DataAccessException;
+	CartItem getCartItem(String cartItemId) throws DataAccessException;
 	void insertCartItem(String productId, int quantity, String userId)  throws DataAccessException;
+	void deleteCartItem(String cartItemId) throws DataAccessException;
 	void deleteAllCartItem(String userId) throws DataAccessException;
-	void deleteCartItem(long cartItemId) throws DataAccessException;
 	void updateCartItem(CartItem cartItem) throws DataAccessException;
 	
 	//PAYMENT
@@ -75,29 +77,29 @@ public interface AloneAlongFacade {
 	//Restaurant
 	void insertRestaurant(Restaurant res);
 	void updateRestaurant(Restaurant res);
-	void deleteRestaurant(long resId);
+	void deleteRestaurant(String ownerId);
 	List<Restaurant> getRestaurantList();
 	List<Restaurant> getRestaurantListByCategory(String category1, String category2, String sortType);
 	List<Restaurant> searchRestaurantList(String keywords);
 //
 	Restaurant getRestaurantByUserId(String userId);
-	Restaurant getRestaurantByResId(long resId);
+	Restaurant getRestaurantByResId(String resId);
 	
 	//Food
 	void insertFood(Food food);
 	void updateFood(Food food);
-	void deleteFood(long foodId);
-	List<Food> getFoodListByRestaurant(long resId);
-	Food getFood(long foodId);
+	void deleteFood(String foodId );
+	List<Food> getFoodListByRestaurant(String resId); 
+	Food getFood(String foodId);
 
 	void insertFoodOrder(FoodOrder order);
 	FoodOrder getFoodOrder(String orderId); 
 	List<FoodOrder> getFoodOrdersByUserId(String userId);
 	void deleteFoodOrder(String orderId);
 	
-	public List<FoodReview> getFoodReviewListByResId(long resId, String sortType);
+	public List<FoodReview> getFoodReviewListByResId(String resId, String sortType);
 	public void insertFoodReview(FoodReview foodReview);
-	void updateAvgRating(int rating, long resId);
+	void updateAvgRating(int rating, String resId);
 	
 	//Together
 	Together getTogetherByTogId(String togId);
@@ -106,7 +108,7 @@ public interface AloneAlongFacade {
 	List<Together> getTogetherListByCategory(String area, String date, String kind, int price, String sex, String age);
 	void updateTogether(Together together);
 	List<Together> recommandTogetherList(String sex, String address);
-	List<Together> getTogetherListByResId(long resId);
+	List<Together> getTogetherListByResId(String resId);
 	void deleteTogether(String togId);
 	List<Together> searchTogetherList(String keyword);
 	

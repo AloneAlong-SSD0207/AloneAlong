@@ -1,56 +1,30 @@
 package com.dwu.alonealong.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.persistence.*;
-
 @SuppressWarnings("serial")
-@Entity
-@Table(name="TOGETHER")
-@Getter
-@Setter
 public class Together implements Serializable {
 	public static final int MIN_HEAD_COUNT = 2;
 	public static final int GATHERING = 0;
 	public static final int GATHERED = 1;
 	
-	@Id
-	@Column(name="tog_id")
 	private String togetherId;
-	@Column(name="tog_name")
 	private String togetherName;
-	@Column(name="headcount")
 	private int headCount;
-	@Column(name="tog_date")
 	private String togetherDate;
-	@Column(name="tog_time")
 	private String togetherTime;
-	@Column(name="tog_sex")
 	private String sex;
-	@Column(name="tog_age")
 	private String age;
-	@Column(name="tog_des")
 	private String togetherDes;
-	@Column(name="res_id")
-	private long resId;
-	@Column(name="tog_status")
+	private String resId;
 	private int status;
 	private int price;
 	
-	@ManyToOne
-	@JoinColumn(name = "res_id", insertable=false, updatable=false)
 	private Restaurant restaurant;
-
-	@Transient
 	private List<TogetherFood> togetherFoodList = new ArrayList<TogetherFood>();
-
-	@Transient
 	private List<TogetherMember> togetherMemberList = new ArrayList<TogetherMember>();
 	
 	public Together() {
@@ -58,7 +32,7 @@ public class Together implements Serializable {
 	}
 	
 	public Together(String togetherId, String togetherName, int headCount, String togetherDate, String togetherTime,
-			String sex, String age, String togetherDes, long resId, int status, int price) {
+			String sex, String age, String togetherDes, String resId, int status, int price) {
 		super();
 		this.togetherId = togetherId;
 		this.togetherName = togetherName;
@@ -72,6 +46,48 @@ public class Together implements Serializable {
 		this.status = status;
 		this.price = price;
 	}
+
+	public String getTogetherId() {return togetherId;}
+	public void setTogetherId(String togetherId) {this.togetherId = togetherId;}
+	
+	public String getTogetherName() {return togetherName;}
+	public void setTogetherName(String togetherName) {this.togetherName = togetherName;}
+	
+	public int getHeadCount() {return headCount;}
+	public void setHeadCount(int headCount) {this.headCount = headCount;}
+	
+	public String getTogetherDate() {return togetherDate;}
+	public void setTogetherDate(String togetherDate) {this.togetherDate = togetherDate;}
+	
+	public String getTogetherTime() {return togetherTime;}
+	public void setTogetherTime(String togetherTime) {this.togetherTime = togetherTime;}
+
+	public String getSex() {return sex;}
+	public void setSex(String sex) {this.sex = sex;}
+	
+	public String getAge() {return age;}
+	public void setAge(String age) {this.age = age;}
+	
+	public String getTogetherDes() {return togetherDes;}
+	public void setTogetherDes(String togetherDes) {this.togetherDes = togetherDes;}
+
+	public String getResId() {return resId;}
+	public void setResId(String resId) {this.resId = resId;}
+
+	public int getStatus() {return status;}
+	public void setStatus(int status) {this.status = status;}
+
+	public int getPrice() {return price;}
+	public void setPrice(int price) {this.price = price;}
+
+	public Restaurant getRestaurant() {return restaurant;}
+	public void setRestaurant(Restaurant restaurant) {this.restaurant = restaurant;}
+
+	public List<TogetherFood> getTogetherFoodList() {return togetherFoodList;}
+	public void setTogetherFoodList(List<TogetherFood> togetherFoodList) {this.togetherFoodList = togetherFoodList;}
+
+	public List<TogetherMember> getTogetherMemberList() {return togetherMemberList;}
+	public void setTogetherMemberList(List<TogetherMember> togetherMemberList) {this.togetherMemberList = togetherMemberList;}
 
 	//음식 총합 구하기
 	public int getTotalPrice() {

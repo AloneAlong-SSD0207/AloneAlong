@@ -130,7 +130,7 @@
 				<a type="button" class="w-40 btn btn-lg btn-warning" href="<c:url value='/togetherOrder' />"><small><i class="far fa-credit-card pr-1"></i></small> 결제하기</a>
 				<c:if test="${ifEditPossible eq true}"> <!-- 수정 가능 여부 -->
 					<a type="button" class="w-40 btn btn-lg btn-success" href="<c:url value='/togetherUpdate/${together.togetherId}' />">수정하기</a>
-					<a type="button" class="w-40 btn btn-lg btn-success" onclick="deleteTogether(${together.togetherId})">삭제하기</a>
+					<a type="button" class="w-40 btn btn-lg btn-success" href="<c:url value='/togetherRegister/delete/${together.togetherId}' />">삭제하기</a>
 				</c:if>
 				<c:if test="${ifEditPossible eq false}">
 					<button class="btn btn-green rounded-pill" onclick="javascript:btn('모집 중인 인원이 1명일 때만 가능합니다.' )">수정하기</button>
@@ -162,34 +162,4 @@
 function btn(message){ 
 	alert(message); 
 } 
-</script>
-
-<!-- ajax 처리 -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-function viewTogether(togetherId) {
-	$.ajax({
-			type: "GET",
-			url: "/together/" + togetherId,
-			processData: false,
-			success: function(together) {
-
-
-			},
-			error: function(){
-				alert("ERROR", arguments);
-			}
-		});
-};
-
-function deleteTogether(togetherId) {
-	$.ajax({
-		type: "DELETE",
-		url: "http://localhost:8080/together/delete/" + togetherId,
-		processData: false,
-		success: function() {
-			window.location.replace("http://localhost:8080/together");
-		}
-	});
-};
 </script>

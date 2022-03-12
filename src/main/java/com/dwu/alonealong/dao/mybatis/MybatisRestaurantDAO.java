@@ -30,7 +30,7 @@ public class MybatisRestaurantDAO implements RestaurantDAO{
 		return resMapper.searchRestaurantList(keywords);
 	}
 	
-	public Restaurant getRestaurant(long resId) throws DataAccessException{
+	public Restaurant getRestaurant(String resId) throws DataAccessException{
 		return resMapper.getRestaurant(resId);
 	}
 	
@@ -50,7 +50,7 @@ public class MybatisRestaurantDAO implements RestaurantDAO{
 		resMapper.deleteRestaurant(ownerId);
 	}
 	@Override
-	public void updateAvgRating(int rating, long resId) throws DataAccessException {
+	public void updateAvgRating(int rating, String resId) throws DataAccessException {
 		resMapper.updateAvgRating(rating, resId);
 	}
 	@Override

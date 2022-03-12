@@ -35,7 +35,7 @@
 											style="background-image: url('https://img-cf.kurly.com/shop/data/goods/1575003713758y0.jpg'); background-size: cover; background-position: center; width: 100px; height: 100px;"></svg>
 									</a>
 									<div class="cart-title text-left ml-3">
-										<a class="text-uppercase text-dark" href="/detail-1"> <strong>${cartItem.getProduct().getProductName()}</strong></a>
+										<a class="text-uppercase text-dark" href="/detail-1"> <strong>${cartItem.productName}</strong></a>
 									</div>
 								</div>
 							</div>
@@ -43,13 +43,13 @@
 								<div class="align-items-center row">
 									<div class="col-md-3">
 										<div class="row">
-											<div class="text-right text-md-center col-6 col-md-12">${cartItem.getProduct().getProductPrice()}</div>
+											<div class="text-right text-md-center col-6 col-md-12">${cartItem.price}</div>
 										</div>
 									</div>
 									<div class="col-md-3 text-center">
 										<input class="form-control text-center" name="quantity"
 											type="number" value="${cartItem.quantity}" min="1">
-										<%-- <div class="row text-center my-auto">s
+										<%-- <div class="row text-center my-auto">
 														<div class="input-group">
 															<div class="input-group-prepend"><button class="btn btn-light" type="button">-</button></div>
 															<input type="text" class="form-control text-center" value="${cartItem.quantity}">

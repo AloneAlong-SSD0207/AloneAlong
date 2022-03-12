@@ -9,42 +9,42 @@ $(document).on("click", ".open-reviewModal", function () {
      $(".modal-body #productId").val(productId);
 });
 </script>
-<c:forEach var="order" items="${productOrderList}">
+<c:forEach var="productOrder" items="${productOrderList}">
 <div class="col-md-12">
 		<div class="mx-3 mt-3">
 		<div class="form-row float-right">
 		</div>
 		<div class="d-flex align-items-center">
-			<svg class="img rounded mr-3" style="background-image: url('../images/${order.getProductOrder().getLineItems().get(0).productId}.png'); background-size: cover; background-position: center"
+			<svg class="img rounded mr-3" style="background-image: url('../images/${productOrder.lineItems.get(0).productId}.png'); background-size: cover; background-position: center"
 										width="100px" height="100px"></svg>
 										<div class="cart-title text-left ml-3">
-				<p><strong>${order.getProductOrder().getLineItems().get(0).product.productName}</strong>
-				<c:if test="${order.getProductOrder().getLineItems().size() > 1}">외 ${order.getProductOrder().getLineItems().size() - 1}건</c:if></p>
-				<small><strong class="text-orange">주문번호 </strong> &nbsp; ${order.orderId}</small><br>
-				<small><strong class="text-orange">주문일자 </strong> &nbsp; ${order.orderDate}</small><br>
+				<p><strong>${productOrder.lineItems.get(0).productName}</strong>
+				<c:if test="${productOrder.lineItems.size() > 1}">외 ${productOrder.lineItems.size() - 1}건</c:if></p>
+				<small><strong class="text-orange">주문번호 </strong> &nbsp; ${productOrder.orderId}</small><br>
+				<small><strong class="text-orange">주문일자 </strong> &nbsp; ${productOrder.orderDate}</small><br>
 				<small><strong class="text-orange">결제금액 </strong> &nbsp;
-					<fmt:formatNumber value="${order.totalPrice}" pattern="#,###,###"/>원</small><br>
-				<small><strong class="text-orange">진행상태 </strong> &nbsp; ${order.status}</small><br>
+					<fmt:formatNumber value="${productOrder.totalPrice}" pattern="#,###,###"/>원</small><br>
+				<small><strong class="text-orange">진행상태 </strong> &nbsp; ${productOrder.status}</small><br>
 			</div>
 		</div>
 		<div class="text-right"><a type="button" class="btn btn-sm btn-orange" data-toggle="collapse" data-parent="#accordion"
-				href="#collapse${order.orderId}" aria-expanded="false"> >>주문상세내역 </a></div>
+				href="#collapse${productOrder.orderId}" aria-expanded="false"> >>주문상세내역 </a></div>
 		</div>
 		<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false">
 			<div class="panel panel-default">
 				<div class="panel-heading" role="tab">
 				</div>
-				<div id="collapse${order.orderId}" class="panel-collapse collapse" role="tabpanel">
+				<div id="collapse${productOrder.orderId}" class="panel-collapse collapse" role="tabpanel">
 					<div class="panel-body m-1 p-2">
 					<div class="p-3 mb-3 rounded bg-light">
-						<small><strong class="text-green">결제 정보</strong> &nbsp; ${order.cardName} ${order.cardNum}</small><hr>
+						<small><strong class="text-green">결제 정보</strong> &nbsp; ${productOrder.cardName} ${productOrder.cardNum}</small><hr>
 						<small><strong class="text-green">배송 정보</strong></small><br>
-						<small><strong>수령인</strong> &nbsp; ${order.getProductOrder().shipName}</small><br>
-						<small><strong>연락처</strong> &nbsp; ${order.getProductOrder().shipPhone}</small><br>
-						<small><strong>배송지</strong> &nbsp; (${order.getProductOrder().shipZip}) ${order.getProductOrder().shipAddress} ${order.getProductOrder().shipAddress2}</small><br>
+						<small><strong>수령인</strong> &nbsp; ${productOrder.shipName}</small><br>
+						<small><strong>연락처</strong> &nbsp; ${productOrder.shipPhone1}-${productOrder.shipPhone2}-${productOrder.shipPhone3}</small><br>
+						<small><strong>배송지</strong> &nbsp; (${productOrder.shipZip}) ${productOrder.shipAddress} ${productOrder.shipAddress2}</small><br>
 					</div>
 					<div class="p-3 mb-3 rounded bg-gradient-light">
-						<c:forEach var="item" items="${order.getProductOrder().getLineItems()}">
+						<c:forEach var="item" items="${productOrder.lineItems}">
 						<div class="row d-flex align-items-center">
 							<div class="col-md-1">
 								<a href=<c:url value="/shop/${item.productId}"/>>
@@ -52,7 +52,7 @@ $(document).on("click", ".open-reviewModal", function () {
 										width="50px" height="50px"></svg></a></div>
 							<div class="col-md-2">
 								<a href=<c:url value="/shop/${item.productId}"/>>
-								<small style="color: black;	text-decoration: none;">${item.product.productName}</small></a></div>
+								<small style="color: black;	text-decoration: none;">${item.productName}</small></a></div>
 							<div class="col-md-1 text-right"><small>x</small></div>
 							<div class="col-md-1 text-right"><small>${item.quantity}</small></div>
 							<div class="col-md-1 text-right"><small>=</small></div>
@@ -65,7 +65,7 @@ $(document).on("click", ".open-reviewModal", function () {
 						<div class="row d-flex align-items-center">
 						<div class="col-md-4"></div>
 						<div class="col-md-2 text-right"><small>배송비</small></div>
-						<div class="col-md-2 text-right"><small><fmt:formatNumber value="${order.getShippingFee()}" pattern="#,###,###"/>원</small></div>
+						<div class="col-md-2 text-right"><small><fmt:formatNumber value="${productOrder.getShippingFee()}" pattern="#,###,###"/>원</small></div>
 						</div>
 						<hr>
 					</div>

@@ -8,7 +8,6 @@ import java.util.Base64.Encoder;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dwu.alonealong.controller.UserSession;
-import com.dwu.alonealong.domain.*;
 import com.dwu.alonealong.exception.NullProductException;
 import com.dwu.alonealong.exception.StockException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,12 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
+import com.dwu.alonealong.domain.User;
+import com.dwu.alonealong.domain.Payment;
+import com.dwu.alonealong.domain.CartItem;
+import com.dwu.alonealong.domain.Product;
+import com.dwu.alonealong.domain.ProductLineItem;
+import com.dwu.alonealong.domain.ProductOrder;
 import com.dwu.alonealong.service.AloneAlongFacade;
 import com.dwu.alonealong.service.ProductOrderFormValidator;
 
@@ -84,7 +89,8 @@ public class ProductOrderController {
 				throw new StockException();
 			}
 			totalPrice = product.getUnitPrice();
-			orderList.add(new ProductLineItem(product));
+			ProductLineItem orderItem = new ProductLineItem(product);
+			orderList.add(orderItem);
 		}
 		else {
 			return "error";
@@ -132,15 +138,11 @@ public class ProductOrderController {
 		}
 		
 		//lineItem
-//		order.setLineItems(lineItems);
-//		order.setTotalPrice(totalPrice);
+		order.setLineItems(lineItems);
+		order.setTotalPrice(totalPrice);
 		
 		//user
-		Order orderInfo = order.getOrder();
-		orderInfo.setUserId(userId);
-		orderInfo.setTotalPrice(totalPrice);
-		order.setOrder(orderInfo);
-		order.setLineItems(lineItems);
+		order.setUserId(userId);		
 		aloneAlong.insertProductOrder(order);
 
 		if(productOrderForm.getType().equals("cart")) {
