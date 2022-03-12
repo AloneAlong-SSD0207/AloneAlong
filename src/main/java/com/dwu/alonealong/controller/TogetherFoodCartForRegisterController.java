@@ -93,7 +93,7 @@ public class TogetherFoodCartForRegisterController {
 			ModelMap model
 			) throws Exception {
 		
-		cart.removeFoodById((request.getParameter("foodId")));
+		cart.removeFoodById(Long.parseLong((request.getParameter("foodId"))));
 		
 		List<Food> foodList = this.alonealong.getFoodListByRestaurant(resId);
 		getFoodsImage(foodList);

@@ -6,7 +6,7 @@ $(document).ready(function() {
 
         if("${restaurant.open}" == ""){
             console.log("${restaurant.open}");
-            $("button[id^='btn']").attr('onClick', null)
+            $("button[id^='foodBtn']").attr('onClick', null)
             .click(function() {$("#infoModal").modal("show");
             });
 
@@ -49,7 +49,7 @@ $(document).ready(function() {
 				              <div class="card-footer" style="width:120px; text-align: center;">
 				              	<div class="mt-5">
 				              		
-					              <button type = "button" class="btn btn-md btn-success" id="btn${food.foodId}"
+					              <button type = "button" class="btn btn-md btn-success" id="foodBtn${food.foodId}"
 					              onClick="location.href='<c:url value='/eating/${restaurant.resId}/addFoodToCart'>
 					              <c:param name="foodId" value="${food.foodId}"/></c:url>'">담기</button></br> 	       		  
 				             	  </div>

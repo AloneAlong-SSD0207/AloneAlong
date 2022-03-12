@@ -51,7 +51,8 @@ public class FoodCart implements Serializable{
 		return foodMap.get(foodId);
 	}
 	
-	public Food removeFoodById(String id) {
+	public Food removeFoodById(long id) {
+		System.out.println("들어옴");
 	    FoodCartItem foodCartItem = foodMap.remove(id);
 	    if (foodCartItem == null) {
 	      return null;
