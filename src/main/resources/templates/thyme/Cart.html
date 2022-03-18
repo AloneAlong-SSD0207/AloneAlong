@@ -27,7 +27,7 @@ function updateCart(cartItemId){
 			quantity : nowQuantity
 		};
 		$.ajax({
-			url:"http://localhost:8080/cart/[[${userSession.user.user_id}]]/items/" + cartItemId,
+			url:"/cart/[[${userSession.user.user_id}]]/items/" + cartItemId,
 			type:"PUT",
 			contentType:"application/json",
 			data:JSON.stringify(cartItem),
@@ -46,7 +46,7 @@ function deleteCart(){
 		cartItemId : cartItemId
 	};
 	$.ajax({
-		url:"http://localhost:8080/cart/[[${userSession.user.user_id}]]/items/" + cartItemId,
+		url:"/cart/[[${userSession.user.user_id}]]/items/" + cartItemId,
 		type:"DELETE",
 		contentType:"application/json",
 		data:JSON.stringify(cartItem),
