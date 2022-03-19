@@ -4,6 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
+$(document).ready(function (){
+
+})
 function changeQuantity(){
 	var nowQuantity = $("#quantity").val();
 	var totalPrice = ${product.productPrice} * nowQuantity;
@@ -24,7 +27,7 @@ function insertCart(){
 	else{
 		let cartItem = { productId : ${productId}, quantity : nowQuantity };
 		$.ajax({
-			url:"http://localhost:8080/cart/${userSession.user.user_id}/items",
+			url:"/cart/${userSession.user.user_id}/items",
 			type:"POST",
 			contentType:"application/json",
 			data:JSON.stringify(cartItem),
@@ -43,7 +46,7 @@ function insertProductReviewRecommend(rId){
 	const reviewId = Number(rId);
 	let user = { user_id : ${userSession.user.user_id} };
 	$.ajax({
-		url:"http://localhost:8080/products/${productId}/reviews/" + reviewId + "/recommends",
+		url:"/products/${productId}/reviews/" + reviewId + "/recommends",
 		type:"POST",
 		contentType:"application/json",
 		data:JSON.stringify(user),
@@ -60,7 +63,7 @@ function insertProductReviewRecommend(rId){
 function deleteProductReviewRecommend(rId){
 	const reviewId = Number(rId);
 	$.ajax({
-		url:"http://localhost:8080/products/${productId}/reviews/" + reviewId + "/recommends/${userSession.user.user_id}",
+		url:"/products/${productId}/reviews/" + reviewId + "/recommends/${userSession.user.user_id}",
 		type:"DELETE",
 		contentType:"application/json",
 		success: function(){
@@ -81,7 +84,7 @@ function insertProductReview(){
 		userId : ${userSession.user.user_id},
 	}
 	$.ajax({
-		url:"http://localhost:8080/products/${productId}/reviews",
+		url:"/products/${productId}/reviews",
 		type:"POST",
 		contentType:"application/json",
 		data:JSON.stringify(productReview),
@@ -103,7 +106,7 @@ function updateProductReview(){
 		userId : ${userSession.user.user_id},
 	}
 	$.ajax({
-		url:"http://localhost:8080/products/${productId}/reviews/" + review[3].value,
+		url:"/products/${productId}/reviews/" + review[3].value,
 		type:"PUT",
 		contentType:"application/json",
 		data:JSON.stringify(productReview),
@@ -120,7 +123,7 @@ function deleteProductReview(){
 	const reviewId = $(".modal-body #reviewId").val();
 	alert(reviewId)
 	$.ajax({
-		url:"http://localhost:8080/products/${productId}/reviews/" + reviewId + "/${userSession.user.user_id}",
+		url:"/products/${productId}/reviews/" + reviewId + "/${userSession.user.user_id}",
 		type:"DELETE",
 		contentType:"application/json",
 		success: function(){

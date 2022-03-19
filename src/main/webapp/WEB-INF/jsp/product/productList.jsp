@@ -24,7 +24,7 @@ function insertCart(stock, product, id){
 	else{
 		let cartItem = { productId : id, quantity : nowQuantity };
 		$.ajax({
-			url:"http://localhost:8080/cart/${userSession.user.user_id}/items",
+			url:"/cart/${userSession.user.user_id}/items",
 			type:"POST",
 			contentType:"application/json",
 			data:JSON.stringify(cartItem),
